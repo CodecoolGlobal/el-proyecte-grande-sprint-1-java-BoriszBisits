@@ -1,5 +1,6 @@
 package com.codecool.circles.controller;
 
+
 import com.codecool.circles.model.Project;
 import com.codecool.circles.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,7 @@ public class ProjectController {
         projectService.addNewProjects(projectName);
         return new ResponseEntity<>("result successful result",
                 HttpStatus.OK);
+
     }
+
 }
