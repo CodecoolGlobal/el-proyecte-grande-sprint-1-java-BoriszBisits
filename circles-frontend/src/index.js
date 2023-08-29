@@ -5,6 +5,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import ProjectList from "./Pages/ProjectList";
+import Project from './Pages/Project';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -21,10 +22,10 @@ const router = createBrowserRouter([
         path: "/projects",
         element: <ProjectList />,
       },
-//      {
-//        path: "/project/[:projectid]",
-//        element: <Project />,
-//      },
+     {
+       path: "/project/:id",
+       element: <Project />,
+     },
     ]
   }
 ]);
