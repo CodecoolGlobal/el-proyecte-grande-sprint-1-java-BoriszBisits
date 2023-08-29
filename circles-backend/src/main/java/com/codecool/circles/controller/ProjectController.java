@@ -24,8 +24,6 @@ public class ProjectController {
     @GetMapping("/projects")
     public List<Project> getProjects() {
 
-        for(Project project : projectService.getProjects()){
-        }
         return projectService.getProjects();
     }
 
