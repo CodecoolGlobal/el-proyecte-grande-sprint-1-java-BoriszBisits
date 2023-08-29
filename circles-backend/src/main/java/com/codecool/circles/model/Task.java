@@ -4,24 +4,35 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Task {
-    private List<SubTask> subTaskList =new ArrayList<>();
+    private String name;
+    private UUID id = UUID.randomUUID();
+    private List<SubTask> subTaskList = new ArrayList<>();
 
     private LocalDate deadLine;
 
-    private List<User> users=new ArrayList<>();
+    private List<User> users = new ArrayList<>();
 
-    public Task(LocalDate deadLine) {
-        this.deadLine = deadLine;
+    public UUID getId() {
+        return id;
     }
 
-    public int getTimeTillDeadLine(){
+    public Task(String name, LocalDate deadLine, List<User> users) {
+        this.name = name;
+        this.deadLine = deadLine;
+        this.users = users;
+    }
 
-        Period period = Period.between(deadLine, LocalDate.now());;
+    public int getTimeTillDeadLine() {
+
+        Period period = Period.between(deadLine, LocalDate.now());
+        ;
         return period.getDays();
     }
-    public void addSubTask(SubTask subTask){
+
+    public void addSubTask(SubTask subTask) {
         subTaskList.add(subTask);
     }
 }
