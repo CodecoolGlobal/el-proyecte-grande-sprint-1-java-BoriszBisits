@@ -5,13 +5,14 @@ import com.codecool.circles.model.User;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 public interface ProjectDao {
-    public void addUser(User user);
+    public void addUser(UUID projectId ,User user);
 
-    public void addUsers(List<User> user);
+    public void addUsers(UUID projectId,List<User> user);
 
-    public List<Task> getAllTasks();
+    public List<Task> getAllTasks(UUID projectId);
 
-    public void addTask(String name, LocalDate deadLine, List<User> users); ///shoud be in projetsDao???
+    public void addTask(Task task); ///shoud be in projetsDao???
 }
