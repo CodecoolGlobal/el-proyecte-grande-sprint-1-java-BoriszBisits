@@ -1,27 +1,33 @@
 package com.codecool.circles.service.dao;
 
 import com.codecool.circles.model.Project;
-import org.springframework.stereotype.Repository;
+import com.codecool.circles.model.Task;
+import com.codecool.circles.model.User;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
-@Repository
 public class ProjectDaoImpl implements ProjectDao {
 
-    private List<Project> projects;
-
-    public ProjectDaoImpl() {
-        this.projects = new ArrayList<>();
+    Project sampleProject=new Project("kamu");
+    @Override
+    public void addUser(User user) {
+        sampleProject.addUsers(user);
     }
 
     @Override
-    public List<Project> getProjects() {
-        return projects;
+    public void addUsers(List<User> users) {
+    sampleProject.addUsers(users);
     }
 
     @Override
-    public void addNewProject(String projectName) {
-        projects.add(new Project(projectName));
+    public List<Task> getAllTasks() {
+      return sampleProject.getAllTask();
+    }
+
+    @Override
+    public void addTask(String name, LocalDate deadLine, List<User> users) {
+        Task newTask=new Task(name,deadLine,users);
+       sampleProject.addTask(newTask);
     }
 }
