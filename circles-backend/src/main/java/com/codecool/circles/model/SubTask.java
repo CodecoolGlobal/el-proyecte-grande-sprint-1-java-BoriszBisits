@@ -6,17 +6,24 @@ import java.util.List;
 public class SubTask {
     private String name;
     private int levelOfCompletion;
+    private boolean isCompleted = false;
     private String description;
     private List<User> userList;
 
-    public SubTask(String name, String description) {
+    public SubTask(String name, String description, List<User> userList) {
         this.name = name;
-        this.levelOfCompletion = 0;
         this.description = description;
-        this.userList = new ArrayList<>();
+        this.userList = userList;
     }
 
-    public void addUser(User user){
+    public void setCompleted() {
+        if (levelOfCompletion == 100) {
+
+            isCompleted = true;
+        }
+    }
+
+    public void addUser(User user) {
         userList.add(user);
     }
 
@@ -28,8 +35,8 @@ public class SubTask {
         this.description = description;
     }
 
-    public boolean deleteUserFromProject(User user){
-        if(userList.contains(user)){
+    public boolean deleteUserFromProject(User user) {
+        if (userList.contains(user)) {
             userList.remove(user);
             return true;
         }
