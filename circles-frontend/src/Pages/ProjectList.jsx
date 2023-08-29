@@ -20,6 +20,7 @@ function ProjectList() {
         fetch("http://localhost:8080/projects")
         .then((res) => res.json())
         .then((data) => {
+            console.log(data)
             setProjects(data)
         })
 
@@ -30,7 +31,7 @@ function ProjectList() {
 
         e.preventDefault()
              
-const data = {name: newProjects}
+const data = newProjects
 console.log("data", data)
 fetch("http://localhost:8080/newprojects", {
     method: "POST",
@@ -38,7 +39,7 @@ fetch("http://localhost:8080/newprojects", {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
-  }).then((res) => res.json());
+  }).then((res) => res);
 
     }
 
