@@ -2,6 +2,7 @@ package com.codecool.circles.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class SubTask {
     private String name;
@@ -9,6 +10,7 @@ public class SubTask {
     private boolean isCompleted = false;
     private String description;
     private List<User> userList;
+    private UUID id = UUID.randomUUID();
 
     public SubTask(String name, String description, List<User> userList) {
         this.name = name;
