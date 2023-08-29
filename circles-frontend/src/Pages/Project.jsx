@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import '../App.css'; // Import your CSS file
+import { useParams } from "react-router-dom";
+
 
 function Project() {
-
+    const {id} = useParams()
     const [newTaskName, setNewTaskName] = useState("");
     const [tasks, setTasks] = useState([]);
     const [members, setMembers] = useState([]);
@@ -20,8 +22,8 @@ function Project() {
         ];
         setTasks(taskList);
 
-        // Uncomment below to fetch tasks from the server
-        // fetch("http://localhost:8080/tasks")
+
+        // fetch(`http://localhost:8080/${id}/tasks`)
         //     .then((res) => res.json())
         //     .then((data) => {
         //         setTasks(data)
@@ -34,7 +36,8 @@ function Project() {
         const data = {
             name: newTaskName,
             deadline: deadline,
-            members: members
+            members: members,
+            projectId: id,
         };
         console.log("data", data);
         fetch("http://localhost:8080/new-task", {

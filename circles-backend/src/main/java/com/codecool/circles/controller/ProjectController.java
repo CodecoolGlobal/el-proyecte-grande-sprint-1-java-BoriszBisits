@@ -2,6 +2,8 @@ package com.codecool.circles.controller;
 
 
 import com.codecool.circles.model.Project;
+import com.codecool.circles.model.Task;
+import com.codecool.circles.service.MainPageService;
 import com.codecool.circles.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,24 +17,33 @@ import java.util.List;
 public class ProjectController {
 
     private ProjectService projectService;
+private MainPageService mainPageService;
 
     @Autowired
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService, MainPageService mainPageService) {
         this.projectService = projectService;
+        this.mainPageService = mainPageService;
     }
+
+
 
     @GetMapping("/projects")
     public List<Project> getProjects() {
 
-        return projectService.getProjects();
+        return mainPageService.getProjects();
     }
 
     @PostMapping("/newprojects")
     public ResponseEntity<Object> addNewProject(@RequestBody String projectName) {
-        projectService.addNewProjects(projectName);
+        mainPageService.addNewProjects(projectName);
         return new ResponseEntity<>("result successful result",
                 HttpStatus.OK);
 
     }
+
+
+
+
+
 
 }
