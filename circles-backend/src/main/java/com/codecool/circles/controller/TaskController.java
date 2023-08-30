@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,5 +35,15 @@ public class TaskController {
 
     }
 
+    @GetMapping("/projectByid/{projectId}/task/{taskId}")
+    public Task getATaskById(@PathVariable String projectId, @PathVariable String taskId){
+
+        System.out.println("project ID: " + projectId);
+        System.out.println("task ID: " + taskId);
+
+        Task task = new Task(UUID.randomUUID(), "name", LocalDate.now(), null);
+
+        return task;
+    }
 
 }
