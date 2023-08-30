@@ -18,7 +18,10 @@ public class Task {
     private List<SubTask> subTaskList =new ArrayList<>();
     private LocalDate deadLine;
 
-    private List<User> users=new ArrayList<>();
+
+    private List<User> members = new ArrayList<>();
+
+
 
     public UUID getId() {
         return id;
@@ -32,16 +35,22 @@ public class Task {
         this.deadLine = deadLine;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setMembers(List<User> members) {
+        this.members = members;
     }
 
 
-    public Task(UUID projectId, String name, LocalDate deadLine) {
+    public Task(UUID projectId, String name, LocalDate deadLine, List<User> members) {
+
+
+  
+
         this.projectId = projectId;
         this.name = name;
 
         this.deadLine = deadLine;
+
+        this.members = members;
 
     }
 
@@ -67,7 +76,7 @@ public class Task {
         return deadLine;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public List<User> getMembers() {
+        return members;
     }
 }
