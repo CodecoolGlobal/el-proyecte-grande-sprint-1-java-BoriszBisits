@@ -28,6 +28,10 @@ public class Task {
         return id;
     }
 
+    public void setDeadLine(LocalDate deadLine) {
+        this.deadLine = deadLine;
+    }
+
     public void setUsers(List<User> users) {
         this.users = users;
     }

@@ -32,10 +32,5 @@ public class TaskController {
 
     }
 
-    @GetMapping("/{id}/tasks")
-    public List<Task> getAllTasks(@RequestParam String id) {
-        System.out.println(id);
-        return projectService.getAllTaskts(UUID.fromString(id));
-    }
 
 }
