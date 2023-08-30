@@ -12,10 +12,7 @@ import java.util.UUID;
 public interface TaskDao {
 
 
-    public Task getTask(UUID taskID);// shoube in project?
-
-
-    public void addSubTask(String name, String description, List<User> users);
+    public Task getTask(UUID taskID , UUID projectId);
 
 
 }

@@ -11,21 +11,24 @@ public class Task {
         return projectId;
     }
 
-    public void setProjectId(UUID projectId) {
-        this.projectId = projectId;
-    }
-
     private UUID projectId;
+
     private String name;
     private UUID id = UUID.randomUUID();
-    private List<SubTask> subTaskList = new ArrayList<>();
-
+    private List<SubTask> subTaskList =new ArrayList<>();
     private LocalDate deadLine;
+
 
     private List<User> members = new ArrayList<>();
 
+
+
     public UUID getId() {
         return id;
+    }
+
+    public void setProjectId(UUID projectId) {
+        this.projectId = projectId;
     }
 
     public void setDeadLine(LocalDate deadLine) {
@@ -36,12 +39,19 @@ public class Task {
         this.members = members;
     }
 
+
     public Task(UUID projectId, String name, LocalDate deadLine, List<User> members) {
+
+
+  
+
         this.projectId = projectId;
         this.name = name;
-   ;
+
         this.deadLine = deadLine;
+
         this.members = members;
+
     }
 
     public int getTimeTillDeadLine() {
@@ -51,8 +61,11 @@ public class Task {
         return period.getDays();
     }
 
-    public void addSubTask(SubTask subTask) {
-        subTaskList.add(subTask);
+    public List<SubTask> getSubTaskList() {
+        return subTaskList;
+    }
+    public void addSubTask(List<SubTask> subTasks) {
+        subTaskList.addAll(subTasks);
     }
 
     public String getName() {

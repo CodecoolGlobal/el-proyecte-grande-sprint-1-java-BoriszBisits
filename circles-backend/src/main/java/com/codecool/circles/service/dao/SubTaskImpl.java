@@ -6,7 +6,7 @@ import com.codecool.circles.model.User;
 import java.util.ArrayList;
 
 public class SubTaskImpl implements SubTaskDao {
-    SubTask sampleSubtask = new SubTask("sampleSub", "sample", new ArrayList<>());
+    SubTask sampleSubtask = new SubTask("sampleSub", "sample");
 
     @Override
     public void setLevelOfCompletion(int percentOfCompletion) {

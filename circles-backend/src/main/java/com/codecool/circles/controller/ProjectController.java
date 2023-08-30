@@ -52,16 +52,16 @@ private MainPageService mainPageService;
             projectUUID = UUID.fromString(projectId);
         } catch (IllegalArgumentException e) {
             System.err.println("Invalid UUID format: " + projectId);
-            // Handle the error, return an error response, etc.
-            return Collections.emptyList(); // or some other response
+
+            return Collections.emptyList();
         }
 
         System.out.println("Parsed UUID: " + projectUUID);
 
+
+
         return projectService.getAllTaskts(projectUUID);
     }
-
-
 
 
 

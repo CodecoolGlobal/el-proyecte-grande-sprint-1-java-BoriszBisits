@@ -3,6 +3,7 @@ package com.codecool.circles.service.dao;
 import com.codecool.circles.model.SubTask;
 import com.codecool.circles.model.Task;
 import com.codecool.circles.model.User;
+import com.codecool.circles.model.storage.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -14,28 +15,17 @@ import java.util.UUID;
 
 public class TaskDaoImpl implements TaskDao{
 
-    List<Task> allTasks;
+  private Storage storage;
 
-    List<SubTask>subTaskList;
-
-
-    @Override
-    public Task getTask(UUID taskID) {
-      for (Task task:allTasks){
-          if (task.getId().equals(taskID)){
-              return task;
-          }
-      }
-      return null;
-    }
-    @Autowired
-    public TaskDaoImpl() {
-        this.allTasks = new ArrayList<>();
-        this.subTaskList = new ArrayList<>();
+    public TaskDaoImpl(Storage storage) {
+        this.storage = storage;
     }
 
     @Override
-    public void addSubTask(String name, String description, List<User> users) {
-        subTaskList.add(new SubTask(name,description,users));
+    public Task getTask(UUID taskID , UUID projectId) {
+
+      return storage.getTaskById(taskID,projectId);
     }
+
+
 }
