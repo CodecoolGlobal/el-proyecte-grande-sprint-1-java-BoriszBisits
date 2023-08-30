@@ -23,10 +23,7 @@ const router = createBrowserRouter([
         path: "/projects",
         element: <ProjectList />,
       },
-      {
-        path: '/projectById/:projectId',
-        element: <ProjectPage />,
-      },
+
      {
        path: "/project/:id",
        element: <Project />,

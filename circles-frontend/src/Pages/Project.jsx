@@ -80,7 +80,7 @@ function ProjectPage() {
             <div className="project-list">
                 {tasks.map((task) => (
                     <div key={task._id} className="project">
-                        <Link to={`/project/${task.name}`}>
+                        <Link to={`/project/${id}/task/${task.id}`}>
                             <p>{task.name}</p>
                         </Link>
                         <button type="button" onClick={() => submitDelete(task._id)}>-</button>
