@@ -7,18 +7,21 @@ import com.codecool.circles.service.dao.TaskDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class TaskService {
 private ProjectDao projectDao;
+private TaskDao taskDao;
     @Autowired
-    public TaskService(ProjectDao projectDao) {
+
+    public TaskService(ProjectDao projectDao, TaskDao taskDao) {
         this.projectDao = projectDao;
+        this.taskDao = taskDao;
     }
 
-
-
-    public void addTask(Task task){
-
+    public Task getTaskByIds(UUID taskId, UUID projectId ){
+        return taskDao.getTask(taskId,projectId);
     }
 
 }

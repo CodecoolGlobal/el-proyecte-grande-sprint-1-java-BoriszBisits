@@ -9,13 +9,37 @@ public class SubTask {
     private int levelOfCompletion;
     private boolean isCompleted = false;
     private String description;
-    private List<User> userList;
+    private List<User> userList=new ArrayList<>();
     private UUID id = UUID.randomUUID();
 
-    public SubTask(String name, String description, List<User> userList) {
+    public SubTask(String name, String description) {
         this.name = name;
         this.description = description;
-        this.userList = userList;
+
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getLevelOfCompletion() {
+        return levelOfCompletion;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public void setCompleted() {

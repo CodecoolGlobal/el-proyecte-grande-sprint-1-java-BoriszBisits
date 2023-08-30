@@ -1,6 +1,7 @@
 package com.codecool.circles.model.storage;
 
 import com.codecool.circles.model.Project;
+import com.codecool.circles.model.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,9 @@ public class Storage {
 
     public List<Project> getProjects() {
         return projects;
+    }
+    public Task getTaskById(UUID taskId, UUID  projectId){
+        return getProjectById(projectId).getTaskById(taskId);
     }
 
     public void  addProject(Project project){
