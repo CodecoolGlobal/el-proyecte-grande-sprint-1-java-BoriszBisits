@@ -11,7 +11,6 @@ public class SubTaskImpl implements SubTaskDao {
     @Override
     public void setLevelOfCompletion(int percentOfCompletion) {
         sampleSubtask.setLevelOfCompletion(percentOfCompletion);
-
     }
 
     @Override

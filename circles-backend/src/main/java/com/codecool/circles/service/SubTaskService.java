@@ -7,14 +7,5 @@ import java.util.List;
 
 @Service
 public class SubTaskService {
-    private List<SubTask> subTaskList;
 
-    public SubTask getSubTaskById(){
-        for(SubTask subTask: subTaskList){
-            if(subTask.getId().equals(subTask.getId())){
-                return subTask;
-            }
-        }
-        return null;
-    }
 }

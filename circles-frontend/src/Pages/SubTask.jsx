@@ -8,6 +8,7 @@ function SubTask() {
 
     useEffect(() => {
 
+
         fetch(`/projectByid/${id}/task/${taskId}/subtask/${subTaskId}`)
             .then((res) => res.json())
             .then((data) => {
@@ -24,6 +25,7 @@ function SubTask() {
             <div className="subtask-details">
                 <h2>{subTask.name}</h2>
                 <p>{subTask.description}</p>
+                <p>{subTask.levelOfCompletion}</p>
             </div>
         </div>
     );

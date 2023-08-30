@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class SubTask {
     private String name;
-    private int levelOfCompletion;
+    private int levelOfCompletion = 0;
     private boolean isCompleted = false;
     private String description;
     private List<User> userList=new ArrayList<>();
@@ -69,7 +69,4 @@ public class SubTask {
         return false;
     }
 
-    public UUID getId() {
-        return id;
-    }
 }
