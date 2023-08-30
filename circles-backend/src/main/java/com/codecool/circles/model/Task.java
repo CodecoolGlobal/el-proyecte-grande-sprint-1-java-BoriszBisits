@@ -79,4 +79,12 @@ public class Task {
     public List<User> getMembers() {
         return members;
     }
+    public SubTask getSubTaskById(UUID uuid){
+        for(SubTask subTask: subTaskList){
+            if(subTask.getId().equals(uuid)){
+                return subTask;
+            }
+        }
+        return null;
+    }
 }
