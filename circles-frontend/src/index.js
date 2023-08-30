@@ -7,7 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import ProjectList from "./Pages/ProjectList";
 import Project from './Pages/Project';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ProjectPage from "./Pages/ProjectPage";
+
 
 const router = createBrowserRouter([
   {
