@@ -11,21 +11,21 @@ public class Task {
         return projectId;
     }
 
-    public void setProjectId(UUID projectId) {
-        this.projectId = projectId;
-    }
-
     private UUID projectId;
+
     private String name;
     private UUID id = UUID.randomUUID();
     private List<SubTask> subTaskList = new ArrayList<>();
-
     private LocalDate deadLine;
 
     private List<User> users = new ArrayList<>();
 
     public UUID getId() {
         return id;
+    }
+
+    public void setProjectId(UUID projectId) {
+        this.projectId = projectId;
     }
 
     public void setDeadLine(LocalDate deadLine) {
