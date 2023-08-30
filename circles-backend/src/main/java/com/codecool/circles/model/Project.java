@@ -27,7 +27,7 @@ public class Project {
     public void setName(String name) {
         this.name = name;
     }
-    public void addUsers(User user){
+    public void addUser(User user){
         users.add(user);
 
     }
@@ -38,6 +38,11 @@ public class Project {
     public List<Task> getAllTask(){
         return taskList;
     }
+
+    public UUID getId() {
+        return id;
+    }
+
     public void addTask(Task task){
         taskList.add(task);
     }

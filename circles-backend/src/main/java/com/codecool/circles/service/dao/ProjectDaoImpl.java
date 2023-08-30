@@ -3,31 +3,58 @@ package com.codecool.circles.service.dao;
 import com.codecool.circles.model.Project;
 import com.codecool.circles.model.Task;
 import com.codecool.circles.model.User;
+import com.codecool.circles.model.storage.Storage;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+@Repository
 
 public class ProjectDaoImpl implements ProjectDao {
 
-    Project sampleProject=new Project("kamu");
+    private Storage storage;
+
+    public ProjectDaoImpl(Storage storage) {
+        this.storage = storage;
+    }
+
+
     @Override
-    public void addUser(User user) {
-        sampleProject.addUsers(user);
+    public void addUser(UUID projectId ,User user) {
+        getProjectById(projectId).addUser(user);
     }
 
     @Override
-    public void addUsers(List<User> users) {
-    sampleProject.addUsers(users);
+    public void addUsers(UUID projectId, List<User> user) {
+        getProjectById(projectId).addUsers(user);
     }
 
     @Override
-    public List<Task> getAllTasks() {
-      return sampleProject.getAllTask();
+    public List<Task> getAllTasks(UUID projectId) {
+      return   getProjectById(projectId).getAllTask();
     }
 
     @Override
-    public void addTask(String name, LocalDate deadLine, List<User> users) {
-        Task newTask=new Task(name,deadLine,users);
-       sampleProject.addTask(newTask);
+    public void addTask(Task task) {
+        System.out.println(task.getProjectId()+"daoban");
+        System.out.println(task.getDeadLine());
+        task.setDeadLine(LocalDate.now());
+        if (task.getUsers()==null){
+            task.setUsers(new ArrayList<>());
+        }
+
+        getProjectById(task.getProjectId()).addTask(task);
+        List<Task> projectTasks=getProjectById(task.getProjectId()).getAllTask();
+        for (Task task1:projectTasks){
+            System.out.println(task1.getName());
+        }
     }
+
+    private Project getProjectById(UUID projectId) {
+        return storage.getProjectById(projectId);
+    }
+
+
 }
