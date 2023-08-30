@@ -25,6 +25,7 @@ public class ProjectService {
         projectDao.addTask(task);
     }
     public List<Task>getAllTaskts(UUID projectId){
+        System.out.println("service" + projectId);
     return projectDao.getAllTasks(projectId);
     }
 
