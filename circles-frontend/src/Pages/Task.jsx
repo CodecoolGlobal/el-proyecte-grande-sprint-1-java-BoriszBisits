@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css';
+import {Link, useParams} from 'react-router-dom';
 
 function Task() {
-    const { id } = useParams();
-    const { taskId } = useParams();
+    const { id, taskId } = useParams();
     const [task, setTask] = useState([]);
+    const [newSubTasks, setNewSubTasks] = useState([]); // State for new sub-tasks input
 
     useEffect(() => {
-
         fetch(`/projectByid/${id}/task/${taskId}`)
             .then((res) => res.json())
             .then((data) => {
@@ -20,51 +17,86 @@ function Task() {
             });
     }, []);
 
-  /*  function handleSubmit(e) {
-        e.preventDefault();*/
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        // Create an array of new sub-tasks
+        const subTasksData = newSubTasks.map(subTask => ({
+            name: subTask.name,
+            description: subTask.description,
+        }));
 
 
-     /*   fetch("http://localhost:8080/new-task", {
-            method: "POST",
+        fetch(`/projectByid/${id}/task/${taskId}/addSubTasks`, {
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data),
-        }).then((res) => res);
+            body: JSON.stringify(subTasksData),
+        })
+            .then((res) => res.json())
+            .then((data) => {
 
-        setNewTaskName("");
-        setDeadLine("");
-        setMembers([]);
-    }*/
+                setTask(data);
+                setNewSubTasks([]);
+            })
+            .catch((error) => {
+                console.error('Error adding sub-tasks:', error);
+            });
+    }
+
+    function handleSubTaskChange(index, field, value) {
+        const updatedSubTasks = [...newSubTasks];
+        updatedSubTasks[index] = {
+            ...updatedSubTasks[index],
+            [field]: value,
+        };
+        setNewSubTasks(updatedSubTasks);
+    }
 
     return (
         <div className="container">
-            <h1 className="title">Project1</h1>
+            <h1 className="title">{task.name}</h1>
             <div className="project-list">
                 {task.subTaskList && task.subTaskList.map((subTask, i) => (
                     <div key={i} className="project">
-                        <p>
-                            {subTask.name}
-                        </p>
+                        <Link to={`/project/${id}/task/${task.id}/subtask/${subTask.id}`}>
+
+                        <p>{subTask.name}</p>
+                        </Link>
                     </div>
                 ))}
             </div>
-           {/* <form onSubmit={handleSubmit} className="new-project-form">
+            <form onSubmit={handleSubmit} className="new-subtask-form">
                 <div>
-                    <label htmlFor="name">Name</label>
-                    <input type="text" id="name" value={newTaskName} onChange={(e) => { setNewTaskName(e.target.value) }} />
+                    {newSubTasks.map((subTask, index) => (
+                        <div key={index}>
+                            <input
+                                type="text"
+                                value={subTask.name || ''}
+                                onChange={(e) => handleSubTaskChange(index, 'name', e.target.value)}
+                                placeholder="Sub-Task Name"
+                            />
+                            <input
+                                type="text"
+                                value={subTask.description || ''}
+                                onChange={(e) => handleSubTaskChange(index, 'description', e.target.value)}
+                                placeholder="Sub-Task Description"
+                            />
+                            <input
+                                type="text"
+                                value={subTask.userList || ''}
+                                onChange={(e) => handleSubTaskChange(index, 'userList', e.target.value)}
+                                placeholder="User List"
+                            />
+                        </div>
+                    ))}
                 </div>
-                <div>
-                    <label htmlFor="deadline">Deadline</label>
-                    <input type="text" id="deadline" value={deadline} onChange={(e) => { setDeadLine(e.target.value) }} />
-                </div>
-                <div>
-                    <label htmlFor="add-member">Add Member</label>
-                    <input type="text" id="add-member" value={members} onChange={(e) => { setMembers(e.target.value) }} />
-                    <button type="button">Add Members</button>
-                </div>
-                <button type="submit">Add new task</button>
-            </form>*/}
+                <button type="button" onClick={() => setNewSubTasks([...newSubTasks, {}])}>
+                    Add Another Sub-Task
+                </button>
+                <button type="submit">Add Sub-Tasks</button>
+            </form>
         </div>
     );
 }
