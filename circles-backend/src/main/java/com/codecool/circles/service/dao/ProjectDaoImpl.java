@@ -39,11 +39,13 @@ public class ProjectDaoImpl implements ProjectDao {
     @Override
     public void addTask(Task task) {
         System.out.println(task.getProjectId()+"daoban");
+        System.out.println(task.getDeadLine());
+        task.setDeadLine(LocalDate.now());
         if (task.getUsers()==null){
             task.setUsers(new ArrayList<>());
         }
-        Task newTask=new Task(task.getProjectId(), task.getName(), task.getDeadLine(),task.getUsers());
-        getProjectById(task.getProjectId()).addTask(newTask);
+
+        getProjectById(task.getProjectId()).addTask(task);
         List<Task> projectTasks=getProjectById(task.getProjectId()).getAllTask();
         for (Task task1:projectTasks){
             System.out.println(task1.getName());

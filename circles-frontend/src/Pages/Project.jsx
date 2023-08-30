@@ -1,34 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import '../App.css'; // Import your CSS file
-import { useParams } from "react-router-dom";
 
-
-function Project() {
-    const {id} = useParams()
+function ProjectPage() {
+    const { id } = useParams();
     const [newTaskName, setNewTaskName] = useState("");
     const [tasks, setTasks] = useState([]);
     const [members, setMembers] = useState([]);
     const [deadline, setDeadLine] = useState("");
 
     useEffect(() => {
-        // Simulated task list
-        const taskList = [
-            { _id: "1", name: "task1" },
-            { _id: "2", name: "task2" },
-            { _id: "3", name: "task3" },
-        ];
-        setTasks(taskList);
-
-
-        // fetch(`http://localhost:8080/${id}/tasks`)
-        //     .then((res) => res.json())
-        //     .then((data) => {
-        //         setTasks(data)
-        //     });
-    }, []);
+        fetch(`/projectByid/${id}`)
+            .then((res) => res.json())
+            .then((data) => {
+                setTasks(data);
+            })
+            .catch((error) => {
+                console.error('Error fetching tasks:', error);
+            });
+    }, [id]);
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -39,7 +30,7 @@ function Project() {
             members: members,
             projectId: id,
         };
-        console.log("data", data);
+
         fetch("http://localhost:8080/new-task", {
             method: "POST",
             headers: {
@@ -48,48 +39,47 @@ function Project() {
             body: JSON.stringify(data),
         }).then((res) => res);
 
-        // Clear input fields after submitting
         setNewTaskName("");
         setDeadLine("");
         setMembers([]);
     }
 
-    const deleteTask = (id) => {
-        return fetch(`http://localhost:8080/tasks/${id}`, { method: "DELETE" }).then((res) =>
+    const deleteTask = (taskId) => {
+        return fetch(`http://localhost:8080/tasks/${taskId}`, { method: "DELETE" }).then((res) =>
             res.json()
         );
     };
 
-    const submitDelete = (id) => {
+    const submitDelete = (taskId) => {
         confirmAlert({
             title: 'Confirm to delete',
             message: 'Are you sure to delete this task?',
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => handleDelete(id)
+                    onClick: () => handleDelete(taskId)
                 },
                 {
                     label: 'No'
                 }
             ]
         });
-    }
+    };
 
-    const handleDelete = (id) => {
-        deleteTask(id);
+    const handleDelete = (taskId) => {
+        deleteTask(taskId);
 
         setTasks((taskList) => {
-            return taskList.filter((task) => task._id !== id);
+            return taskList.filter((task) => task._id !== taskId);
         });
     };
 
     return (
-        <div className="container"> {/* Use the same class name as in your CSS */}
-            <h1 className="title">Project1</h1> {/* Use the same class name as in your CSS */}
-            <div className="project-list"> {/* Use the same class name as in your CSS */}
+        <div className="container">
+            <h1 className="title">Project1</h1>
+            <div className="project-list">
                 {tasks.map((task) => (
-                    <div key={task._id} className="project"> {/* Use the same class name as in your CSS */}
+                    <div key={task._id} className="project">
                         <Link to={`/project/${task.name}`}>
                             <p>{task.name}</p>
                         </Link>
@@ -97,7 +87,7 @@ function Project() {
                     </div>
                 ))}
             </div>
-            <form onSubmit={handleSubmit} className="new-project-form"> {/* Use the same class name as in your CSS */}
+            <form onSubmit={handleSubmit} className="new-project-form">
                 <div>
                     <label htmlFor="name">Name</label>
                     <input type="text" id="name" value={newTaskName} onChange={(e) => { setNewTaskName(e.target.value) }} />
@@ -117,4 +107,4 @@ function Project() {
     );
 }
 
-export default Project;
+export default ProjectPage;
