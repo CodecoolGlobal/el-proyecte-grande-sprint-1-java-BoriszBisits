@@ -42,6 +42,13 @@ public class Project {
     public UUID getId() {
         return id;
     }
+    public Task getTaskById(UUID taskId){
+        for (Task task:taskList){
+            if (task.getId().equals(taskId)){
+                return task;
+            }
+        }return null;
+    }
 
     public void addTask(Task task){
         taskList.add(task);
