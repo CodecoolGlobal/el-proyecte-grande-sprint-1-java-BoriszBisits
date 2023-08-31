@@ -34,9 +34,9 @@ public class TaskController {
     public ResponseEntity<Object> addNewProject(@RequestBody Task task) {
         System.out.println(task.getName());
         //System.out.println(task.getId());
-        System.out.println(task.getProjectId());
+
         System.out.println("user" + task.getMembers());
-        System.out.println("deadline" + task.getDeadLine());
+
         projectService.addNewTask(task);
         return new ResponseEntity<>("result successful result",
                 HttpStatus.OK);
@@ -61,9 +61,18 @@ public class TaskController {
 
 
     @PostMapping("projectByid/{id}/task/{taskId}/addSubTasks")
-    public ResponseEntity<Object> addNewSubTasks(@PathVariable UUID id, @PathVariable UUID taskId, @RequestBody List<SubTask> subTasks) {
+    public ResponseEntity<Object> addNewSubTasks(@PathVariable UUID id, @PathVariable UUID taskId, @RequestBody SubTask subTask) {
 
-       taskService.getTaskByIds(taskId,id).addSubTask(subTasks);
+        System.out.println("subtaskname " + subTask.getName());
+        System.out.println("descirtion" +  subTask.getDescription());
+        System.out.println("users" + subTask.getUserList());
+        System.out.println("firstUser" + subTask.getUserList().get(0).getName());
+        System.out.println("firstUser" + subTask.getUserList().get(1).getName());
+//        System.out.println("subtask1" + subTasks.get(0).getName());
+//        System.out.println("subtask1" + subTasks.get(1).getName());
+//        System.out.println("description" + subTasks.get(0).getDescription());
+//        System.out.println("users" + subTasks.get(0).getUserList().get(0).getName());
+       taskService.getTaskByIds(taskId,id).addSubTask(subTask);
 
         return new ResponseEntity<>("Sub-tasks added successfully", HttpStatus.OK);
     }

@@ -9,6 +9,8 @@ public class SubTask {
     private int levelOfCompletion = 0;
     private boolean isCompleted = false;
     private String description;
+
+    private String colorOfCircle;
     private List<User> userList=new ArrayList<>();
     private UUID id = UUID.randomUUID();
 
@@ -16,6 +18,14 @@ public class SubTask {
         this.name = name;
         this.description = description;
 
+    }
+
+
+ 
+
+
+    public String getColorOfCircle() {
+        return colorOfCircle;
     }
 
     public String getName() {
