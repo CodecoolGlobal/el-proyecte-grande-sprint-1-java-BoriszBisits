@@ -37,6 +37,7 @@ public class TaskController {
         System.out.println(task.getProjectId());
         System.out.println("user" + task.getMembers());
         System.out.println("deadline" + task.getDeadLine());
+        System.out.println(task.getColorOfCircle());
         projectService.addNewTask(task);
         return new ResponseEntity<>("result successful result",
                 HttpStatus.OK);

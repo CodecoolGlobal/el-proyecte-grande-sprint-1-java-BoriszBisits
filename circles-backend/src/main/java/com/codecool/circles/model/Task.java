@@ -17,7 +17,11 @@ public class Task {
     private UUID id = UUID.randomUUID();
     private List<SubTask> subTaskList =new ArrayList<>();
     private LocalDate deadLine;
+    private String colorOfCircle;
 
+    public String getColorOfCircle() {
+        return colorOfCircle;
+    }
 
     private List<User> members = new ArrayList<>();
 
