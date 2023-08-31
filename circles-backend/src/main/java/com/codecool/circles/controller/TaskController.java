@@ -69,10 +69,7 @@ public class TaskController {
         System.out.println("users" + subTask.getUserList());
         System.out.println("firstUser" + subTask.getUserList().get(0).getName());
         System.out.println("firstUser" + subTask.getUserList().get(1).getName());
-//        System.out.println("subtask1" + subTasks.get(0).getName());
-//        System.out.println("subtask1" + subTasks.get(1).getName());
-//        System.out.println("description" + subTasks.get(0).getDescription());
-//        System.out.println("users" + subTasks.get(0).getUserList().get(0).getName());
+
        taskService.getTaskByIds(taskId,id).addSubTask(subTask);
 
         return new ResponseEntity<>("Sub-tasks added successfully", HttpStatus.OK);
