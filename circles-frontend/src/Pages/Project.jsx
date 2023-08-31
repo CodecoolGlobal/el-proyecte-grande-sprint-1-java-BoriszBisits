@@ -14,7 +14,7 @@ function ProjectPage() {
         const abc = [...membersName,[]]
         setMembersName(abc);
 
-    }
+    } 
 
     function handleChange(onChangeValue, i){
         const inputdata = [...membersName]
@@ -23,7 +23,6 @@ function ProjectPage() {
         
         
     }
-    console.log(membersName)
 
 
     useEffect(() => {
