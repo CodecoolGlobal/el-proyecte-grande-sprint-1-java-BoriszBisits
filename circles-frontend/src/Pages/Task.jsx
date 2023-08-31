@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import {Link, useParams} from 'react-router-dom';
+import TaskCircle from "../Circle/TaskCircle";
+import SubTaskCircle from "../Circle/SubTaskCircle";
 
 function Task() {
     const { id, taskId } = useParams();
     const [task, setTask] = useState([]);
     const [newSubTasks, setNewSubTasks] = useState([]); // State for new sub-tasks input
+    const [subTasks, setSubTasks] = useState([]);
 
     useEffect(() => {
         fetch(`/projectByid/${id}/task/${taskId}`)
             .then((res) => res.json())
             .then((data) => {
                 setTask(data);
+                setSubTasks(task.subTaskList);
+                console.log(subTasks);
             })
             .catch((error) => {
                 console.error('Error fetching tasks:', error);
@@ -24,6 +29,7 @@ function Task() {
         const subTasksData = newSubTasks.map(subTask => ({
             name: subTask.name,
             description: subTask.description,
+            colorOfCircle: subTask.colorOfCircle
         }));
 
 
@@ -85,6 +91,12 @@ function Task() {
                             />
                             <input
                                 type="text"
+                                value={subTask.colorOfCircle || ''}
+                                onChange={(e) => handleSubTaskChange(index, 'colorOfCircle', e.target.value)}
+                                placeholder="Color of circle"
+                            />
+                            <input
+                                type="text"
                                 value={subTask.userList || ''}
                                 onChange={(e) => handleSubTaskChange(index, 'userList', e.target.value)}
                                 placeholder="User List"
@@ -97,6 +109,9 @@ function Task() {
                 </button>
                 <button type="submit">Add Sub-Tasks</button>
             </form>
+            <div>
+                <SubTaskCircle subtasks={task.subTaskList} projectId={id} taskId={taskId}  />
+            </div>
         </div>
     );
 }
