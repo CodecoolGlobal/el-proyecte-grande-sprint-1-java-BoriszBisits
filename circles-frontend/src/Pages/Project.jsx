@@ -12,6 +12,7 @@ function ProjectPage() {
     const [deadline, setDeadLine] = useState("");
     const [colorOfCircle, setColorOfCircle] = useState("");
     const [membersName, setMembersName] = useState([]);
+    const [projectName, setProjectName] = useState("");
 
 
     function handleAddMember() {
@@ -30,12 +31,23 @@ function ProjectPage() {
         fetch(`/projectByid/${id}`)
             .then((res) => res.json())
             .then((data) => {
+                //setProjectName(data); TODO
                 setTasks(data);
             })
             .catch((error) => {
                 console.error('Error fetching tasks:', error);
             });
     }, [id]);
+    function fetchTasks() {
+        fetch(`/projectByid/${id}`)
+            .then((res) => res.json())
+            .then((data) => {
+                setTasks(data);
+            })
+            .catch((error) => {
+                console.error('Error fetching tasks:', error);
+            });
+    }
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -56,8 +68,16 @@ function ProjectPage() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(data),
-        }).then((res) => res);
-
+        }).then((res) => {
+            if (res.ok) {
+                // Clear form fields after successful submission
+                setNewTaskName("");
+                setDeadLine("");
+                setMembersName([]);
+                // Fetch updated tasks after adding a new task
+                fetchTasks();
+            }
+        });
 
     }
 
@@ -84,23 +104,22 @@ function ProjectPage() {
     };
 
     const handleDelete = (taskId) => {
-        deleteTask(taskId);
-
-        setTasks((taskList) => {
-            return taskList.filter((task) => task._id !== taskId);
+        deleteTask(taskId).then(() => {
+            // Fetch updated tasks after deleting a task
+            fetchTasks();
         });
     };
-
+console.log(projectName);
     return (
         <div className="container">
-            <h1 className="title">Project1</h1>
+            <h1 className="title">The Project</h1>
             <div className="project-list">
                 {tasks.map((task) => (
                     <div key={task._id} className="project">
                         <Link to={`/project/${id}/task/${task.id}`}>
                             <p>{task.name}</p>
                         </Link>
-                        <button type="button" onClick={() => submitDelete(task._id)}>-</button>
+                        <button type="button" onClick={() => submitDelete(task._id)}>Delete</button>
                     </div>
                 ))}
             </div>
