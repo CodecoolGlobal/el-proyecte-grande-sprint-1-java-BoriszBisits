@@ -34,10 +34,9 @@ public class TaskController {
     public ResponseEntity<Object> addNewProject(@RequestBody Task task) {
         System.out.println(task.getName());
         //System.out.println(task.getId());
-        System.out.println(task.getProjectId());
+
         System.out.println("user" + task.getMembers());
-        System.out.println("deadline" + task.getDeadLine());
-        System.out.println(task.getColorOfCircle());
+
         projectService.addNewTask(task);
         return new ResponseEntity<>("result successful result",
                 HttpStatus.OK);
