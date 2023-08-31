@@ -18,6 +18,10 @@ public class SubTask {
 
     }
 
+    public SubTask(){
+
+    }
+
     public String getName() {
         return name;
     }

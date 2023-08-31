@@ -64,8 +64,8 @@ public class Task {
     public List<SubTask> getSubTaskList() {
         return subTaskList;
     }
-    public void addSubTask(List<SubTask> subTasks) {
-        subTaskList.addAll(subTasks);
+    public void addSubTask(SubTask subTask) {
+        subTaskList.add(subTask);
     }
 
     public String getName() {
