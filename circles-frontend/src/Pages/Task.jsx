@@ -8,6 +8,22 @@ function Task() {
     const [task, setTask] = useState([]);
     const [newSubTasks, setNewSubTasks] = useState([]); // State for new sub-tasks input
     const [subTasks, setSubTasks] = useState([]);
+    const [subTaskName, setSubTasksName] = useState(null)
+    const [description, setDescription] = useState(null)
+    const [colorOfCircle, setColorOfCircle] = useState("");
+    const [membersName, setMembersName] = useState([]);
+
+
+    function handleAddMember() {
+        const abc = [...membersName, []]
+        setMembersName(abc);
+    }
+
+    function handleChange(onChangeValue, i) {
+        const inputdata = [...membersName]
+        inputdata[i] = onChangeValue.target.value
+        setMembersName(inputdata)
+    }
 
     useEffect(() => {
         fetch(`/projectByid/${id}/task/${taskId}`)
@@ -25,12 +41,17 @@ function Task() {
     function handleSubmit(e) {
         e.preventDefault();
 
-        // Create an array of new sub-tasks
-        const subTasksData = newSubTasks.map(subTask => ({
-            name: subTask.name,
-            description: subTask.description,
-            colorOfCircle: subTask.colorOfCircle
-        }));
+        const users = membersName.map(name => ({ name }));
+
+
+
+
+        const data = {
+            name: subTaskName,
+            description: description,
+            colorOfCircle: colorOfCircle,
+            userList: users
+        }
 
 
         fetch(`/projectByid/${id}/task/${taskId}/addSubTasks`, {
@@ -38,7 +59,7 @@ function Task() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(subTasksData),
+            body: JSON.stringify(data),
         })
             .then((res) => res.json())
             .then((data) => {
@@ -51,15 +72,6 @@ function Task() {
             });
     }
 
-    function handleSubTaskChange(index, field, value) {
-        const updatedSubTasks = [...newSubTasks];
-        updatedSubTasks[index] = {
-            ...updatedSubTasks[index],
-            [field]: value,
-        };
-        setNewSubTasks(updatedSubTasks);
-    }
-
     return (
         <div className="container">
             <h1 className="title">{task.name}</h1>
@@ -68,45 +80,41 @@ function Task() {
                     <div key={i} className="project">
                         <Link to={`/project/${id}/task/${task.id}/subtask/${subTask.id}`}>
 
-                        <p>{subTask.name}</p>
+                            <p>{subTask.name}</p>
                         </Link>
                     </div>
                 ))}
             </div>
             <form onSubmit={handleSubmit} className="new-subtask-form">
                 <div>
-                    {newSubTasks.map((subTask, index) => (
-                        <div key={index}>
-                            <input
-                                type="text"
-                                value={subTask.name || ''}
-                                onChange={(e) => handleSubTaskChange(index, 'name', e.target.value)}
-                                placeholder="Sub-Task Name"
-                            />
-                            <input
-                                type="text"
-                                value={subTask.description || ''}
-                                onChange={(e) => handleSubTaskChange(index, 'description', e.target.value)}
-                                placeholder="Sub-Task Description"
-                            />
-                            <input
-                                type="text"
-                                value={subTask.colorOfCircle || ''}
-                                onChange={(e) => handleSubTaskChange(index, 'colorOfCircle', e.target.value)}
-                                placeholder="Color of circle"
-                            />
-                            <input
-                                type="text"
-                                value={subTask.userList || ''}
-                                onChange={(e) => handleSubTaskChange(index, 'userList', e.target.value)}
-                                placeholder="User List"
-                            />
-                        </div>
-                    ))}
+                    <label htmlFor="name">Name</label>
+                    <input type="text" id="name" value={subTaskName} onChange={(e) => {
+                        setSubTasksName(e.target.value)
+                    }}/>
                 </div>
-                <button type="button" onClick={() => setNewSubTasks([...newSubTasks, {}])}>
-                    Add Another Sub-Task
-                </button>
+                <div>
+                    <label htmlFor="description">Description</label>
+                    <input type="text" id="description" value={description} onChange={(e) => {
+                        setDescription(e.target.value)
+                    }}/>
+                </div>
+                <div>
+                    <label htmlFor="colorOfCircle">Color</label>
+                    <input type="text" id="colorOfCircle" value={colorOfCircle} onChange={(e) => {
+                        setColorOfCircle(e.target.value)
+                    }}/>
+                </div>
+                <div>
+                    <label htmlFor="add-member">Add Member</label>
+                    <button type="button" onClick={() => handleAddMember()}>Add Members</button>
+                    {membersName.map((data,i) => {
+                        return(
+                            <input onChange={e => handleChange(e,i)}/>
+                        )
+                    })}
+
+                </div>
+
                 <button type="submit">Add Sub-Tasks</button>
             </form>
             <div>
