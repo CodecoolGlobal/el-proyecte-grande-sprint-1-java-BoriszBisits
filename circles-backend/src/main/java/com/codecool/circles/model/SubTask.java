@@ -6,9 +6,11 @@ import java.util.UUID;
 
 public class SubTask {
     private String name;
-    private int levelOfCompletion;
+    private int levelOfCompletion = 0;
     private boolean isCompleted = false;
     private String description;
+
+    private String colorOfCircle;
     private List<User> userList=new ArrayList<>();
     private UUID id = UUID.randomUUID();
 
@@ -18,8 +20,12 @@ public class SubTask {
 
     }
 
-    public SubTask(){
 
+ 
+
+
+    public String getColorOfCircle() {
+        return colorOfCircle;
     }
 
     public String getName() {
@@ -72,6 +78,5 @@ public class SubTask {
         }
         return false;
     }
-
 
 }

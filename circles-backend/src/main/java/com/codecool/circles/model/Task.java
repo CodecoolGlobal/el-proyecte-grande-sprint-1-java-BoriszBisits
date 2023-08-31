@@ -17,7 +17,11 @@ public class Task {
     private UUID id = UUID.randomUUID();
     private List<SubTask> subTaskList =new ArrayList<>();
     private LocalDate deadLine;
+    private String colorOfCircle;
 
+    public String getColorOfCircle() {
+        return colorOfCircle;
+    }
 
     private List<User> members = new ArrayList<>();
 
@@ -78,5 +82,13 @@ public class Task {
 
     public List<User> getMembers() {
         return members;
+    }
+    public SubTask getSubTaskById(UUID uuid){
+        for(SubTask subTask: subTaskList){
+            if(subTask.getId().equals(uuid)){
+                return subTask;
+            }
+        }
+        return null;
     }
 }

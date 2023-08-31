@@ -8,6 +8,7 @@ function ProjectPage() {
     const [newTaskName, setNewTaskName] = useState("");
     const [tasks, setTasks] = useState([]);
     const [deadline, setDeadLine] = useState("");
+    const [colorOfCircle, setColorOfCircle] = useState("");
     const [membersName, setMembersName] = useState([]);
 
     function handleAddMember(){
@@ -50,7 +51,8 @@ function ProjectPage() {
         const data = {
             name: newTaskName,
             deadline: deadline,
-            members : members,
+            colorOfCircle: colorOfCircle,
+            members: members,
             projectId: id,
         };
 
@@ -65,8 +67,10 @@ function ProjectPage() {
             body: JSON.stringify(data),
         }).then((res) => res);
 
-       
-        
+        setNewTaskName("");
+        setDeadLine("");
+        setColorOfCircle("");
+        setMembers([]);
     }
 
     const deleteTask = (taskId) => {
@@ -122,15 +126,19 @@ function ProjectPage() {
                     <input type="text" id="deadline" value={deadline} onChange={(e) => { setDeadLine(e.target.value) }} />
                 </div>
                 <div>
-                    <button type="button" onClick={() => handleAddMember()}>Add Members</button>
-                    {membersName.map((data,i) => {
-                        return(
-                            <input onChange={e => handleChange(e,i)}/>
-                        )
-                    })}
+                    <label htmlFor="colorOfCircle">Color</label>
+                    <input type="text" id="colorOfCircle" value={colorOfCircle} onChange={(e) => { setColorOfCircle(e.target.value) }} />
+                </div>
+                <div>
+                    <label htmlFor="add-member">Add Member</label>
+                    <input type="text" id="add-member" value={members} onChange={(e) => { setMembers(e.target.value) }} />
+                    <button type="button">Add Members</button>
                 </div>
                 <button type="submit">Add new task</button>
             </form>
+            <div>
+                <TaskCircle projectId={id} tasks={tasks} />
+            </div>
         </div>
     );
 }
