@@ -43,6 +43,21 @@ public class TaskController {
 
     }
 
+    @DeleteMapping("projectByid/{projectId}/task/{taskId}")
+    public ResponseEntity<Object> deleteTask(
+            @PathVariable UUID projectId,
+            @PathVariable UUID taskId
+    ) {
+        boolean removed = taskService.deleteTaskById(projectId, taskId);
+
+        if (removed) {
+            return new ResponseEntity<>("Task deleted successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Task not found", HttpStatus.NOT_FOUND);
+        }
+
+    }
+
     @GetMapping("/projectByid/{projectId}/task/{taskId}")
     public Task getATaskById(@PathVariable String projectId, @PathVariable String taskId) {
 

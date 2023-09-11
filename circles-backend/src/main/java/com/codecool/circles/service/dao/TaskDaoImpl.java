@@ -27,5 +27,10 @@ public class TaskDaoImpl implements TaskDao{
       return storage.getTaskById(taskID,projectId);
     }
 
+  @Override
+  public boolean deleteTaskById(UUID projectId, UUID taskId) {
+    return storage.getProjectById(projectId).removeTaskById(taskId);
+  }
+
 
 }
