@@ -1,27 +1,41 @@
 package com.codecool.circles.model;
 
-import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+
+import javax.persistence.*;
 import java.util.List;
-import java.util.UUID;
+
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Table(name = "subtask")
 
 public class SubTask {
+    @Id
+   // @JsonIgnore
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private int levelOfCompletion = 0;
     private boolean isCompleted = false;
     private String description;
+    @ManyToOne
+    private Task task;
 
     private String colorOfCircle;
-    private List<User> userList=new ArrayList<>();
-    private UUID id = UUID.randomUUID();
+    @ManyToMany(mappedBy = "subTaskList")
+    private List<Member> memberList;
+
 
     public SubTask(String name, String description) {
         this.name = name;
         this.description = description;
 
     }
-
-
- 
 
 
     public String getColorOfCircle() {
@@ -44,13 +58,11 @@ public class SubTask {
         return description;
     }
 
-    public List<User> getUserList() {
-        return userList;
+    public List<Member> getMemberList() {
+        return memberList;
     }
 
-    public UUID getId() {
-        return id;
-    }
+
 
     public void setCompleted() {
         if (levelOfCompletion == 100) {
@@ -59,8 +71,8 @@ public class SubTask {
         }
     }
 
-    public void addUser(User user) {
-        userList.add(user);
+    public void addUser(Member member) {
+        memberList.add(member);
     }
 
     public void setLevelOfCompletion(int levelOfCompletion) {
@@ -71,9 +83,9 @@ public class SubTask {
         this.description = description;
     }
 
-    public boolean deleteUserFromProject(User user) {
-        if (userList.contains(user)) {
-            userList.remove(user);
+    public boolean deleteUserFromProject(Member member) {
+        if (memberList.contains(member)) {
+            memberList.remove(member);
             return true;
         }
         return false;

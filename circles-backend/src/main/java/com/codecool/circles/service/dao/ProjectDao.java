@@ -1,18 +1,19 @@
 package com.codecool.circles.service.dao;
 
+import com.codecool.circles.model.Project;
 import com.codecool.circles.model.Task;
-import com.codecool.circles.model.User;
+import com.codecool.circles.model.Member;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 public interface ProjectDao {
-    public void addUser(UUID projectId ,User user);
+    public void addUser(Long projectId , Member member);
 
-    public void addUsers(UUID projectId,List<User> user);
+    public void addUsers(Long projectId,List<Member> member);
 
-    public List<Task> getAllTasks(UUID projectId);
+    public List<Task> getAllTasks(Long projectId);
+
+    public Project getProjectById(Long projectId);
 
     public void addTask(Task task); ///shoud be in projetsDao???
 }

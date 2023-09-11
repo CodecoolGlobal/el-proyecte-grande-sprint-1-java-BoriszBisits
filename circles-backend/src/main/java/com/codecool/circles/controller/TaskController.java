@@ -10,12 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/")
@@ -45,8 +40,8 @@ public class TaskController {
 
     @DeleteMapping("projectByid/{projectId}/task/{taskId}")
     public ResponseEntity<Object> deleteTask(
-            @PathVariable UUID projectId,
-            @PathVariable UUID taskId
+            @PathVariable Long projectId,
+            @PathVariable Long taskId
     ) {
         boolean removed = taskService.deleteTaskById(projectId, taskId);
 
@@ -65,7 +60,7 @@ public class TaskController {
         System.out.println("task ID: " + taskId);
 
 
-        Task clg = taskService.getTaskByIds(UUID.fromString(taskId), UUID.fromString(projectId));
+        Task clg = taskService.getTaskByIds(Long.valueOf(taskId), Long.valueOf(projectId));
        List<SubTask> clgsub= clg.getSubTaskList();
        for (SubTask subTask:clgsub){
            System.out.println(subTask.getName());
@@ -76,11 +71,11 @@ public class TaskController {
 
 
     @PostMapping("projectByid/{id}/task/{taskId}/addSubTasks")
-    public ResponseEntity<Object> addNewSubTasks(@PathVariable UUID id, @PathVariable UUID taskId, @RequestBody SubTask subTask) {
+    public ResponseEntity<Object> addNewSubTasks(@PathVariable Long id, @PathVariable Long taskId, @RequestBody SubTask subTask) {
 
         System.out.println("subtaskname " + subTask.getName());
         System.out.println("descirtion" +  subTask.getDescription());
-        System.out.println("users" + subTask.getUserList());
+        System.out.println("users" + subTask.getMemberList());
 //        System.out.println("subtask1" + subTasks.get(0).getName());
 //        System.out.println("subtask1" + subTasks.get(1).getName());
 //        System.out.println("description" + subTasks.get(0).getDescription());

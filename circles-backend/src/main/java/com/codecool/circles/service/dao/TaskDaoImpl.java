@@ -1,16 +1,9 @@
 package com.codecool.circles.service.dao;
 
-import com.codecool.circles.model.SubTask;
 import com.codecool.circles.model.Task;
-import com.codecool.circles.model.User;
 import com.codecool.circles.model.storage.Storage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 @Repository
 
 public class TaskDaoImpl implements TaskDao{
@@ -22,13 +15,13 @@ public class TaskDaoImpl implements TaskDao{
     }
 
     @Override
-    public Task getTask(UUID taskID , UUID projectId) {
+    public Task getTask(Long taskID , Long projectId) {
 
       return storage.getTaskById(taskID,projectId);
     }
 
   @Override
-  public boolean deleteTaskById(UUID projectId, UUID taskId) {
+  public boolean deleteTaskById(Long projectId, Long taskId) {
     return storage.getProjectById(projectId).removeTaskById(taskId);
   }
 

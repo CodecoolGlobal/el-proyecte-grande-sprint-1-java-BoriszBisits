@@ -21,11 +21,11 @@ public class TaskService {
         this.taskDao = taskDao;
     }
 
-    public Task getTaskByIds(UUID taskId, UUID projectId) {
+    public Task getTaskByIds(Long taskId, Long projectId) {
         return taskDao.getTask(taskId, projectId);
     }
 
-    public boolean deleteTaskById(UUID projectId, UUID taskId) {
+    public boolean deleteTaskById(Long projectId, Long taskId) {
         return taskDao.deleteTaskById(projectId,taskId);
     }
 }

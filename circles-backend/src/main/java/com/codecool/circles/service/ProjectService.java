@@ -13,18 +13,22 @@ import java.util.UUID;
 @Service
 public class ProjectService {
    private ProjectDao projectDao;
-    private MainPageDao mainPageDao;
+
 @Autowired
-    public ProjectService(ProjectDao projectDao, MainPageDao mainPageDao) {
+    public ProjectService(ProjectDao projectDao) {
         this.projectDao = projectDao;
-        this.mainPageDao = mainPageDao;
+
     }
 
     public void addNewTask(Task task){
 
         projectDao.addTask(task);
     }
-    public List<Task>getAllTaskts(UUID projectId){
+
+    public Project  getProjectById(Long projectId){
+    return projectDao.getProjectById(projectId);
+    }
+    public List<Task>getAllTaskts(Long projectId){
         System.out.println("service" + projectId);
     return projectDao.getAllTasks(projectId);
     }
