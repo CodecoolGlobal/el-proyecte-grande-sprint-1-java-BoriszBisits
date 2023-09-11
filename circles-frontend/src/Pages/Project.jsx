@@ -8,7 +8,6 @@ function ProjectPage() {
     const {id} = useParams();
     const [newTaskName, setNewTaskName] = useState("");
     const [tasks, setTasks] = useState([]);
-    const [members, setMembers] = useState([]);
     const [deadline, setDeadLine] = useState("");
     const [colorOfCircle, setColorOfCircle] = useState("");
     const [membersName, setMembersName] = useState([]);
@@ -38,6 +37,7 @@ function ProjectPage() {
                 console.error('Error fetching tasks:', error);
             });
     }, [id]);
+
     function fetchTasks() {
         fetch(`/projectByid/${id}`)
             .then((res) => res.json())
@@ -82,7 +82,9 @@ function ProjectPage() {
     }
 
     const deleteTask = (taskId) => {
-        return fetch(`http://localhost:8080/tasks/${taskId}`, {method: "DELETE"}).then((res) =>
+        console.log("projectid: " + id);
+        console.log("taskid" + taskId);
+        return fetch(`http://localhost:8080/projectByid/${id}/task/${taskId}`, {method: "DELETE"}).then((res) =>
             res.json()
         );
     };
@@ -104,12 +106,14 @@ function ProjectPage() {
     };
 
     const handleDelete = (taskId) => {
-        deleteTask(taskId).then(() => {
-            // Fetch updated tasks after deleting a task
-            fetchTasks();
-        });
+        deleteTask(taskId)
+        
+            setTasks((task) => {
+                return tasks.filter((task) => task.id !== taskId);
+              });
+    
     };
-console.log(projectName);
+    
     return (
         <div className="container">
             <h1 className="title">The Project</h1>
@@ -119,7 +123,7 @@ console.log(projectName);
                         <Link to={`/project/${id}/task/${task.id}`}>
                             <p>{task.name}</p>
                         </Link>
-                        <button type="button" onClick={() => submitDelete(task._id)}>Delete</button>
+                        <button type="button" onClick={() => submitDelete(task.id)}>Delete</button>
                     </div>
                 ))}
             </div>

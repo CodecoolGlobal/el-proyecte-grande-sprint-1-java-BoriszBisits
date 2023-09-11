@@ -11,8 +11,9 @@ import java.util.UUID;
 
 @Service
 public class TaskService {
-private ProjectDao projectDao;
-private TaskDao taskDao;
+    private ProjectDao projectDao;
+    private TaskDao taskDao;
+
     @Autowired
 
     public TaskService(ProjectDao projectDao, TaskDao taskDao) {
@@ -20,8 +21,11 @@ private TaskDao taskDao;
         this.taskDao = taskDao;
     }
 
-    public Task getTaskByIds(UUID taskId, UUID projectId ){
-        return taskDao.getTask(taskId,projectId);
+    public Task getTaskByIds(UUID taskId, UUID projectId) {
+        return taskDao.getTask(taskId, projectId);
     }
 
+    public boolean deleteTaskById(UUID projectId, UUID taskId) {
+        return taskDao.deleteTaskById(projectId,taskId);
+    }
 }
