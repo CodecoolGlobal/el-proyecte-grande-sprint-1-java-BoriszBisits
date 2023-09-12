@@ -1,10 +1,11 @@
 package com.codecool.circles.service.dao;
 
 import com.codecool.circles.model.SubTask;
-import com.codecool.circles.model.User;
 
-import java.util.ArrayList;
-import java.util.UUID;
+
+
+import com.codecool.circles.model.Member;
+
 
 public class SubTaskImpl implements SubTaskDao {
     SubTask sampleSubtask = new SubTask("sampleSub", "sample");
@@ -15,8 +16,8 @@ public class SubTaskImpl implements SubTaskDao {
     }
 
     @Override
-    public void addUser(User user) {
-        sampleSubtask.addUser(user);
+    public void addUser(Member member) {
+        sampleSubtask.addUser(member);
     }
 
 

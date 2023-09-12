@@ -22,14 +22,14 @@ public class Storage {
     public List<Project> getProjects() {
         return projects;
     }
-    public Task getTaskById(UUID taskId, UUID  projectId){
+    public Task getTaskById(Long taskId, Long  projectId){
         return getProjectById(projectId).getTaskById(taskId);
     }
 
     public void  addProject(Project project){
         projects.add(project);
     }
-    public Project getProjectById(UUID watedProject){
+    public Project getProjectById(Long watedProject){
         for (Project project:projects){
             if (project.getId().equals(watedProject)){
                 return project;
