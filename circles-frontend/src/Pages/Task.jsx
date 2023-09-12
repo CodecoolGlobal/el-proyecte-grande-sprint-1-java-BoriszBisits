@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import {Link, useParams} from 'react-router-dom';
 import TaskCircle from "../Circle/TaskCircle";
 import SubTaskCircle from "../Circle/SubTaskCircle";
+import {confirmAlert} from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
 
 function Task() {
     const { id, taskId } = useParams();
@@ -30,13 +33,29 @@ function Task() {
             .then((res) => res.json())
             .then((data) => {
                 setTask(data);
-                setSubTasks(task.subTaskList);
-                console.log(subTasks);
+                setSubTasks(data.subTaskList);
+                console.log("sub" + subTasks);
+        
             })
             .catch((error) => {
                 console.error('Error fetching tasks:', error);
             });
     }, []);
+
+    function fetchSubTasks(){
+        
+            fetch(`/projectByid/${id}/task/${taskId}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    setTask(data);
+                    setSubTasks(data.subTaskList);
+            
+                })
+                .catch((error) => {
+                    console.error('Error fetching tasks:', error);
+                });
+        
+    }
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -61,27 +80,62 @@ function Task() {
             },
             body: JSON.stringify(data),
         })
-            .then((res) => res.json())
-            .then((data) => {
-
-                setTask(data);
-                setNewSubTasks([]);
-            })
-            .catch((error) => {
-                console.error('Error adding sub-tasks:', error);
-            });
+            .then((res) => {
+                if (res.ok) {
+                    // Clear form fields after successful submission
+                    setSubTasksName("");
+                    setDescription("");
+                    setColorOfCircle("")
+                    setMembersName([]);
+                    // Fetch updated tasks after adding a new task
+                    fetchSubTasks();
+    }});
+            
     }
+
+    const deleteSubTask = (subTaskId) => {
+       
+        return fetch(`http://localhost:8080/projectByid/${id}/task/${taskId}/subTask/${subTaskId}`, {method: "DELETE"}).then((res) =>
+            res.json()
+        );
+    };
+    const submitDelete = (subTaskId) => {
+        confirmAlert({
+            title: 'Confirm to delete',
+            message: 'Are you sure to delete this task?',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => handleDelete(subTaskId)
+                },
+                {
+                    label: 'No'
+                }
+            ]
+        });
+    };
+
+    const handleDelete = (subTaskId) => {
+        deleteSubTask(subTaskId)
+       
+            setSubTasks((prevSubTasks) => {
+                return prevSubTasks.filter((subTask) => subTask.id !== subTaskId);
+            });
+       
+    };
 
     return (
         <div className="container">
             <h1 className="title">{task.name}</h1>
             <div className="project-list">
-                {task.subTaskList && task.subTaskList.map((subTask, i) => (
-                    <div key={i} className="project">
+                {subTasks && subTasks.map((subTask) => (
+                    <div key={subTask.id} className="project">
                         <Link to={`/project/${id}/task/${task.id}/subtask/${subTask.id}`}>
 
                             <p>{subTask.name}</p>
                         </Link>
+                        <button type="button" onClick={() => submitDelete(subTask.id)}>Delete</button>
+
                     </div>
                 ))}
             </div>

@@ -1,7 +1,11 @@
 package com.codecool.circles.service.dao;
 
 import com.codecool.circles.model.SubTask;
+
+
+
 import com.codecool.circles.model.Member;
+
 
 public class SubTaskImpl implements SubTaskDao {
     SubTask sampleSubtask = new SubTask("sampleSub", "sample");
@@ -15,4 +19,6 @@ public class SubTaskImpl implements SubTaskDao {
     public void addUser(Member member) {
         sampleSubtask.addUser(member);
     }
+
+
 }

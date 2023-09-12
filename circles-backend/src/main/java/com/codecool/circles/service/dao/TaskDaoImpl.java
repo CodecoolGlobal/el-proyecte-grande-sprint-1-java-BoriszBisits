@@ -30,6 +30,8 @@ private ProjectDao projectDao;
       return taskRepository.findById(taskID).get();
     }
 
+
+
   @Override
   public void deleteTaskById( Long taskId) {
     taskRepository.deleteById(taskId);
@@ -38,6 +40,11 @@ private ProjectDao projectDao;
   @Override
   public void addTask(Task task) {
     taskRepository.save(task);
+  }
+
+  @Override
+  public boolean deleteSubtaskById(UUID projectId, UUID taskId, UUID subTaskId) {
+    return storage.getProjectById(projectId).getTaskById(taskId).removeSubTaskById(subTaskId);
   }
 
 
