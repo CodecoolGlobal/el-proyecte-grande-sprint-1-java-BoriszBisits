@@ -29,7 +29,7 @@ public class TaskController {
     public ResponseEntity<Object> addNewProject(@PathVariable Long id ,@RequestBody Task task) {
         System.out.println(task.getName());
         System.out.println(id);
-        //System.out.println(task.getId());
+
 
 
 
