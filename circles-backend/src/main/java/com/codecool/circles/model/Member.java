@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "member")
 public class Member {
     @Id
-   // @JsonIgnore
+    // @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
@@ -28,7 +28,7 @@ public class Member {
             inverseJoinColumns = @JoinColumn(name = "task_id")
     )
 
-    private List<Task>taskList;
+    private List<Task> taskList;
     @ManyToMany
     @JoinTable(
             name = "member_subtask",
@@ -36,7 +36,6 @@ public class Member {
             inverseJoinColumns = @JoinColumn(name = "subtask_id")
     )
     private List<SubTask> subTaskList;
-
 
     public String getName() {
         return name;

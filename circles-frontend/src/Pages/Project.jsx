@@ -62,7 +62,7 @@ function ProjectPage() {
             projectId: id,
         };
 
-        fetch("http://localhost:8080/new-task", {
+        fetch(`http://localhost:8080/${id}/new-task`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

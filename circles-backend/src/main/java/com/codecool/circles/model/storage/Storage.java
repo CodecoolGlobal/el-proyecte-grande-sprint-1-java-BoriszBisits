@@ -12,8 +12,7 @@ import java.util.UUID;
 
 @Component
 public class Storage {
-    private List<Project>projects;
-
+    private List<Project> projects;
 
     public Storage() {
         this.projects = new ArrayList<>();
@@ -22,16 +21,18 @@ public class Storage {
     public List<Project> getProjects() {
         return projects;
     }
-    public Task getTaskById(Long taskId, Long  projectId){
+
+    public Task getTaskById(Long taskId, Long projectId) {
         return getProjectById(projectId).getTaskById(taskId);
     }
 
-    public void  addProject(Project project){
+    public void addProject(Project project) {
         projects.add(project);
     }
-    public Project getProjectById(Long watedProject){
-        for (Project project:projects){
-            if (project.getId().equals(watedProject)){
+
+    public Project getProjectById(Long watedProject) {
+        for (Project project : projects) {
+            if (project.getId().equals(watedProject)) {
                 return project;
             }
         }

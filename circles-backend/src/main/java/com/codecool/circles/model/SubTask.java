@@ -16,7 +16,7 @@ import java.util.List;
 
 public class SubTask {
     @Id
-   // @JsonIgnore
+    // @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
@@ -61,7 +61,6 @@ public class SubTask {
     public List<Member> getMemberList() {
         return memberList;
     }
-
 
 
     public void setCompleted() {

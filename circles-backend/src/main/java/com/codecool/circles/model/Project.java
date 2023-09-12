@@ -17,20 +17,14 @@ import java.util.List;
 @Table(name = "project")
 public class Project {
     @Id
- //   @JsonIgnore
+    //   @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToMany
-    @JoinTable(
-            name = "member_project",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "member_id")
-    )
+    @JoinTable(name = "member_project", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "member_id"))
     private List<Member> members = new ArrayList<>();
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Task> taskList = new ArrayList<>();
-
-
 
 
     @JsonProperty("name")
@@ -39,6 +33,7 @@ public class Project {
     public Project(String name) {
         this.name = name;
     }
+
     public List<Member> getMembers() {
         return members;
     }
@@ -54,6 +49,7 @@ public class Project {
     public String getName() {
         return name;
     }
+
     public void setTaskList(List<Task> taskList) {
         this.taskList = taskList;
     }
@@ -77,7 +73,6 @@ public class Project {
     }
 
 
-
     public Task getTaskById(Long taskId) {
         for (Task task : taskList) {
             if (task.getId().equals(taskId)) {
@@ -95,8 +90,7 @@ public class Project {
 
         Task taskToRemove = null;
         for (Task task : taskList) {
-            if (task.getId().equals(taskId))
-                taskToRemove = task;
+            if (task.getId().equals(taskId)) taskToRemove = task;
             break;
         }
 

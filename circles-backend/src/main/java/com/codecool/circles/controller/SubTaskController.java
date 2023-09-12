@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.UUID;
+
 @RestController
 @RequestMapping("/")
 public class SubTaskController {
-
     private SubTaskService subTaskService;
     private TaskService taskService;
 
@@ -25,16 +25,8 @@ public class SubTaskController {
         this.taskService = taskService;
     }
 
-
     @GetMapping("/projectByid/{projectId}/task/{taskId}/subtask/{subTaskId}")
-    public SubTask getSubTaskById(@PathVariable String projectId, @PathVariable String taskId, @PathVariable String subTaskId){
-
-        System.out.println("Aproject ID: " + projectId);
-        System.out.println("Btask ID: " + taskId);
-        System.out.println("subtask ID: " + subTaskId);
-
+    public SubTask getSubTaskById(@PathVariable String projectId, @PathVariable String taskId, @PathVariable String subTaskId) {
         return taskService.getTaskByIds(Long.valueOf(taskId)).getSubTaskById(Long.valueOf(subTaskId));
     }
-
-
 }

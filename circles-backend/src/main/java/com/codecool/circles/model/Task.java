@@ -19,10 +19,9 @@ import java.util.List;
 
 public class Task {
     @Id
-   // @JsonIgnore
+    // @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
 
     private String name;
@@ -33,6 +32,7 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
     public String getColorOfCircle() {
         return colorOfCircle;
     }
@@ -49,7 +49,7 @@ public class Task {
     }
 
 
-    public Task( String name, LocalDate deadLine, List<Member> members) {
+    public Task(String name, LocalDate deadLine, List<Member> members) {
 
         this.name = name;
 
@@ -77,6 +77,7 @@ public class Task {
     public String getName() {
         return name;
     }
+
     public Long getId() {
         return id;
     }
@@ -84,6 +85,7 @@ public class Task {
     public void setId(Long id) {
         this.id = id;
     }
+
     public LocalDate getDeadLine() {
         return deadLine;
     }

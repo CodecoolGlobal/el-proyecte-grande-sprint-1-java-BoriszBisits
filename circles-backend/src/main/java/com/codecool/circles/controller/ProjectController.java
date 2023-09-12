@@ -1,6 +1,5 @@
 package com.codecool.circles.controller;
 
-
 import com.codecool.circles.model.Project;
 import com.codecool.circles.model.Task;
 import com.codecool.circles.model.storage.Storage;
@@ -27,7 +26,6 @@ public class ProjectController {
         this.mainPageService = mainPageService;
     }
 
-
     @GetMapping("/projects")
     public List<Project> getProjects() {
         List<Project> projects = mainPageService.getProjects();
@@ -42,27 +40,18 @@ public class ProjectController {
         mainPageService.addNewProjects(projectName);
         return new ResponseEntity<>("result successful result",
                 HttpStatus.OK);
-
     }
 
     @GetMapping("/projectByid/{projectId}")
     public List<Task> getProjectById(@PathVariable Long projectId) {
-        System.out.println("Received request for project ID: " + projectId);
 
         Long projectUUID;
+
         try {
             projectUUID = Long.valueOf(projectId);
         } catch (IllegalArgumentException e) {
-            System.err.println("Invalid Long format: " + projectId);
-
             return Collections.emptyList();
         }
-
-        System.out.println("Parsed Long: " + projectUUID);
-
-
         return projectService.getAllTaskts(projectUUID);
     }
-
-
 }

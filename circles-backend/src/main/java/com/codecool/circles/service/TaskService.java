@@ -24,14 +24,14 @@ public class TaskService {
     public Task getTaskByIds(Long taskId) {
         return taskDao.getTask(taskId);
     }
-    public void addNewTask(Task task , Long id){
-    projectDao.getProjectById(id).addTask(task);
 
+    public void addNewTask(Task task, Long id) {
+        projectDao.getProjectById(id).addTask(task);
 
-     taskDao.addTask(task);
+        taskDao.addTask(task);
     }
 
-    public void deleteTaskById(  Long taskId) {
-         taskDao.deleteTaskById(taskId);
+    public void deleteTaskById(Long taskId) {
+        taskDao.deleteTaskById(taskId);
     }
 }

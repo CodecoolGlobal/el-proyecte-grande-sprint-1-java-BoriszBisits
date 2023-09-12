@@ -24,16 +24,9 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-
     @PostMapping("/{id}/new-task")
-    public ResponseEntity<Object> addNewProject(@PathVariable Long id ,@RequestBody Task task) {
-        System.out.println(task.getName());
-        System.out.println(id);
-        //System.out.println(task.getId());
-
-
-
-     taskService.addNewTask(task , id);
+    public ResponseEntity<Object> addNewProject(@PathVariable Long id, @RequestBody Task task) {
+        taskService.addNewTask(task, id);
         return new ResponseEntity<>("result successful result",
                 HttpStatus.OK);
 
@@ -44,25 +37,13 @@ public class TaskController {
             @PathVariable Long projectId,
             @PathVariable Long taskId
     ) {
-
         taskService.deleteTaskById(taskId);
     }
 
-    ;
-
-
     @GetMapping("/projectByid/{projectId}/task/{taskId}")
     public Task getATaskById(@PathVariable String projectId, @PathVariable String taskId) {
-
-        System.out.println("project ID: " + projectId);
-        System.out.println("task ID: " + taskId);
-
-
-
-
         return taskService.getTaskByIds(Long.valueOf(taskId));
     }
-
 
     @PostMapping("projectByid/{id}/task/{taskId}/addSubTasks")
     public ResponseEntity<Object> addNewSubTasks(@PathVariable Long id, @PathVariable Long taskId, @RequestBody SubTask subTask) {
@@ -70,14 +51,8 @@ public class TaskController {
         System.out.println("subtaskname " + subTask.getName());
         System.out.println("descirtion" + subTask.getDescription());
         System.out.println("users" + subTask.getMemberList());
-//        System.out.println("subtask1" + subTasks.get(0).getName());
-//        System.out.println("subtask1" + subTasks.get(1).getName());
-//        System.out.println("description" + subTasks.get(0).getDescription());
-//        System.out.println("users" + subTasks.get(0).getUserList().get(0).getName());
         taskService.getTaskByIds(taskId).addSubTask(subTask);
 
         return new ResponseEntity<>("Sub-tasks added successfully", HttpStatus.OK);
     }
-
-
 }
