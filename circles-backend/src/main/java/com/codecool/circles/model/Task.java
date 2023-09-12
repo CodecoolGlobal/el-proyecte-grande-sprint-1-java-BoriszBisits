@@ -91,4 +91,20 @@ public class Task {
         }
         return null;
     }
+    public boolean removeSubTaskById(UUID subTaskId) {
+
+        SubTask subtaskToRemove = null;
+        for (SubTask subTask : subTaskList) {
+            if (subTask.getId().equals(subTaskId))
+                subtaskToRemove = subTask;
+            break;
+        }
+
+        if (subtaskToRemove != null) {
+            subTaskList.remove(subtaskToRemove);
+            System.out.println("deleted task :" + subtaskToRemove.getName());
+            return true;
+        }
+        return false;
+    }
 }

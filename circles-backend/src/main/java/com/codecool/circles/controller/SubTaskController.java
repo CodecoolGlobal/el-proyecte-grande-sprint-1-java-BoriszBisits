@@ -5,10 +5,9 @@ import com.codecool.circles.model.Task;
 import com.codecool.circles.service.SubTaskService;
 import com.codecool.circles.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -16,17 +15,16 @@ import java.util.UUID;
 @RequestMapping("/")
 public class SubTaskController {
 
-    private SubTaskService subTaskService;
     private TaskService taskService;
 
     @Autowired
-    public SubTaskController(SubTaskService subTaskService, TaskService taskService) {
-        this.subTaskService = subTaskService;
+    public SubTaskController( TaskService taskService) {
+
         this.taskService = taskService;
     }
 
 
-    @GetMapping("/projectByid/{projectId}/task/{taskId}/subtask/{subTaskId}")
+    @GetMapping("/projectByid/{projectId}/task/{taskId}/subTask/{subTaskId}")
     public SubTask getSubTaskById(@PathVariable String projectId, @PathVariable String taskId, @PathVariable String subTaskId){
 
         System.out.println("Aproject ID: " + projectId);
@@ -35,6 +33,20 @@ public class SubTaskController {
 
         return taskService.getTaskByIds(UUID.fromString(taskId), UUID.fromString(projectId)).getSubTaskById(UUID.fromString(subTaskId));
     }
+    @DeleteMapping("projectByid/{projectId}/task/{taskId}/subTask/{subTaskId}")
+    public ResponseEntity<Object> deleteSubTask(
+            @PathVariable UUID projectId,
+            @PathVariable UUID taskId,
+            @PathVariable UUID subTaskId
+    ) {
+        boolean removed = taskService.deleteSUbTaskById(projectId, taskId, subTaskId );
 
+        if (removed) {
+            return new ResponseEntity<>("Task deleted successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Task not found", HttpStatus.NOT_FOUND);
+        }
+
+    }
 
 }
