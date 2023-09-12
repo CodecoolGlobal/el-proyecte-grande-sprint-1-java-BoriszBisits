@@ -9,9 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
-import java.util.List;
-
 @RestController
 @RequestMapping("/")
 public class TaskController {
@@ -25,7 +22,7 @@ public class TaskController {
     }
 
     @PostMapping("/{id}/new-task")
-    public ResponseEntity<Object> addNewProject(@PathVariable Long id, @RequestBody Task task) {
+    public ResponseEntity<Object> addNewTaskToProject(@PathVariable Long id, @RequestBody Task task) {
         taskService.addNewTask(task, id);
         return new ResponseEntity<>("result successful result",
                 HttpStatus.OK);

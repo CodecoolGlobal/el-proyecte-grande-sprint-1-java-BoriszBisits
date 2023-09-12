@@ -102,7 +102,7 @@ public class Task {
         }
         return null;
     }
-    public boolean removeSubTaskById(UUID subTaskId) {
+    /*public boolean removeSubTaskById(UUID subTaskId) {
 
         SubTask subtaskToRemove = null;
         for (SubTask subTask : subTaskList) {
@@ -117,5 +117,5 @@ public class Task {
             return true;
         }
         return false;
-    }
+    }*/
 }

@@ -8,6 +8,7 @@ import com.codecool.circles.service.dao.TaskDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -30,6 +31,9 @@ public class TaskService {
 
     public void addNewTask(Task task, Long id) {
         projectDao.getProjectById(id).addTask(task);
+        Project project=projectDao.getProjectById(id);
+        task.setProject(project);
+
 
         taskDao.addTask(task);
     }
@@ -37,7 +41,7 @@ public class TaskService {
     public void deleteTaskById(Long taskId) {
         taskDao.deleteTaskById(taskId);
     }
-    public boolean deleteSUbTaskById(UUID projectId, UUID taskId, UUID subTaskId) {
+    /*public boolean deleteSUbTaskById(UUID projectId, UUID taskId, UUID subTaskId) {
         return taskDao.deleteSubtaskById(projectId,taskId, subTaskId);
-    }
+    }*/
 }
