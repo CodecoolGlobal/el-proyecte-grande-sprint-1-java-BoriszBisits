@@ -2,7 +2,6 @@ package com.codecool.circles.controller;
 
 import com.codecool.circles.model.Project;
 import com.codecool.circles.model.Task;
-import com.codecool.circles.model.storage.Storage;
 import com.codecool.circles.service.MainPageService;
 import com.codecool.circles.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/")
@@ -52,6 +50,6 @@ public class ProjectController {
         } catch (IllegalArgumentException e) {
             return Collections.emptyList();
         }
-        return projectService.getAllTaskts(projectUUID);
+        return projectService.getAllTaskByProjectId(projectUUID);
     }
 }

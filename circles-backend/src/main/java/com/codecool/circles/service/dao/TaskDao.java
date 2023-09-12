@@ -2,6 +2,8 @@ package com.codecool.circles.service.dao;
 
 import com.codecool.circles.model.Task;
 
+import java.util.List;
+
 public interface TaskDao {
 
 
@@ -9,8 +11,9 @@ public interface TaskDao {
 
     public void deleteTaskById( Long taskId);
     public void addTask(Task task);
+    public List<Task> getTasksByProjectId(Long projectId);
 
-
+/*
     public boolean deleteSubtaskById(UUID projectId, UUID taskId, UUID subTaskId);
-
+*/
 }

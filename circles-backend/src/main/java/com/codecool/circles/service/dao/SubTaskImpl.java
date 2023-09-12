@@ -5,19 +5,20 @@ import com.codecool.circles.model.SubTask;
 
 
 import com.codecool.circles.model.Member;
+import org.springframework.stereotype.Repository;
 
-
+@Repository
 public class SubTaskImpl implements SubTaskDao {
-    SubTask sampleSubtask = new SubTask("sampleSub", "sample");
+
 
     @Override
     public void setLevelOfCompletion(int percentOfCompletion) {
-        sampleSubtask.setLevelOfCompletion(percentOfCompletion);
+
     }
 
     @Override
     public void addUser(Member member) {
-        sampleSubtask.addUser(member);
+
     }
 
 
