@@ -19,7 +19,7 @@ import java.util.UUID;
 @RequestMapping("/")
 public class ProjectController {
     private ProjectService projectService;
-private MainPageService mainPageService;
+    private MainPageService mainPageService;
 
     @Autowired
     public ProjectController(ProjectService projectService, MainPageService mainPageService) {
@@ -28,10 +28,12 @@ private MainPageService mainPageService;
     }
 
 
-
     @GetMapping("/projects")
     public List<Project> getProjects() {
-
+        List<Project> projects = mainPageService.getProjects();
+        for (Project project : projects) {
+            System.out.println(project.getId());
+        }
         return mainPageService.getProjects();
     }
 
@@ -44,29 +46,23 @@ private MainPageService mainPageService;
     }
 
     @GetMapping("/projectByid/{projectId}")
-    public List<Task> getProjectById(@PathVariable String projectId) {
+    public List<Task> getProjectById(@PathVariable Long projectId) {
         System.out.println("Received request for project ID: " + projectId);
 
-        UUID projectUUID;
+        Long projectUUID;
         try {
-            projectUUID = UUID.fromString(projectId);
+            projectUUID = Long.valueOf(projectId);
         } catch (IllegalArgumentException e) {
-            System.err.println("Invalid UUID format: " + projectId);
+            System.err.println("Invalid Long format: " + projectId);
 
             return Collections.emptyList();
         }
 
-        System.out.println("Parsed UUID: " + projectUUID);
-
+        System.out.println("Parsed Long: " + projectUUID);
 
 
         return projectService.getAllTaskts(projectUUID);
     }
-
-
-
-
-
 
 
 }

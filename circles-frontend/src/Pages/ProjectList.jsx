@@ -17,6 +17,7 @@ function ProjectList() {
             .then((data) => {
                 setProjects(data);
             });
+         
     }
 
     function handleSubmit(e) {
@@ -38,6 +39,8 @@ function ProjectList() {
             <h1 className="title">Projects</h1>
             <div className="project-list">
                 {projects.map((project, index) => {
+                    console.log("Project ID:", project.id);
+
 
                     const projectNameParts = project.name.split(":");
                     const actualPart = projectNameParts[1];
@@ -46,8 +49,10 @@ function ProjectList() {
                         <p
                             key={index}
                             className="project"
+                            
                             onClick={(e) => navigate(`/project/${project.id}`)}
                         >
+                          
                             {cleanedHelloPart}
                         </p>
                     );

@@ -2,61 +2,61 @@ package com.codecool.circles.service.dao;
 
 import com.codecool.circles.model.Project;
 import com.codecool.circles.model.Task;
-import com.codecool.circles.model.User;
+import com.codecool.circles.model.Member;
 import com.codecool.circles.model.storage.Storage;
+import com.codecool.circles.repositories.ProjectRepository;
+import com.codecool.circles.service.ProjectService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 @Repository
+
+
 
 public class ProjectDaoImpl implements ProjectDao {
 
-    private Storage storage;
+private ProjectRepository projectRepository;
 
-    public ProjectDaoImpl(Storage storage) {
-        this.storage = storage;
+
+@Autowired
+    public ProjectDaoImpl(ProjectRepository projectRepository) {
+        this.projectRepository = projectRepository;
+
     }
 
 
+
+
+
     @Override
-    public void addUser(UUID projectId ,User user) {
-        getProjectById(projectId).addUser(user);
+    public void addUser(Long projectId , Member member) {
+        getProjectById(projectId).addUser(member);
     }
 
     @Override
-    public void addUsers(UUID projectId, List<User> user) {
-        getProjectById(projectId).addUsers(user);
+    public void addUsers(Long projectId, List<Member> member) {
+        getProjectById(projectId).addUsers(member);
     }
 
     @Override
-    public List<Task> getAllTasks(UUID projectId) {
+    public List<Task> getAllTasks(Long projectId) {
         System.out.println("daoimpl" + projectId);
       return   getProjectById(projectId).getAllTask();
     }
 
-    @Override
-    public void addTask(Task task) {
-        System.out.println("id" + task.getId());
-        System.out.println(task.getProjectId()+"daoban");
-        System.out.println(task.getDeadLine());
-        System.out.println("user" + task.getMembers());
-        task.setDeadLine(LocalDate.now());
-        if (task.getMembers()==null){
-            task.setMembers(new ArrayList<>());
-        }
 
-        getProjectById(task.getProjectId()).addTask(task);
-        List<Task> projectTasks=getProjectById(task.getProjectId()).getAllTask();
-        for (Task task1:projectTasks){
-            System.out.println(task1.getName());
-        }
+
+    public Project getProjectById(Long projectId) {
+        return projectRepository.getById(projectId);
     }
-
-    private Project getProjectById(UUID projectId) {
-        return storage.getProjectById(projectId);
+    public void getTaskSavedToProject(Long id , Task task) {
+   Project project= projectRepository.findById(id).get();
+   project.addTask(task);
+    projectRepository.save(project);
     }
 
 

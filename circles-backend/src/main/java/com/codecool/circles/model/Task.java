@@ -1,55 +1,56 @@
 package com.codecool.circles.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Table(name = "task")
 
 public class Task {
-    public UUID getProjectId() {
-        return projectId;
-    }
+    @Id
+   // @JsonIgnore
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private UUID projectId;
+
 
     private String name;
-    private UUID id = UUID.randomUUID();
-    private List<SubTask> subTaskList =new ArrayList<>();
+    @OneToMany(mappedBy = "task")
+    private List<SubTask> subTaskList = new ArrayList<>();
     private LocalDate deadLine;
     private String colorOfCircle;
-
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
     public String getColorOfCircle() {
         return colorOfCircle;
     }
 
-    private List<User> members = new ArrayList<>();
-
-
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setProjectId(UUID projectId) {
-        this.projectId = projectId;
-    }
+    @ManyToMany(mappedBy = "taskList")
+    private List<Member> members = new ArrayList<>();
 
     public void setDeadLine(LocalDate deadLine) {
         this.deadLine = deadLine;
     }
 
-    public void setMembers(List<User> members) {
+    public void setMembers(List<Member> members) {
         this.members = members;
     }
 
 
-    public Task(UUID projectId, String name, LocalDate deadLine, List<User> members) {
+    public Task( String name, LocalDate deadLine, List<Member> members) {
 
-
-  
-
-        this.projectId = projectId;
         this.name = name;
 
         this.deadLine = deadLine;
@@ -68,6 +69,7 @@ public class Task {
     public List<SubTask> getSubTaskList() {
         return subTaskList;
     }
+
     public void addSubTask(SubTask subTask) {
         subTaskList.add(subTask);
     }
@@ -75,17 +77,24 @@ public class Task {
     public String getName() {
         return name;
     }
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
     public LocalDate getDeadLine() {
         return deadLine;
     }
 
-    public List<User> getMembers() {
+    public List<Member> getMembers() {
         return members;
     }
-    public SubTask getSubTaskById(UUID uuid){
-        for(SubTask subTask: subTaskList){
-            if(subTask.getId().equals(uuid)){
+
+    public SubTask getSubTaskById(Long uuid) {
+        for (SubTask subTask : subTaskList) {
+            if (subTask.getId().equals(uuid)) {
                 return subTask;
             }
         }
