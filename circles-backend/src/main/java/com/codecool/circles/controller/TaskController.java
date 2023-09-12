@@ -70,7 +70,6 @@ public class TaskController {
         System.out.println("subtaskname " + subTask.getName());
         System.out.println("descirtion" + subTask.getDescription());
         System.out.println("users" + subTask.getMemberList());
-//        System.out.println("subtask1" + subTasks.get(0).getName());
 //        System.out.println("subtask1" + subTasks.get(1).getName());
 //        System.out.println("description" + subTasks.get(0).getDescription());
 //        System.out.println("users" + subTasks.get(0).getUserList().get(0).getName());
