@@ -31,6 +31,14 @@ public class Project {
     private List<Task> taskList = new ArrayList<>();
 
 
+
+
+    @JsonProperty("name")
+    private String name;
+
+    public Project(String name) {
+        this.name = name;
+    }
     public List<Member> getMembers() {
         return members;
     }
@@ -43,19 +51,11 @@ public class Project {
         return taskList;
     }
 
-    public void setTaskList(List<Task> taskList) {
-        this.taskList = taskList;
-    }
-
-    @JsonProperty("name")
-    private String name;
-
-    public Project(String name) {
-        this.name = name;
-    }
-
     public String getName() {
         return name;
+    }
+    public void setTaskList(List<Task> taskList) {
+        this.taskList = taskList;
     }
 
     public void setName(String name) {

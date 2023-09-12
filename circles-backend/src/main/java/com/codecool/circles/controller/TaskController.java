@@ -25,33 +25,31 @@ public class TaskController {
     }
 
 
-    @PostMapping("/new-task")
-    public ResponseEntity<Object> addNewProject(@RequestBody Task task) {
+    @PostMapping("/{id}/new-task")
+    public ResponseEntity<Object> addNewProject(@PathVariable Long id ,@RequestBody Task task) {
         System.out.println(task.getName());
+        System.out.println(id);
         //System.out.println(task.getId());
 
-        System.out.println("user" + task.getMembers());
 
-        projectService.addNewTask(task);
+
+     taskService.addNewTask(task , id);
         return new ResponseEntity<>("result successful result",
                 HttpStatus.OK);
 
     }
 
     @DeleteMapping("projectByid/{projectId}/task/{taskId}")
-    public ResponseEntity<Object> deleteTask(
+    public void deleteTask(
             @PathVariable Long projectId,
             @PathVariable Long taskId
     ) {
-        boolean removed = taskService.deleteTaskById(projectId, taskId);
 
-        if (removed) {
-            return new ResponseEntity<>("Task deleted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Task not found", HttpStatus.NOT_FOUND);
-        }
-
+        taskService.deleteTaskById(taskId);
     }
+
+    ;
+
 
     @GetMapping("/projectByid/{projectId}/task/{taskId}")
     public Task getATaskById(@PathVariable String projectId, @PathVariable String taskId) {
@@ -60,13 +58,9 @@ public class TaskController {
         System.out.println("task ID: " + taskId);
 
 
-        Task clg = taskService.getTaskByIds(Long.valueOf(taskId), Long.valueOf(projectId));
-       List<SubTask> clgsub= clg.getSubTaskList();
-       for (SubTask subTask:clgsub){
-           System.out.println(subTask.getName());
-       }
 
-        return clg;
+
+        return taskService.getTaskByIds(Long.valueOf(taskId));
     }
 
 
@@ -74,17 +68,16 @@ public class TaskController {
     public ResponseEntity<Object> addNewSubTasks(@PathVariable Long id, @PathVariable Long taskId, @RequestBody SubTask subTask) {
 
         System.out.println("subtaskname " + subTask.getName());
-        System.out.println("descirtion" +  subTask.getDescription());
+        System.out.println("descirtion" + subTask.getDescription());
         System.out.println("users" + subTask.getMemberList());
 //        System.out.println("subtask1" + subTasks.get(0).getName());
 //        System.out.println("subtask1" + subTasks.get(1).getName());
 //        System.out.println("description" + subTasks.get(0).getDescription());
 //        System.out.println("users" + subTasks.get(0).getUserList().get(0).getName());
-       taskService.getTaskByIds(taskId,id).addSubTask(subTask);
+        taskService.getTaskByIds(taskId).addSubTask(subTask);
 
         return new ResponseEntity<>("Sub-tasks added successfully", HttpStatus.OK);
     }
-
 
 
 }

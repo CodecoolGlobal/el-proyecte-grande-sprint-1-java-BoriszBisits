@@ -48,26 +48,15 @@ private ProjectRepository projectRepository;
       return   getProjectById(projectId).getAllTask();
     }
 
-    @Override
-    public void addTask(Task task) {
-        System.out.println("id" + task.getId());
-        ;
-        System.out.println(task.getDeadLine());
-        System.out.println("user" + task.getMembers());
-        task.setDeadLine(LocalDate.now());
-        if (task.getMembers()==null){
-            task.setMembers(new ArrayList<>());
-        }
 
-        getProjectById(task.getId()).addTask(task);
-        List<Task> projectTasks=getProjectById(task.getId()).getAllTask();
-        for (Task task1:projectTasks){
-            System.out.println(task1.getName());
-        }
-    }
 
     public Project getProjectById(Long projectId) {
-        return (Project) projectRepository.findAllById(Collections.singleton(projectId));
+        return projectRepository.getById(projectId);
+    }
+    public void getTaskSavedToProject(Long id , Task task) {
+   Project project= projectRepository.findById(id).get();
+   project.addTask(task);
+    projectRepository.save(project);
     }
 
 

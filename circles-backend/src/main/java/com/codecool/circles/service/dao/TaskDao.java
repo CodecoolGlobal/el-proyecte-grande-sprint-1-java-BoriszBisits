@@ -5,9 +5,10 @@ import com.codecool.circles.model.Task;
 public interface TaskDao {
 
 
-    public Task getTask(Long taskID , Long projectId);
+    public Task getTask(Long taskID );
 
-    public boolean deleteTaskById(Long projectId, Long taskId);
+    public void deleteTaskById( Long taskId);
+    public void addTask(Task task);
 
 
 }

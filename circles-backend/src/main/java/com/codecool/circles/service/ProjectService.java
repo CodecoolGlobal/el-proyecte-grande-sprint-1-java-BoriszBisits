@@ -20,10 +20,7 @@ public class ProjectService {
 
     }
 
-    public void addNewTask(Task task){
 
-        projectDao.addTask(task);
-    }
 
     public Project  getProjectById(Long projectId){
     return projectDao.getProjectById(projectId);

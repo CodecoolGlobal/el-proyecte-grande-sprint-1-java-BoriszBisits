@@ -12,8 +12,9 @@ public interface ProjectDao {
     public void addUsers(Long projectId,List<Member> member);
 
     public List<Task> getAllTasks(Long projectId);
+    public void getTaskSavedToProject(Long id , Task task);
 
     public Project getProjectById(Long projectId);
 
-    public void addTask(Task task); ///shoud be in projetsDao???
+
 }

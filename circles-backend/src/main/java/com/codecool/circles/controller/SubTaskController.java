@@ -33,7 +33,7 @@ public class SubTaskController {
         System.out.println("Btask ID: " + taskId);
         System.out.println("subtask ID: " + subTaskId);
 
-        return taskService.getTaskByIds(Long.valueOf(taskId), Long.valueOf(projectId)).getSubTaskById(Long.valueOf(subTaskId));
+        return taskService.getTaskByIds(Long.valueOf(taskId)).getSubTaskById(Long.valueOf(subTaskId));
     }
 
 
