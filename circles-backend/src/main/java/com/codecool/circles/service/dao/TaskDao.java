@@ -11,4 +11,6 @@ public interface TaskDao {
     public void addTask(Task task);
 
 
+    public boolean deleteSubtaskById(UUID projectId, UUID taskId, UUID subTaskId);
+
 }

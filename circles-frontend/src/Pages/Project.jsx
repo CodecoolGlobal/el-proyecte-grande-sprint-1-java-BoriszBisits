@@ -36,7 +36,7 @@ function ProjectPage() {
             .catch((error) => {
                 console.error('Error fetching tasks:', error);
             });
-    }, [id]);
+    }, []);
 
     function fetchTasks() {
         fetch(`/projectByid/${id}`)
@@ -108,7 +108,7 @@ function ProjectPage() {
     const handleDelete = (taskId) => {
         deleteTask(taskId)
         
-            setTasks((task) => {
+            setTasks((tasks) => {
                 return tasks.filter((task) => task.id !== taskId);
               });
     
