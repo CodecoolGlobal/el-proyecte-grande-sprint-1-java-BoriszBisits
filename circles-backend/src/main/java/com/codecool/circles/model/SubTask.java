@@ -23,19 +23,17 @@ public class SubTask {
     private int levelOfCompletion = 0;
     private boolean isCompleted = false;
     private String description;
+    @JsonIgnore
     @ManyToOne
     private Task task;
 
     private String colorOfCircle;
+    @JsonIgnore
     @ManyToMany(mappedBy = "subTaskList")
     private List<Member> memberList;
 
 
-    public SubTask(String name, String description) {
-        this.name = name;
-        this.description = description;
 
-    }
 
 
     public String getColorOfCircle() {
@@ -80,6 +78,38 @@ public class SubTask {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
+    }
+
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
+    }
+
+    public void setColorOfCircle(String colorOfCircle) {
+        this.colorOfCircle = colorOfCircle;
+    }
+
+    public void setMemberList(List<Member> memberList) {
+        this.memberList = memberList;
     }
 
     public boolean deleteUserFromProject(Member member) {

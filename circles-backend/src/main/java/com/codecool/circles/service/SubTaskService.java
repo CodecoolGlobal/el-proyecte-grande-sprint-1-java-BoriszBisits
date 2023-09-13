@@ -9,6 +9,7 @@ import java.util.UUID;
 @Service
 
 public class SubTaskService {
+    @Autowired
     private SubTaskDao subTaskDao;
 
 
