@@ -8,6 +8,7 @@ import com.codecool.circles.service.dao.TaskDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,6 +31,7 @@ public class TaskService {
     }
 
     public void addNewTask(Task task, Long id) {
+        System.out.println("date: " + task.getDeadLine());
         projectDao.getProjectById(id).addTask(task);
         Project project=projectDao.getProjectById(id);
         task.setProject(project);
