@@ -51,7 +51,7 @@ public class TaskController {
         System.out.println("subtaskname " + subTask.getName());
         System.out.println("descirtion" + subTask.getDescription());
         System.out.println("users" + subTask.getMemberList());
-        taskService.getTaskByIds(taskId).addSubTask(subTask);
+        taskService.addSubTaskToTaskById(taskId, subTask);
 
         return new ResponseEntity<>("Sub-tasks added successfully", HttpStatus.OK);
     }
