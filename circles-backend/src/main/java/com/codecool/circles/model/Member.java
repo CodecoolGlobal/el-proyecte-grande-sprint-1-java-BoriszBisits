@@ -22,8 +22,15 @@ public class Member {
     private Long id;
     private String name;
     @JsonIgnore
-    @ManyToMany(mappedBy = "members")
-    private List<Project> project=new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "member_project",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id")
+    )
+    private List<Project> project;
+
+
     @JsonIgnore
     @ManyToMany
     @JoinTable(
