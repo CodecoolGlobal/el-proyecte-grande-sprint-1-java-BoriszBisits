@@ -15,6 +15,7 @@ function ProjectList() {
         fetch("http://localhost:8080/projects")
             .then((res) => res.json())
             .then((data) => {
+                console.log("data " + JSON.stringify(data))
                 setProjects(data);
             });
          

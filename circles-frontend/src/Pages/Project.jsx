@@ -31,6 +31,7 @@ function ProjectPage() {
             .then((res) => res.json())
             .then((data) => {
                 //setProjectName(data); TODO
+                console.log(data[0].name)
                 setTasks(data);
             })
             .catch((error) => {
@@ -56,7 +57,7 @@ function ProjectPage() {
 
         const data = {
             name: newTaskName,
-            deadline: deadline,
+            deadLine: deadline,
             colorOfCircle: colorOfCircle,
             members: users,
             projectId: id,

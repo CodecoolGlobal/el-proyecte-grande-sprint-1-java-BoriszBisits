@@ -28,7 +28,7 @@ public class ProjectController {
     public List<Project> getProjects() {
         List<Project> projects = mainPageService.getProjects();
         for (Project project : projects) {
-            System.out.println(project.getId());
+            System.out.println(project.getName());
         }
         return mainPageService.getProjects();
     }

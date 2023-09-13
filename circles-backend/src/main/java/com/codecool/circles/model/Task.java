@@ -1,7 +1,9 @@
 package com.codecool.circles.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -27,8 +29,12 @@ public class Task {
     private String name;
     @OneToMany(mappedBy = "task")
     private List<SubTask> subTaskList = new ArrayList<>();
+
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate deadLine;
     private String colorOfCircle;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
