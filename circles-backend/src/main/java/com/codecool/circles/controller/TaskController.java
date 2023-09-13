@@ -33,11 +33,12 @@ public class TaskController {
     }
 
     @DeleteMapping("projectByid/{projectId}/task/{taskId}")
-    public void deleteTask(
+    public ResponseEntity<String> deleteTask(
             @PathVariable Long projectId,
             @PathVariable Long taskId
     ) {
-        taskService.deleteTaskById(taskId);
+        ResponseEntity<String> response = taskService.deleteTaskById(taskId);
+        return response;
     }
 
     @GetMapping("/projectByid/{projectId}/task/{taskId}")

@@ -9,6 +9,7 @@ import com.codecool.circles.service.dao.ProjectDao;
 import com.codecool.circles.service.dao.SubTaskDao;
 import com.codecool.circles.service.dao.TaskDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -65,10 +66,9 @@ public class TaskService {
         taskDao.addTask(task);
     }
 
-    public void deleteTaskById(Long taskId) {
-        taskDao.deleteTaskById(taskId);
+    public ResponseEntity<String> deleteTaskById(Long taskId) {
+        ResponseEntity<String> response = taskDao.deleteTaskById(taskId);
+        return response;
     }
-    /*public boolean deleteSUbTaskById(UUID projectId, UUID taskId, UUID subTaskId) {
-        return taskDao.deleteSubtaskById(projectId,taskId, subTaskId);
-    }*/
+
 }
