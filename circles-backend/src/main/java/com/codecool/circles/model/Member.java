@@ -19,8 +19,14 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @ManyToMany(mappedBy = "members")
+    @ManyToMany
+    @JoinTable(
+            name = "member_project",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "_project_id")
+    )
     private List<Project> project;
+
     @ManyToMany
     @JoinTable(
             name = "member_task",

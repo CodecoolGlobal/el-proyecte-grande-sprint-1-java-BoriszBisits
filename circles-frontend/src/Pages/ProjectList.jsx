@@ -6,6 +6,19 @@ function ProjectList() {
     const navigate = useNavigate();
     const [projects, setProjects] = useState([]);
     const [newProject, setNewProject] = useState("");
+    const [membersName, setMembersName] = useState([]);
+
+    function handleAddMember() {
+        const abc = [...membersName, []]
+        setMembersName(abc);
+    }
+
+    function handleChange(onChangeValue, i) {
+        const inputdata = [...membersName]
+        inputdata[i] = onChangeValue.target.value
+        setMembersName(inputdata)
+    }
+
 
     useEffect(() => {
         fetchProjects();
@@ -40,8 +53,7 @@ function ProjectList() {
             <h1 className="title">Projects</h1>
             <div className="project-list">
                 {projects.map((project, index) => {
-                    console.log("Project ID:", project.id);
-
+ 
 
                     const projectNameParts = project.name.split(":");
                     const actualPart = projectNameParts[1];
@@ -57,8 +69,11 @@ function ProjectList() {
                             {cleanedHelloPart}
                         </p>
                     );
+                    
                 })}
+                
             </div>
+          
             <div className="new-project-form">
                 <form onSubmit={handleSubmit}>
                     <label htmlFor="name">Name</label>
@@ -68,6 +83,16 @@ function ProjectList() {
                         value={newProject}
                         onChange={(e) => setNewProject(e.target.value)}
                     />
+                       <div>
+                    <button type="button" onClick={() => handleAddMember()}>Add Members</button>
+                    {membersName.map((data,i) => {
+                        return(
+                            <input onChange={e => handleChange(e,i)}/>
+                        )
+                    })}
+
+                </div>
+                
                     <button type="submit">Add new project</button>
                 </form>
             </div>
