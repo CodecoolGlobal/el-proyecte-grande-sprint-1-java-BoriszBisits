@@ -26,7 +26,7 @@ public class Member {
     @JoinTable(
             name = "member_project",
             joinColumns = @JoinColumn(name = "member_id"),
-            inverseJoinColumns = @JoinColumn(name = "_project_id")
+            inverseJoinColumns = @JoinColumn(name = "project_id")
     )
     private List<Project> project;
 
