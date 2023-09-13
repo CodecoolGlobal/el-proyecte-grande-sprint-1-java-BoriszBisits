@@ -1,9 +1,11 @@
 package com.codecool.circles.model;
 
+import com.fasterxml.jackson.annotation.JacksonInject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,8 +21,17 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @ManyToMany(mappedBy = "members")
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "member_project",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id")
+    )
     private List<Project> project;
+
+
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "member_task",
@@ -28,14 +39,15 @@ public class Member {
             inverseJoinColumns = @JoinColumn(name = "task_id")
     )
 
-    private List<Task> taskList;
+    private List<Task> taskList=new ArrayList<>();
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "member_subtask",
             joinColumns = @JoinColumn(name = "member_id"),
             inverseJoinColumns = @JoinColumn(name = "subtask_id")
     )
-    private List<SubTask> subTaskList;
+    private List<SubTask> subTaskList =new ArrayList<>();
 
     public String getName() {
         return name;
