@@ -13,6 +13,7 @@ public interface TaskDao {
     public ResponseEntity<String> deleteTaskById(Long taskId);
     public void addTask(Task task);
     public List<Task> getTasksByProjectId(Long projectId);
+    public void saveTask(Task task);
 
 /*
     public boolean deleteSubtaskById(UUID projectId, UUID taskId, UUID subTaskId);

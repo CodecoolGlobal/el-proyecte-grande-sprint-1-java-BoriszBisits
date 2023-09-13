@@ -58,6 +58,11 @@ private ProjectDao projectDao;
   public List<Task> getTasksByProjectId(Long projectId) {
    return taskRepository.findByProjectId(projectId);
   }
+
+  @Override
+  public void saveTask(Task task) {
+    taskRepository.save(task);
+  }
 /*
   @Override
   public boolean deleteSubtaskById(UUID projectId, UUID taskId, UUID subTaskId) {

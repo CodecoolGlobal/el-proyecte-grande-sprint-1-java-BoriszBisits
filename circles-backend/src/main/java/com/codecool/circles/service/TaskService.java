@@ -1,6 +1,7 @@
 package com.codecool.circles.service;
 
 import com.codecool.circles.model.Project;
+import com.codecool.circles.model.SubTask;
 import com.codecool.circles.model.Task;
 import com.codecool.circles.service.dao.ProjectDao;
 import com.codecool.circles.service.dao.SubTaskDao;
@@ -21,10 +22,22 @@ public class TaskService {
 
 
     @Autowired
-
-    public TaskService(ProjectDao projectDao, TaskDao taskDao) {
+    public TaskService(ProjectDao projectDao, TaskDao taskDao, SubTaskDao subTaskDao) {
         this.projectDao = projectDao;
         this.taskDao = taskDao;
+        this.subTaskDao = subTaskDao;
+    }
+
+
+    public void addSubTaskToTaskById(Long taskId, SubTask subTask) {
+        Task task = taskDao.getTask(taskId);
+        List<SubTask> subTasks = task.getSubTaskList();
+        subTasks.add(subTask);
+        task.setSubTaskList(subTasks);
+
+        taskDao.saveTask(task);
+        subTask.setTask(task);
+        subTaskDao.saveSubTask(subTask);
     }
 
     public Task getTaskByIds(Long taskId) {
@@ -34,7 +47,7 @@ public class TaskService {
     public void addNewTask(Task task, Long id) {
         System.out.println("date: " + task.getDeadLine());
         projectDao.getProjectById(id).addTask(task);
-        Project project=projectDao.getProjectById(id);
+        Project project = projectDao.getProjectById(id);
         task.setProject(project);
 
 
