@@ -13,13 +13,21 @@ function ProjectList() {
 
     function fetchProjects() {
         fetch("http://localhost:8080/projects")
-            .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Failed to fetch projects");
+                }
+                return res.json();
+            })
             .then((data) => {
-                console.log("data " + JSON.stringify(data))
+                console.log("data " + JSON.stringify(data));
                 setProjects(data);
+            })
+            .catch((error) => {
+                console.error("Error fetching projects:", error);
             });
-         
     }
+
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -37,40 +45,40 @@ function ProjectList() {
     }
 
     return (<div className="container">
-            <h1 className="title">Projects</h1>
-            <div className="project-list">
-                {projects.map((project, index) => {
-                    console.log("Project ID:", project.id);
+        <h1 className="title">Projects</h1>
+        <div className="project-list">
+            {projects.map((project, index) => {
+                console.log("Project ID:", project.id);
 
 
-                    const projectNameParts = project.name.split(":");
-                    const actualPart = projectNameParts[1];
-                    const cleanedHelloPart = actualPart.substring(1, actualPart.length - 2);
-                    return (
-                        <p
-                            key={index}
-                            className="project"
-                            
-                            onClick={(e) => navigate(`/project/${project.id}`)}
-                        >
-                          
-                            {cleanedHelloPart}
-                        </p>
-                    );
-                })}
-            </div>
-            <div className="new-project-form">
-                <form onSubmit={handleSubmit}>
-                    <label htmlFor="name">Name</label>
-                    <input
-                        type="text"
-                        id="name"
-                        value={newProject}
-                        onChange={(e) => setNewProject(e.target.value)}
-                    />
-                    <button type="submit">Add new project</button>
-                </form>
-            </div>
-        </div>);
+                const projectNameParts = project.name.split(":");
+                const actualPart = projectNameParts[1];
+                const cleanedHelloPart = actualPart.substring(1, actualPart.length - 2);
+                return (
+                    <p
+                        key={index}
+                        className="project"
+
+                        onClick={(e) => navigate(`/project/${project.id}`)}
+                    >
+
+                        {cleanedHelloPart}
+                    </p>
+                );
+            })}
+        </div>
+        <div className="new-project-form">
+            <form onSubmit={handleSubmit}>
+                <label htmlFor="name">Name: </label>
+                <input
+                    type="text"
+                    id="name"
+                    value={newProject}
+                    onChange={(e) => setNewProject(e.target.value)}
+                />
+                <button type="submit">Add new project</button>
+            </form>
+        </div>
+    </div>);
 }
 export default ProjectList;
