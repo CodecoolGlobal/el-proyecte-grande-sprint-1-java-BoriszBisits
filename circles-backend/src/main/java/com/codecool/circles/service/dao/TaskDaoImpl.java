@@ -4,6 +4,9 @@ import com.codecool.circles.model.Task;
 import com.codecool.circles.model.storage.Storage;
 import com.codecool.circles.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,8 +38,15 @@ private ProjectDao projectDao;
 
 
   @Override
-  public void deleteTaskById( Long taskId) {
-    taskRepository.deleteById(taskId);
+  public ResponseEntity<String> deleteTaskById(Long taskId) {
+    try {
+      taskRepository.deleteById(taskId);
+      return new ResponseEntity<>("Task deleted successfully", HttpStatus.OK);
+    } catch (EmptyResultDataAccessException e) {
+      return new ResponseEntity<>("Task not found", HttpStatus.NOT_FOUND);
+    } catch (Exception e) {
+      return new ResponseEntity<>("An error occurred while deleting the task", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Override
