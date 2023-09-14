@@ -6,6 +6,19 @@ function ProjectList() {
     const navigate = useNavigate();
     const [projects, setProjects] = useState([]);
     const [newProject, setNewProject] = useState("");
+    const [membersName, setMembersName] = useState([]);
+
+    function handleAddMember() {
+        const abc = [...membersName, []]
+        setMembersName(abc);
+    }
+
+    function handleChange(onChangeValue, i) {
+        const inputdata = [...membersName]
+        inputdata[i] = onChangeValue.target.value
+        setMembersName(inputdata)
+    }
+
 
     useEffect(() => {
         fetchProjects();
@@ -13,13 +26,21 @@ function ProjectList() {
 
     function fetchProjects() {
         fetch("http://localhost:8080/projects")
-            .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Failed to fetch projects");
+                }
+                return res.json();
+            })
             .then((data) => {
-                console.log("data " + JSON.stringify(data))
+                console.log("data " + JSON.stringify(data));
                 setProjects(data);
+            })
+            .catch((error) => {
+                console.error("Error fetching projects:", error);
             });
-         
     }
+
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -40,7 +61,6 @@ function ProjectList() {
             <h1 className="title">Projects</h1>
             <div className="project-list">
                 {projects.map((project, index) => {
-                    console.log("Project ID:", project.id);
 
 
                     const projectNameParts = project.name.split(":");
@@ -57,8 +77,11 @@ function ProjectList() {
                             {cleanedHelloPart}
                         </p>
                     );
+
                 })}
+
             </div>
+
             <div className="new-project-form">
                 <form onSubmit={handleSubmit}>
                     <label htmlFor="name">Name</label>
@@ -68,6 +91,16 @@ function ProjectList() {
                         value={newProject}
                         onChange={(e) => setNewProject(e.target.value)}
                     />
+                       <div>
+                    <button type="button" onClick={() => handleAddMember()}>Add Members</button>
+                    {membersName.map((data,i) => {
+                        return(
+                            <input onChange={e => handleChange(e,i)}/>
+                        )
+                    })}
+
+                </div>
+
                     <button type="submit">Add new project</button>
                 </form>
             </div>

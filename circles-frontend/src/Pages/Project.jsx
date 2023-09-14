@@ -108,13 +108,13 @@ function ProjectPage() {
 
     const handleDelete = (taskId) => {
         deleteTask(taskId)
-        
-            setTasks((tasks) => {
-                return tasks.filter((task) => task.id !== taskId);
-              });
-    
+
+        setTasks((tasks) => {
+            return tasks.filter((task) => task.id !== taskId);
+        });
+
     };
-    
+
     return (
         <div className="container">
             <h1 className="title">The Project</h1>
@@ -148,7 +148,7 @@ function ProjectPage() {
                     }}/>
                 </div>
                 <div>
-                    <label htmlFor="add-member">Add Member</label>
+                    <label htmlFor="add-member"></label>
                     <button type="button" onClick={() => handleAddMember()}>Add Members</button>
                     {membersName.map((data,i) => {
                         return(
