@@ -1,5 +1,6 @@
 package com.codecool.circles.controller;
 
+import com.codecool.circles.model.Member;
 import com.codecool.circles.model.SubTask;
 import com.codecool.circles.model.Task;
 import com.codecool.circles.service.ProjectService;
@@ -10,12 +11,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/")
 public class TaskController {
     ProjectService projectService;
     TaskService taskService;
+
 
     @Autowired
     public TaskController(ProjectService projectService, TaskService taskService) {
@@ -44,6 +47,11 @@ public class TaskController {
     @GetMapping("/projectByid/{projectId}/task/{taskId}")
     public Task getATaskById(@PathVariable String projectId, @PathVariable String taskId) {
         return taskService.getTaskByIds(Long.valueOf(taskId));
+    }
+
+    @GetMapping("project/members")
+    public List<Member> getCoworkers(){
+        return taskService.getCoworkers();
     }
 
     @PostMapping("projectByid/{id}/task/{taskId}/addSubTasks")
