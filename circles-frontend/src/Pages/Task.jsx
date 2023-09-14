@@ -32,31 +32,27 @@ function Task() {
 
   useEffect(() => {
     fetch(`/projectByid/${id}/task/${taskId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setTask(data);
-        setSubTasks(data.subTaskList);
-        console.log("sub" + subTasks);
-
-      })
-      .catch((error) => {
-        console.error('Error fetching tasks:', error);
-      });
+        .then((res) => res.json())
+        .then((data) => {
+          setTask(data);
+          setSubTasks(data.subTaskList);
+          console.log("sub" + subTasks);
+        })
+        .catch((error) => {
+          console.error('Error fetching tasks:', error);
+        });
   }, []);
 
   function fetchSubTasks() {
-
     fetch(`/projectByid/${id}/task/${taskId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setTask(data);
-        setSubTasks(data.subTaskList);
-
-      })
-      .catch((error) => {
-        console.error('Error fetching tasks:', error);
-      });
-
+        .then((res) => res.json())
+        .then((data) => {
+          setTask(data);
+          setSubTasks(data.subTaskList);
+        })
+        .catch((error) => {
+          console.error('Error fetching tasks:', error);
+        });
   }
 
   function handleSubmit(e) {
@@ -78,25 +74,25 @@ function Task() {
       },
       body: JSON.stringify(data),
     })
-      .then((res) => {
-        if (res.ok) {
-          // Clear form fields after successful submission
-          setSubTasksName("");
-          setDescription("");
-          setColorOfCircle("")
-          setMembersName([]);
-          // Fetch updated tasks after adding a new task
-          fetchSubTasks();
-        }
-      });
+        .then((res) => {
+          if (res.ok) {
+            // Clear form fields after successful submission
+            setSubTasksName("");
+            setDescription("");
+            setColorOfCircle("")
+            setMembersName([]);
+            // Fetch updated tasks after adding a new task
+            fetchSubTasks();
+          }
+        });
   }
 
   const deleteSubTask = (subTaskId) => {
-
     return fetch(`http://localhost:8080/projectByid/${id}/task/${taskId}/subTask/${subTaskId}`, { method: "DELETE" }).then((res) =>
-      res.json()
+        res.json()
     );
   };
+
   const submitDelete = (subTaskId) => {
     confirmAlert({
       title: 'Confirm to delete',
@@ -119,76 +115,77 @@ function Task() {
     setSubTasks((prevSubTasks) => {
       return prevSubTasks.filter((subTask) => subTask.id !== subTaskId);
     });
-
   };
 
   return (
-    <div className="container">
-      <div className="left-content">
-        <h1 className="title">{task.name}</h1>
-        <div className="project-list">
-          {subTasks &&
-            subTasks.map((subTask) => (
-              <div key={subTask.id} className="project">
-                <p onClick={() => navigate(`/project/${id}/task/${task.id}/subtask/${subTask.id}`)}>
-                  {subTask.name}
-                </p>
-                <button type="button" onClick={() => submitDelete(subTask.id)}>
-                  Delete
-                </button>
-              </div>
-            ))}
+      <div className="container">
+        <div className="left-content">
+          <h1 className="title">{task.name}</h1>
+          <div className="project-list">
+            {subTasks &&
+                subTasks.map((subTask) => (
+                    <div key={subTask.id} className="project">
+                      <p onClick={() => navigate(`/project/${id}/task/${task.id}/subtask/${subTask.id}`)}>
+                        {subTask.name}
+                      </p>
+                      <button type="button" onClick={() => submitDelete(subTask.id)}>
+                        Delete
+                      </button>
+                    </div>
+                ))}
+          </div>
+          <form onSubmit={handleSubmit} className="new-subtask-form">
+            <div>
+              <label htmlFor="name">Name</label>
+              <input
+                  type="text"
+                  id="name"
+                  value={subTaskName}
+                  onChange={(e) => {
+                    setSubTasksName(e.target.value);
+                  }}
+              />
+            </div>
+            <div>
+              <label htmlFor="description">Description</label>
+              <input
+                  type="text"
+                  id="description"
+                  value={description}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                  }}
+              />
+            </div>
+            <div>
+              <label htmlFor="colorOfCircle">Color</label>
+              <input
+                  type="text"
+                  id="colorOfCircle"
+                  value={colorOfCircle}
+                  onChange={(e) => {
+                    setColorOfCircle(e.target.value);
+                  }}
+              />
+            </div>
+            <div>
+              <label htmlFor="add-member"></label>
+              <button type="button" onClick={() => handleAddMember()}>
+                Add Members
+              </button>
+              {membersName.map((data, i) => {
+                return <input key={i} onChange={(e) => handleChange(e, i)} />;
+              })}
+            </div>
+            <button type="submit">Add Sub-Tasks</button>
+          </form>
         </div>
-        <form onSubmit={handleSubmit} className="new-subtask-form">
-          <div>
-            <label htmlFor="name">Name</label>
-            <input
-              type="text"
-              id="name"
-              value={subTaskName}
-              onChange={(e) => {
-                setSubTasksName(e.target.value);
-              }}
-            />
+        <div className="right-content">
+          <div className="task-circle">
+            <SubTaskCircle subtasks={task.subTaskList} projectId={id} taskId={taskId} />
           </div>
-          <div>
-            <label htmlFor="description">Description</label>
-            <input
-              type="text"
-              id="description"
-              value={description}
-              onChange={(e) => {
-                setDescription(e.target.value);
-              }}
-            />
-          </div>
-          <div>
-            <label htmlFor="colorOfCircle">Color</label>
-            <input
-              type="text"
-              id="colorOfCircle"
-              value={colorOfCircle}
-              onChange={(e) => {
-                setColorOfCircle(e.target.value);
-              }}
-            />
-          </div>
-          <div>
-            <label htmlFor="add-member"></label>
-            <button type="button" onClick={() => handleAddMember()}>
-              Add Members
-            </button>
-            {membersName.map((data, i) => {
-              return <input key={i} onChange={(e) => handleChange(e, i)} />;
-            })}
-          </div>
-          <button type="submit">Add Sub-Tasks</button>
-        </form>
+        </div>
       </div>
-      <div className="task-circle">
-        <SubTaskCircle subtasks={task.subTaskList} projectId={id} taskId={taskId} />
-      </div>
-    </div>
   );
 }
 
