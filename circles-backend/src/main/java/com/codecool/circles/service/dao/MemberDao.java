@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface MemberDao {
     public void saveMember(Member member);
+
+
     public void saveMembers(List<Member> memberList);
+
 }
