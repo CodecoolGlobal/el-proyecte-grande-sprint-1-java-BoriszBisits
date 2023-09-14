@@ -8,6 +8,6 @@ public interface MainPageDao {
 
 
     public List<Project> getProjects();
-    public void addNewProject(String projectName);
+    public void addNewProject(Project project);
 
 }
