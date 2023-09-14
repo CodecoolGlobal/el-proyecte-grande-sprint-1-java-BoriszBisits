@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Stream;
 
 @Service
 public class TaskService {
@@ -33,6 +30,9 @@ public class TaskService {
         this.memberDao = memberDao;
     }
 
+    public List<Member> getCoworkers() {
+        return memberDao.getAllMember().stream().filter(member -> member.isCoWorker() == true).toList();
+    }
 
     public void addSubTaskToTaskById(Long taskId, SubTask subTask) {
         Task task = taskDao.getTask(taskId);
@@ -55,12 +55,12 @@ public class TaskService {
         Project project = projectDao.getProjectById(id);
         task.setProject(project);
         List<Member> memberList = task.getMembers();
-       for (Member member:memberList){
-           List <Task> tasks=member.getTaskList();
-           tasks.add(task);
-           member.setTaskList(tasks);
-           memberDao.saveMember(member);
-       }
+        for (Member member : memberList) {
+            List<Task> tasks = member.getTaskList();
+            tasks.add(task);
+            member.setTaskList(tasks);
+            memberDao.saveMember(member);
+        }
 
 
         taskDao.addTask(task);
