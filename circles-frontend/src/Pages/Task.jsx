@@ -37,7 +37,6 @@ function Task() {
         setTask(data);
         setSubTasks(data.subTaskList);
         console.log("sub" + subTasks);
-
       })
       .catch((error) => {
         console.error('Error fetching tasks:', error);
@@ -45,18 +44,15 @@ function Task() {
   }, []);
 
   function fetchSubTasks() {
-
     fetch(`/projectByid/${id}/task/${taskId}`)
       .then((res) => res.json())
       .then((data) => {
         setTask(data);
         setSubTasks(data.subTaskList);
-
       })
       .catch((error) => {
         console.error('Error fetching tasks:', error);
       });
-
   }
 
   function handleSubmit(e) {
@@ -92,11 +88,11 @@ function Task() {
   }
 
   const deleteSubTask = (subTaskId) => {
-
     return fetch(`http://localhost:8080/projectByid/${id}/task/${taskId}/subTask/${subTaskId}`, { method: "DELETE" }).then((res) =>
       res.json()
     );
   };
+
   const submitDelete = (subTaskId) => {
     confirmAlert({
       title: 'Confirm to delete',
@@ -119,7 +115,6 @@ function Task() {
     setSubTasks((prevSubTasks) => {
       return prevSubTasks.filter((subTask) => subTask.id !== subTaskId);
     });
-
   };
 
   return (
@@ -185,8 +180,10 @@ function Task() {
           <button type="submit">Add Sub-Tasks</button>
         </form>
       </div>
-      <div className="task-circle">
-        <SubTaskCircle subtasks={task.subTaskList} projectId={id} taskId={taskId} />
+      <div className="right-content">
+        <div className="task-circle">
+          <SubTaskCircle subtasks={task.subTaskList} projectId={id} taskId={taskId} />
+        </div>
       </div>
     </div>
   );

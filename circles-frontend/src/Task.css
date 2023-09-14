@@ -1,16 +1,27 @@
-/* Overall background color */
+/* Overall container */
 .container {
-    background-color: #eaffd0;
+    display: flex;
+    justify-content: space-between; /* Separate left and right content */
     padding: 20px;
-    display: flex; /* Use flexbox to arrange items */
   }
   
   /* Left side content */
   .left-content {
-    flex: 1; /* Take up remaining space on the left side */
+    flex: 1;
   }
   
- 
+  /* Right side content */
+  .right-content {
+    flex: 1;
+    margin-left: 20px; /* Add some margin for spacing between left and right content */
+  }
+  
+  /* Title styling */
+  .title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+  }
   
   /* Project styles */
   .project {
@@ -53,7 +64,8 @@
   }
   
   /* Button styles */
-  .new-subtask-form button[type="submit"] {
+  .new-subtask-form button[type="submit"],
+  .new-subtask-form button[type="button"] {
     background-color: #f38181;
     color: #fff;
     border: none;
@@ -65,7 +77,8 @@
   }
   
   /* Button hover effect */
-  .new-subtask-form button[type="submit"]:hover {
+  .new-subtask-form button[type="submit"]:hover,
+  .new-subtask-form button[type="button"]:hover {
     background-color: #d61c1c;
   }
   
