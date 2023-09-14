@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../App.css";
 
 function ProjectList() {
@@ -7,21 +7,25 @@ function ProjectList() {
     const [projects, setProjects] = useState([]);
     const [newProject, setNewProject] = useState("");
     const [membersName, setMembersName] = useState([]);
+    const [allMembers, setAllMembers] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [filteredMembers, setFilteredMembers] = useState([]);
+    const [coworkerId, setCoworkerId] = useState(null);
 
     function handleAddMember() {
-        const abc = [...membersName, []]
-        setMembersName(abc);
+        const updatedMembers = [...membersName, ""];
+        setMembersName(updatedMembers);
     }
 
     function handleChange(onChangeValue, i) {
-        const inputdata = [...membersName]
-        inputdata[i] = onChangeValue.target.value
-        setMembersName(inputdata)
+        const updatedMembers = [...membersName];
+        updatedMembers[i] = onChangeValue.target.value;
+        setMembersName(updatedMembers);
     }
-
 
     useEffect(() => {
         fetchProjects();
+        fetchMembers();
     }, []);
 
     function fetchProjects() {
@@ -33,7 +37,6 @@ function ProjectList() {
                 return res.json();
             })
             .then((data) => {
-                console.log("data " + JSON.stringify(data));
                 setProjects(data);
             })
             .catch((error) => {
@@ -41,47 +44,86 @@ function ProjectList() {
             });
     }
 
+    function fetchMembers() {
+        fetch("http://localhost:8080/project/members")
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Failed to fetch members");
+                }
+                return res.json();
+            })
+            .then((data) => {
+                setAllMembers(data);
+                setFilteredMembers(data);
+            })
+            .catch((error) => {
+                console.error("Error fetching members:", error);
+            });
+    }
 
     function handleSubmit(e) {
         e.preventDefault();
-
+        const users = membersName.map((name) => ({ name }));
+        const data = {
+            name: newProject,
+            members: users,
+        };
         fetch("http://localhost:8080/newprojects", {
-            method: "POST", headers: {
+            method: "POST",
+            headers: {
                 "Content-Type": "application/json",
-            }, body: JSON.stringify({name: newProject}),
-        }).then((res) => {
-            if (res.ok) {
-                setNewProject("");
-                fetchProjects();
-            }
-        });
+            },
+            body: JSON.stringify(data),
+        })
+            .then((res) => {
+                if (res.ok) {
+                    setNewProject("");
+                    fetchProjects();
+                }
+            })
+            .catch((error) => {
+                console.error("Error creating project:", error);
+            });
     }
 
-    return (<div className="container">
+    function handleAddCoworker(memberId) {
+        fetch("http://localhost:8080/project/members", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify( memberId ),
+        })
+            .then((res) => {
+                if (res.ok) {
+                    fetchMembers()
+                }
+            })
+            .catch((error) => {
+                console.error("Error adding coworker:", error);
+            });
+    }
+
+    function filterMembers() {
+        return allMembers.filter((member) =>
+            member.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    }
+
+    return (
+        <div className="container">
             <h1 className="title">Projects</h1>
             <div className="project-list">
-                {projects.map((project, index) => {
-
-
-                    const projectNameParts = project.name.split(":");
-                    const actualPart = projectNameParts[1];
-                    const cleanedHelloPart = actualPart.substring(1, actualPart.length - 2);
-                    return (
-                        <p
-                            key={index}
-                            className="project"
-                            
-                            onClick={(e) => navigate(`/project/${project.id}`)}
-                        >
-                          
-                            {cleanedHelloPart}
-                        </p>
-                    );
-
-                })}
-
+                {projects.map((project, index) => (
+                    <p
+                        key={index}
+                        className="project"
+                        onClick={() => navigate(`/project/${project.id}`)}
+                    >
+                        {project.name}
+                    </p>
+                ))}
             </div>
-
             <div className="new-project-form">
                 <form onSubmit={handleSubmit}>
                     <label htmlFor="name">Name</label>
@@ -91,19 +133,45 @@ function ProjectList() {
                         value={newProject}
                         onChange={(e) => setNewProject(e.target.value)}
                     />
-                       <div>
-                    <button type="button" onClick={() => handleAddMember()}>Add Members</button>
-                    {membersName.map((data,i) => {
-                        return(
-                            <input onChange={e => handleChange(e,i)}/>
-                        )
-                    })}
-
-                </div>
-
+                    <button type="button" onClick={() => handleAddMember()}>
+                        Add Members
+                    </button>
+                    {membersName.map((data, i) => (
+                        <input
+                            key={i}
+                            onChange={(e) => handleChange(e, i)}
+                            placeholder={`Member ${i + 1}`}
+                        />
+                    ))}
                     <button type="submit">Add new project</button>
                 </form>
             </div>
-        </div>);
+            <div className="search-bar">
+                <input
+                    type="text"
+                    placeholder="Search members"
+                    value={searchQuery}
+                    onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        setFilteredMembers(filterMembers());
+                    }}
+                />
+            </div>
+            <div className="member-list">
+                <h2>All Members</h2>
+                <ul>
+                    {filteredMembers.map((member) => (
+                        <div key={member.id}>
+                            <li>{member.name}</li>
+                            <button onClick={() => handleAddCoworker(member.id)}>
+                                Add Coworker
+                            </button>
+                        </div>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    );
 }
+
 export default ProjectList;
