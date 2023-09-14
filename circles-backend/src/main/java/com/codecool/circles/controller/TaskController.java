@@ -38,7 +38,7 @@ public class TaskController {
 
     @PostMapping("/{id}/new-task")
     public ResponseEntity<Object> addNewTaskToProject(@PathVariable Long id, @RequestBody Task task) {
-       // System.out.println("date controller: " + task.getDeadLine());
+        // System.out.println("date controller: " + task.getDeadLine());
         List<Member> memberList=task.getMembers();
         for (Member member:memberList){
 
@@ -65,10 +65,10 @@ public class TaskController {
         return taskService.getTaskByIds(Long.valueOf(taskId));
     }
 
-    @GetMapping("project/members")
-    public List<Member> getCoworkers(){
-        return taskService.getCoworkers();
-    }
+//    @GetMapping("project/members")
+//    public List<Member> getCoworkers(){
+//        return taskService.getCoworkers();
+//    }
 
     @PostMapping("projectByid/{id}/task/{taskId}/addSubTasks")
     public ResponseEntity<Object> addNewSubTasks(@PathVariable Long id, @PathVariable Long taskId, @RequestBody SubTask subTask) {

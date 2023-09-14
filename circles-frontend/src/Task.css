@@ -1,0 +1,109 @@
+/* Overall background color */
+.container {
+    background-color: #eaffd0;
+    padding: 20px;
+    display: flex; /* Use flexbox to arrange items */
+  }
+  
+  /* Left side content */
+  .left-content {
+    flex: 1; /* Take up remaining space on the left side */
+  }
+  
+ 
+  
+  /* Project styles */
+  .project {
+    background-color: #fce38a;
+    padding: 20px;
+    margin: 10px;
+    border: 1px solid #eaeaea;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Form styles */
+  .new-subtask-form {
+    background-color: #95e1d3;
+    padding: 20px;
+    margin: 10px;
+    border: 1px solid #eaeaea;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Input styles */
+  .new-subtask-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  /* Select styles (drop-down menu) */
+  .new-subtask-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  /* Button styles */
+  .new-subtask-form button[type="submit"] {
+    background-color: #f38181;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Button hover effect */
+  .new-subtask-form button[type="submit"]:hover {
+    background-color: #d61c1c;
+  }
+  
+  /* Delete button styles */
+  .project button[type="button"] {
+    background-color: #f38181;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Delete button hover effect */
+  .project button[type="button"]:hover {
+    background-color: #d61c1c;
+  }
+  
+  /* Add Member Button Styles */
+  .new-subtask-form button[type="button"] {
+    background-color: #95e1d3;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  /* Name of Subtasks Styles */
+  .project p {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 8px;
+    text-align: left;
+    margin-left: 0;
+  }
+  
