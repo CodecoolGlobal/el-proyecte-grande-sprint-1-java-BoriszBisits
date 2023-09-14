@@ -59,6 +59,12 @@ public class Member {
     public void setName(String name) {
         this.name = name;
     }
+    public void addTask(Task task){
+        taskList.add(task);
+    }
+    public void addProjet(Project project1){
+        project.add(project1);
+    }
 
 
 }

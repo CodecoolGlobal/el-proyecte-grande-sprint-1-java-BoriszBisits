@@ -1,7 +1,9 @@
 package com.codecool.circles.controller;
 
+import com.codecool.circles.model.Member;
 import com.codecool.circles.model.SubTask;
 import com.codecool.circles.model.Task;
+import com.codecool.circles.service.MainPageService;
 import com.codecool.circles.service.ProjectService;
 import com.codecool.circles.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,23 +12,39 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/")
 public class TaskController {
     ProjectService projectService;
     TaskService taskService;
+    MainPageService mainPageService;
 
     @Autowired
-    public TaskController(ProjectService projectService, TaskService taskService) {
+    public TaskController(ProjectService projectService, TaskService taskService, MainPageService mainPageService) {
         this.projectService = projectService;
         this.taskService = taskService;
+        this.mainPageService = mainPageService;
     }
+
+
+    @GetMapping("/project/coworkers")
+    public List<Member> getMembers() {
+        return mainPageService.getALLMemberWoIsCoworker();
+    }
+
 
     @PostMapping("/{id}/new-task")
     public ResponseEntity<Object> addNewTaskToProject(@PathVariable Long id, @RequestBody Task task) {
-        System.out.println("date controller: " + task.getDeadLine());
+       // System.out.println("date controller: " + task.getDeadLine());
+        List<Member> memberList=task.getMembers();
+        for (Member member:memberList){
+
+            System.out.println("bejövök new task member id"+member.getId());
+        }
         taskService.addNewTask(task, id);
+
         return new ResponseEntity<>("result successful result",
                 HttpStatus.OK);
 
