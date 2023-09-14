@@ -26,4 +26,7 @@ public class MemberDaoImpl implements MemberDao{
 
         memberRepository.saveAll(memberList);
     }
+
 }
+
+
