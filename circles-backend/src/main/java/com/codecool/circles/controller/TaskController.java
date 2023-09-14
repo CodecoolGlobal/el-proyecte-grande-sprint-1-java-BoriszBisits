@@ -65,11 +65,11 @@ public class TaskController {
         return taskService.getTaskByIds(Long.valueOf(taskId));
     }
 
-    @GetMapping("project/members")
+   /* @GetMapping("project/members")
     public List<Member> getCoworkers(){
         return taskService.getCoworkers();
     }
-
+*/
     @PostMapping("projectByid/{id}/task/{taskId}/addSubTasks")
     public ResponseEntity<Object> addNewSubTasks(@PathVariable Long id, @PathVariable Long taskId, @RequestBody SubTask subTask) {
 
