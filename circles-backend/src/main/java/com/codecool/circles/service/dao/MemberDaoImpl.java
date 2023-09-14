@@ -9,9 +9,8 @@ import javax.persistence.Access;
 import java.util.*;
 
 @Repository
-public class MemberDaoImpl implements MemberDao {
+public class MemberDaoImpl implements MemberDao{
     private MemberRepository memberRepository;
-
     @Autowired
     public MemberDaoImpl(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
