@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../App.css";
+
 
 function ProjectList() {
     const navigate = useNavigate();
