@@ -1,5 +1,6 @@
 package com.codecool.circles.controller;
 
+import com.codecool.circles.model.Member;
 import com.codecool.circles.model.Project;
 import com.codecool.circles.model.Task;
 import com.codecool.circles.service.MainPageService;
@@ -34,8 +35,10 @@ public class ProjectController {
     }
 
     @PostMapping("/newprojects")
-    public ResponseEntity<Object> addNewProject(@RequestBody String projectName) {
-        mainPageService.addNewProjects(projectName);
+    public ResponseEntity<Object> addNewProject(@RequestBody Project project) {
+        System.out.println("project name: " + project.getName());
+        System.out.println("project members" + project.getMembers());
+        mainPageService.addNewProjects(project);
         return new ResponseEntity<>("result successful result",
                 HttpStatus.OK);
     }
@@ -52,4 +55,17 @@ public class ProjectController {
         }
         return projectService.getAllTaskByProjectId(projectUUID);
     }
+
+    @GetMapping("/project/members")
+    public List<Member> getMembers() {
+        return mainPageService.getAllMemberWhoIsNotCoWorker();
+    }
+
+    @PostMapping("/project/members")
+    public void addMemberId(@RequestBody String id) {
+        System.out.println("coworker id: " + id);
+        Long longId = Long.valueOf(id);
+        mainPageService.setMemberToCoWorker(longId);
+    }
+
 }

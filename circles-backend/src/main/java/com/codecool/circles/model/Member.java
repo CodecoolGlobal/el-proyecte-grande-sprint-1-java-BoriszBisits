@@ -6,7 +6,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 @Entity
 @Builder
@@ -28,7 +30,7 @@ public class Member {
             joinColumns = @JoinColumn(name = "member_id"),
             inverseJoinColumns = @JoinColumn(name = "project_id")
     )
-    private List<Project> project;
+    private List<Project> project = new ArrayList<>();
 
 
     @JsonIgnore
@@ -48,6 +50,7 @@ public class Member {
             inverseJoinColumns = @JoinColumn(name = "subtask_id")
     )
     private List<SubTask> subTaskList =new ArrayList<>();
+    private boolean isCoWorker = false;
 
     public String getName() {
         return name;
@@ -56,6 +59,8 @@ public class Member {
     public void setName(String name) {
         this.name = name;
     }
+
+
 }
 
 
