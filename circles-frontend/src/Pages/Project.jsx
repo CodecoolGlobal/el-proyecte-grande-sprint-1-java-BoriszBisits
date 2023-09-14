@@ -12,6 +12,7 @@ function ProjectPage() {
     const [colorOfCircle, setColorOfCircle] = useState("");
     const [membersName, setMembersName] = useState([]);
     const [projectName, setProjectName] = useState("");
+    const [memebers, setMembers] = useState([]);
 
 
     function handleAddMember() {
@@ -27,28 +28,41 @@ function ProjectPage() {
 
 
     useEffect(() => {
-        fetch(`/projectByid/${id}`)
-            .then((res) => res.json())
-            .then((data) => {
-                //setProjectName(data); TODO
-                console.log(data[0].name)
-                setTasks(data);
-            })
-            .catch((error) => {
-                console.error('Error fetching tasks:', error);
-            });
+        fetchTasks();
+        fetchMembers();
+      
     }, []);
 
-    function fetchTasks() {
+    function fetchTasks(){
         fetch(`/projectByid/${id}`)
-            .then((res) => res.json())
-            .then((data) => {
-                setTasks(data);
-            })
-            .catch((error) => {
-                console.error('Error fetching tasks:', error);
-            });
+        .then((res) => res.json())
+        .then((data) => {
+            //setProjectName(data); TODO
+            console.log(data[0].name)
+            setTasks(data);
+        })
+        .catch((error) => {
+            console.error('Error fetching tasks:', error);
+        });
     }
+
+    function fetchMembers(){
+        fetch("http://localhost:8080/project/members")
+        .then((res) => {
+            if (!res.ok) {
+                throw new Error("Failed to fetch members");
+            }
+            return res.json();
+        })
+        .then((data) => {
+            setMembers(data)
+        })
+        .catch((error) => {
+            console.error("Error fetching members:", error);
+        });
+    }
+
+   
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -161,6 +175,17 @@ function ProjectPage() {
             </form>
             <div>
                 <TaskCircle projectId={id} tasks={tasks}/>
+            </div>
+            <div className="member-list">
+                <h2>All Members</h2>
+                <ul>
+                    {memebers.map((member) => (
+                        <div key={member.id}>
+                            <li>{member.name}</li>
+                        
+                        </div>
+                    ))}
+                </ul>
             </div>
         </div>
     );
