@@ -43,6 +43,7 @@ public class Task {
         return colorOfCircle;
     }
 
+
     @ManyToMany(mappedBy = "taskList")
     private List<Member> members = new ArrayList<>();
 
