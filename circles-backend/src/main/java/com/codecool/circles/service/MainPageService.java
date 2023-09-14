@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MainPageService {
@@ -23,7 +24,9 @@ public class MainPageService {
 
     public List<Project> getProjects() {
 
-     //   memberDao.populateDataBase(); //for database population with members
+
+       // memberDao.populateDataBase(); //for database population with members
+
         return mainPageDao.getProjects();
     }
 
@@ -56,6 +59,9 @@ public class MainPageService {
 
     public List<Member> getAllMemberWhoIsNotCoWorker() {
         return getAllMember().stream().filter(member -> member.isCoWorker() == false).toList();
+    }
+    public List<Member>getALLMemberWoIsCoworker(){
+        return getAllMember().stream().filter(member -> member.isCoWorker() ==true).toList();
     }
 
     public void setMemberToCoWorker(Long id) {

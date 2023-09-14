@@ -54,16 +54,22 @@ public class TaskService {
         projectDao.getProjectById(id).addTask(task);
         Project project = projectDao.getProjectById(id);
         task.setProject(project);
+        taskDao.saveTask(task);
         List<Member> memberList = task.getMembers();
-        for (Member member : memberList) {
-            List<Task> tasks = member.getTaskList();
-            tasks.add(task);
-            member.setTaskList(tasks);
-            memberDao.saveMember(member);
-        }
+
+       for (Member member:memberList){
+        Member member1=   memberDao.getMemberById(member.getId());
+        //List<Task> tasks=member1.getTaskList();
+       // tasks.add(task);
+        member1.addTask(task);
+        member1.addProjet(project);
+        memberDao.saveMember(member1);
+
+       }
 
 
-        taskDao.addTask(task);
+
+      //  taskDao.addTask(task);
     }
 
     public ResponseEntity<String> deleteTaskById(Long taskId) {
