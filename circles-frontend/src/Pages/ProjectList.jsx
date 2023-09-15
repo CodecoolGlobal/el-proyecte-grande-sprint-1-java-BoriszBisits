@@ -175,6 +175,8 @@ function ProjectList() {
             placeholder="Search members"
             value={searchQuery}
             onChange={(e) => {
+              // TODO: if the search is ever done by the backend
+              //       then use Debouncing
               setEventCount(old => old+1);
               const newSearchQuery = e.target.value;
               setSearchQuery(newSearchQuery);
