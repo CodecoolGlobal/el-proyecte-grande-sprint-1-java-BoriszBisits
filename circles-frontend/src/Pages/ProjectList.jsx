@@ -11,6 +11,9 @@ function ProjectList() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredMembers, setFilteredMembers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const [eventCount, setEventCount] = useState(() => 0);
+
   const membersPerPage = 10;
 
   function handleAddMember() {
@@ -105,7 +108,7 @@ function ProjectList() {
       });
   }
 
-  function filterMembers() {
+  function filterMembers(searchQuery) {
     return allMembers.filter((member) =>
       member.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -171,8 +174,10 @@ function ProjectList() {
             placeholder="Search members"
             value={searchQuery}
             onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setFilteredMembers(filterMembers());
+              setEventCount(old => old+1);
+              const newSearchQuery = e.target.value;
+              setSearchQuery(newSearchQuery);
+              setFilteredMembers(filterMembers(newSearchQuery));
             }}
           />
         </div>
