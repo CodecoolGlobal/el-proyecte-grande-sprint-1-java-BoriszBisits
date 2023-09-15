@@ -28,6 +28,8 @@ public class MemberDaoImpl implements MemberDao{
     }
 
     public void populateDataBase() {
+        // TODO: only do this if there is no data
+
         Random random = new Random();
 
         List<String> randomFirstNames = Arrays.asList(

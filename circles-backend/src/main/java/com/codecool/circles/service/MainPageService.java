@@ -23,10 +23,6 @@ public class MainPageService {
     }
 
     public List<Project> getProjects() {
-
-
-        memberDao.populateDataBase(); //for database population with members
-
         return mainPageDao.getProjects();
     }
 
