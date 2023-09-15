@@ -30,7 +30,7 @@ function ProjectList() {
   }, []);
 
   function fetchProjects() {
-    fetch("http://localhost:8080/projects")
+    fetch("/projects")
       .then((res) => {
         if (!res.ok) {
           throw new Error("Failed to fetch projects");
@@ -46,7 +46,7 @@ function ProjectList() {
   }
 
   function fetchMembers() {
-    fetch("http://localhost:8080/project/members")
+    fetch("/project/members")
       .then((res) => {
         if (!res.ok) {
           throw new Error("Failed to fetch members");
@@ -69,7 +69,7 @@ function ProjectList() {
       name: newProject,
       members: users,
     };
-    fetch("http://localhost:8080/newprojects", {
+    fetch("/newprojects", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -88,7 +88,7 @@ function ProjectList() {
   }
 
   function handleAddCoworker(memberId) {
-    fetch("http://localhost:8080/project/members", {
+    fetch("/project/members", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
