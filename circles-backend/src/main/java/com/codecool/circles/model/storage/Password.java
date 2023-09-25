@@ -1,9 +1,10 @@
 package com.codecool.circles.model.storage;
 
 import com.codecool.circles.model.Member;
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
+
 
 @Entity
 @Builder
