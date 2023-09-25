@@ -5,7 +5,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import TaskCircle from '../Circle/TaskCircle';
 import '../Project.css';
 
-function ProjectPage() {
+function Project() {
     const {id} = useParams();
     const [newTaskName, setNewTaskName] = useState('');
     const [tasks, setTasks] = useState([]);
@@ -204,4 +204,4 @@ function ProjectPage() {
     );
 }
 
-export default ProjectPage;
+export default Project;

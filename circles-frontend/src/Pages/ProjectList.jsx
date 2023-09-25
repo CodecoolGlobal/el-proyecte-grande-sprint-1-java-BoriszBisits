@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Debug from "../components/Debug";
+
 import "../projectlistsytle.css";
 
 function ProjectList() {
@@ -184,7 +184,7 @@ function ProjectList() {
             }}
           />
         </div>
-        <Debug><strong>Evenet count: </strong>{eventCount}</Debug>
+     
         <div className="member-list">
           <h2>All Members</h2>
           <ul>
