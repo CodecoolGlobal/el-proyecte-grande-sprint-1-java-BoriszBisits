@@ -1,5 +1,6 @@
 package com.codecool.circles.model;
 
+import com.codecool.circles.model.storage.Password;
 import com.fasterxml.jackson.annotation.JacksonInject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -53,6 +54,8 @@ public class Member {
     )
     private List<SubTask> subTaskList =new ArrayList<>();
     private boolean isCoWorker = false;
+    @OneToOne
+    private Password password;
 
     public String getName() {
         return name;
@@ -68,5 +71,7 @@ public class Member {
         project.add(project1);
     }
 
-
+    public Password getPassword() {
+        return password;
+    }
 }

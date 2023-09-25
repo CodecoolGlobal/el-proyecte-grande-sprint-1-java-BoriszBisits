@@ -14,4 +14,6 @@ public interface MemberDao {
     public List<Member> getAllMember();
     public Member getMemberById(Long id);
     public void setCoworker(Long id);
+
+    public Member findMemberByName(String name);
 }
