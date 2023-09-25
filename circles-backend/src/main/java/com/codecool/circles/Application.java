@@ -24,6 +24,6 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        memberDao.populateDataBase();
+        //memberDao.populateDataBase();
     }
 }

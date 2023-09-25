@@ -9,6 +9,7 @@ import Project from './Pages/Project';
 import Task from "./Pages/Task";
 import SubTask from "./Pages/SubTask";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Login from './Pages/Login';
 
 
 const router = createBrowserRouter([
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
+        element: <Login />,
+      },
+      {
+        path: "/project-list",
         element: <ProjectList />,
       },
       {

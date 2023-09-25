@@ -73,4 +73,9 @@ public class MemberDaoImpl implements MemberDao{
         member.setCoWorker(true);
         memberRepository.save(member);
     }
+
+    @Override
+    public Member findMemberByName(String name) {
+        return memberRepository.findMemberByName(name);
+    }
 }
