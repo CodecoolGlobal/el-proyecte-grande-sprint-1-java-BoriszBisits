@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Debug from "../components/Debug";
 import "../projectlistsytle.css";
 
 function ProjectList() {
@@ -11,6 +12,9 @@ function ProjectList() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredMembers, setFilteredMembers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const [eventCount, setEventCount] = useState(() => 0);
+
   const membersPerPage = 10;
 
   function handleAddMember() {
@@ -30,7 +34,7 @@ function ProjectList() {
   }, []);
 
   function fetchProjects() {
-    fetch("http://localhost:8080/projects")
+    fetch("/projects")
       .then((res) => {
         if (!res.ok) {
           throw new Error("Failed to fetch projects");
@@ -46,7 +50,7 @@ function ProjectList() {
   }
 
   function fetchMembers() {
-    fetch("http://localhost:8080/project/members")
+    fetch("/project/members")
       .then((res) => {
         if (!res.ok) {
           throw new Error("Failed to fetch members");
@@ -69,7 +73,7 @@ function ProjectList() {
       name: newProject,
       members: users,
     };
-    fetch("http://localhost:8080/newprojects", {
+    fetch("/newprojects", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -88,7 +92,7 @@ function ProjectList() {
   }
 
   function handleAddCoworker(memberId) {
-    fetch("http://localhost:8080/project/members", {
+    fetch("/project/members", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -105,7 +109,7 @@ function ProjectList() {
       });
   }
 
-  function filterMembers() {
+  function filterMembers(searchQuery) {
     return allMembers.filter((member) =>
       member.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -171,11 +175,16 @@ function ProjectList() {
             placeholder="Search members"
             value={searchQuery}
             onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setFilteredMembers(filterMembers());
+              // TODO: if the search is ever done by the backend
+              //       then use Debouncing
+              setEventCount(old => old+1);
+              const newSearchQuery = e.target.value;
+              setSearchQuery(newSearchQuery);
+              setFilteredMembers(filterMembers(newSearchQuery));
             }}
           />
         </div>
+        <Debug><strong>Evenet count: </strong>{eventCount}</Debug>
         <div className="member-list">
           <h2>All Members</h2>
           <ul>

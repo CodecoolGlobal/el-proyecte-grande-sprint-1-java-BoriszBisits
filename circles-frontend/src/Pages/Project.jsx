@@ -89,7 +89,7 @@ function ProjectPage() {
             projectId: id,
         };
 
-        fetch(`http://localhost:8080/${id}/new-task`, {
+        fetch(`/${id}/new-task`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -111,7 +111,7 @@ function ProjectPage() {
     const deleteTask = (taskId) => {
         console.log('projectid: ' + id);
         console.log('taskid' + taskId);
-        return fetch(`http://localhost:8080/projectByid/${id}/task/${taskId}`, {
+        return fetch(`/projectByid/${id}/task/${taskId}`, {
             method: 'DELETE',
         }).then((res) => res.json());
     };

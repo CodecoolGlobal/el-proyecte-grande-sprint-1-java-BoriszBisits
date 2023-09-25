@@ -88,7 +88,7 @@ function Task() {
   }
 
   const deleteSubTask = (subTaskId) => {
-    return fetch(`http://localhost:8080/projectByid/${id}/task/${taskId}/subTask/${subTaskId}`, { method: "DELETE" }).then((res) =>
+    return fetch(`/projectByid/${id}/task/${taskId}/subTask/${subTaskId}`, { method: "DELETE" }).then((res) =>
         res.json()
     );
   };

@@ -34,6 +34,8 @@ public class Member {
 
 
     @JsonIgnore
+    // TODO:  Use @JsonManagedReference and @JsonBackReference annotations on the two side
+    //        (Read the documentation for both)
     @ManyToMany
     @JoinTable(
             name = "member_task",
@@ -68,9 +70,3 @@ public class Member {
 
 
 }
-
-
-
-
-
-
