@@ -1,7 +1,6 @@
 package com.codecool.circles.repositories;
 
 import com.codecool.circles.model.Member;
-import com.codecool.circles.model.storage.Password;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -26,13 +26,7 @@ public class MemberController {
 
     @PostMapping("/")
     public ResponseEntity<Object> authenticateMember(@RequestBody CreateUserRequest createUserRequest) {
-        Boolean response = memberService.authenticateMember(createUserRequest.username, createUserRequest.password);
-        if (response) {
-            return new ResponseEntity<>("result successful result",
-                    HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("failed authentication",
-                    HttpStatus.FORBIDDEN);
+      return null;
         }
-    }
+
 }

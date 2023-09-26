@@ -1,15 +1,12 @@
 package com.codecool.circles.model;
 
-import com.codecool.circles.model.storage.Password;
-import com.fasterxml.jackson.annotation.JacksonInject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 
-import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 @Entity
 @Builder
@@ -21,7 +18,7 @@ import java.util.Random;
 public class Member {
     @Id
     // @JsonIgnore
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
     private String name;
     @JsonIgnore
@@ -54,8 +51,10 @@ public class Member {
     )
     private List<SubTask> subTaskList =new ArrayList<>();
     private boolean isCoWorker = false;
-    @OneToOne
-    private Password password;
+    private String password;
+    private String email;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public String getName() {
         return name;
@@ -71,7 +70,11 @@ public class Member {
         project.add(project1);
     }
 
-    public Password getPassword() {
+    public String getPassword() {
         return password;
+    }
+
+    public Role getRole() {
+        return role;
     }
 }
