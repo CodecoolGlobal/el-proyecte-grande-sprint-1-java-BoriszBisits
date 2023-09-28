@@ -85,6 +85,8 @@ function Project() {
         });
     };
 
+    // szevasz
+
     const handleDelete = (taskId) => {
         deleteTask(taskId);
 
