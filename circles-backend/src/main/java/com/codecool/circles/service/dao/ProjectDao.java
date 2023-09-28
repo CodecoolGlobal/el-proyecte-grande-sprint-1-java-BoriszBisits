@@ -16,5 +16,7 @@ public interface ProjectDao {
 
     public Project getProjectById(Long projectId);
 
+    public void save(Project project);
+
 
 }

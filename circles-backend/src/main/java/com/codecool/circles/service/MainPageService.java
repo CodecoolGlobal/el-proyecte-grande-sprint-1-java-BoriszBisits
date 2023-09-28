@@ -5,6 +5,7 @@ import com.codecool.circles.model.Project;
 import com.codecool.circles.model.Task;
 import com.codecool.circles.service.dao.MainPageDao;
 import com.codecool.circles.service.dao.MemberDao;
+import com.codecool.circles.service.dao.ProjectDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +16,16 @@ import java.util.stream.Collectors;
 public class MainPageService {
     private MainPageDao mainPageDao;
     private MemberDao memberDao;
-
+    private ProjectDao projectDao;
     @Autowired
-    public MainPageService(MainPageDao mainPageDao, MemberDao memberDao) {
+
+    public MainPageService(MainPageDao mainPageDao, MemberDao memberDao, ProjectDao projectDao) {
         this.mainPageDao = mainPageDao;
         this.memberDao = memberDao;
+        this.projectDao = projectDao;
     }
+
+
 
     public List<Project> getProjects(String leader) {
 
@@ -28,14 +33,19 @@ public class MainPageService {
     }
 
     public void addNewProjects(Project project) {
-        List<Member> memberList = project.getMembers();
-//        for(Member member : memberList){
-//            System.out.println("project members " + member.getName());
-//            List<Project> projectList = member.getProject();
-//            projectList.add(project);
-//            member.setProject(projectList);
-//            memberDao.saveMember(member);
-//        }
+        projectDao.save(project);
+        Member member=memberDao.findMemberByName(project.getLeader());
+        List <Project> projects=member.getProject();
+        projects.add(project);
+
+        member.setProject(projects);
+        memberDao.saveMember(member);
+
+
+
+
+
+
         mainPageDao.addNewProject(project);
     }
 

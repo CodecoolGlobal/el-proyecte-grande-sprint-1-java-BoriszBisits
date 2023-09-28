@@ -13,27 +13,24 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-@Repository
 
+@Repository
 
 
 public class ProjectDaoImpl implements ProjectDao {
 
-private ProjectRepository projectRepository;
+    private ProjectRepository projectRepository;
 
 
-@Autowired
+    @Autowired
     public ProjectDaoImpl(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
 
     }
 
 
-
-
-
     @Override
-    public void addUser(Long projectId , Member member) {
+    public void addUser(Long projectId, Member member) {
         getProjectById(projectId).addUser(member);
     }
 
@@ -45,18 +42,23 @@ private ProjectRepository projectRepository;
     @Override
     public List<Task> getAllTasks(Long projectId) {
         System.out.println("daoimpl" + projectId);
-      return   getProjectById(projectId).getAllTask();
+        return getProjectById(projectId).getAllTask();
     }
-
 
 
     public Project getProjectById(Long projectId) {
         return projectRepository.getById(projectId);
     }
-    public void getTaskSavedToProject(Long id , Task task) {
-   Project project= projectRepository.findById(id).get();
-   project.addTask(task);
-    projectRepository.save(project);
+
+    @Override
+    public void save(Project project) {
+        projectRepository.save(project);
+    }
+
+    public void getTaskSavedToProject(Long id, Task task) {
+        Project project = projectRepository.findById(id).get();
+        project.addTask(task);
+        projectRepository.save(project);
     }
 
 
