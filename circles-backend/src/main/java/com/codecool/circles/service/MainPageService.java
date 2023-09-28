@@ -28,8 +28,9 @@ public class MainPageService {
 
 
     public List<Project> getProjects(String leader) {
-
-        return mainPageDao.getProjects().stream().filter(project -> project.getLeader().equals(leader)).toList();
+         Member member=memberDao.findMemberByName(leader);
+        System.out.println( "member projects"+ member.getProject());
+        return member.getProject();
     }
 
     public void addNewProjects(Project project) {
