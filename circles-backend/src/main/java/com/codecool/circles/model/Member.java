@@ -45,6 +45,15 @@ public class Member {
     private List<Task> taskList=new ArrayList<>();
     @JsonIgnore
     @ManyToMany
+
+    @JoinTable(
+            name = "member_coworker",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "coworker_id")
+    )
+    private List<Member> coWorkers = new ArrayList<>();
+    @JsonIgnore
+    @ManyToMany
     @JoinTable(
             name = "member_subtask",
             joinColumns = @JoinColumn(name = "member_id"),
@@ -77,5 +86,9 @@ public class Member {
 
     public Role getRole() {
         return role;
+    }
+
+    public void addCoworker(Member coWorker) {
+        coWorkers.add(coWorker);
     }
 }

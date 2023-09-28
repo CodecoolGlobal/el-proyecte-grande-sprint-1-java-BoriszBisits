@@ -96,6 +96,7 @@ function ProjectList() {
         return res.json();
       })
       .then((data) => {
+        data=data.filter(member=>member.name!==localStorage.getItem("username"))
         setAllMembers(data);
         setFilteredMembers(data);
       })
@@ -138,6 +139,8 @@ function ProjectList() {
   }
 
   function handleAddCoworker(memberId) {
+    let data={memberId: memberId,
+    leader:localStorage.getItem('username')}
     let token = localStorage.getItem('token')
 
     fetch("/projectlist/project/members", {
@@ -147,7 +150,7 @@ function ProjectList() {
 
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(memberId),
+      body: JSON.stringify(data ),
     })
       .then((res) => {
         if (res.ok) {
