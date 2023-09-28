@@ -30,6 +30,8 @@ public class Project {
     @JsonProperty("name")
     private String name;
 
+    private String leader;
+
     public Project(String name) {
         this.name = name;
     }
