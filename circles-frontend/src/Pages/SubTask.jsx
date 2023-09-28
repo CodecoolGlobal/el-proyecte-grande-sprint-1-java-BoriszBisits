@@ -8,8 +8,14 @@ function SubTask() {
 
     useEffect(() => {
 
+        const token = localStorage.getItem('token');
 
-        fetch(`/projectByid/${id}/task/${taskId}/subtask/${subTaskId}`)
+
+        fetch(`/projectByid/${id}/task/${taskId}/subtask/${subTaskId}`,{
+            method: 'GET',
+            headers:       {'Authorization': `Bearer ${token}` }
+
+        })
             .then((res) => res.json())
             .then((data) => {
                 setSubTask(data);

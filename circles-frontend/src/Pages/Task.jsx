@@ -53,7 +53,13 @@ function Task() {
 
 
   function fetchSubTasks() {
-    fetch(`/projectByid/${id}/task/${taskId}`)
+    const token = localStorage.getItem('token');
+
+    fetch(`/projectByid/${id}/task/${taskId}`,{
+      method: 'GET',
+      headers:  {'Authorization': `Bearer ${token}` }
+
+    })
         .then((res) => res.json())
         .then((data) => {
           setTask(data);
