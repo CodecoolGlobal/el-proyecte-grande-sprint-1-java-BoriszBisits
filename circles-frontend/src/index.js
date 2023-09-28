@@ -8,6 +8,7 @@ import Task from "./Pages/Task";
 import SubTask from "./Pages/SubTask";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from './Pages/Login';
+import Registration from './Pages/Registration';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <Login />,
+            },
+            {
+                path: "/registration",
+                element: <Registration />,
             },
             {
                 path: "/project-list",

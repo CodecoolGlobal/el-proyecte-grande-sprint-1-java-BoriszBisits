@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import TextField from '@mui/material/TextField';
+import { styled } from '@mui/material/styles';
+import HeaderBar from '../Components/HeaderBar'
+import Button from '@mui/material/Button';
 
-import "../projectlistsytle.css";
 
 function ProjectList() {
   const navigate = useNavigate();
@@ -131,9 +140,11 @@ function ProjectList() {
     pageNumbers.push(i);
   }
 
+
   return (
     <div className="container">
-      <h1 className="title">My Projects:</h1>
+      <HeaderBar />
+      <Typography variant={"h3"} style={{ marginBottom: "50px", textAlign: 'center', marginTop: '20px' }} className="title">My Projects</Typography>
       <div className="project-circles">
         {projects.map((project, index) => (
           <div
@@ -147,33 +158,51 @@ function ProjectList() {
       </div>
       <div className="new-project-form-container">
         <div className="new-project-form">
-          <h2>Create New Project:</h2>
+            <Typography variant={"h4"} style={{ marginBottom: "20px", textAlign: 'left', marginTop: '20px' }}>Create New Project:</Typography>
+
           <form onSubmit={handleSubmit}>
-            <label htmlFor="name">Name</label>
-            <input
+            <TextField
+                variant="outlined"
+              label={"Project title"}
               type="text"
               id="name"
               value={newProject}
               onChange={(e) => setNewProject(e.target.value)}
+                style={{ marginBottom: "20px", textAlign: 'left', marginTop: '20px' }}
             />
-            <button type="button" onClick={() => handleAddMember()}>
-              Add Members
-            </button>
+              <Button variant="contained"
+                      color="primary"
+                      style={{ marginTop: '16px' }}
+                      type="submit">Create Project</Button>
+
             {membersName.map((data, i) => (
-              <input
+              <TextField
+                type="search"
                 key={i}
                 onChange={(e) => handleChange(e, i)}
                 placeholder={`Member ${i + 1}`}
               />
             ))}
-            <button type="submit">Create Project</button>
+
+
           </form>
         </div>
         <div className="search-bar">
-          <input
-            type="text"
-            placeholder="Search members"
+            <Button type="submit"
+                    variant="contained"
+                    color="primary"
+                    style={{ marginBottom: "20px", float: 'right', marginTop: '20px' }}
+                    onClick={() => handleAddMember()}
+
+            >
+                Add Members
+            </Button>
+          <TextField
+              variant="outlined"
+            type="search"
+            label="Search members"
             value={searchQuery}
+              style={{ marginBottom: "20px", float: 'right', marginTop: '20px' }}
             onChange={(e) => {
               // TODO: if the search is ever done by the backend
               //       then use Debouncing
@@ -183,10 +212,11 @@ function ProjectList() {
               setFilteredMembers(filterMembers(newSearchQuery));
             }}
           />
+
         </div>
-     
+
         <div className="member-list">
-          <h2>All Members</h2>
+          <Typography variant={"h5"} style={{ marginBottom: "20px", textAlign: 'right', marginTop: '20px' }}>All Members</Typography>
           <ul>
             {currentMembers.map((member) => (
               <div key={member.id}>
