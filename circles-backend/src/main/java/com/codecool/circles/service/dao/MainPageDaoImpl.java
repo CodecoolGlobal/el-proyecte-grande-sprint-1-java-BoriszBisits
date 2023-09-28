@@ -31,7 +31,7 @@ public class MainPageDaoImpl implements MainPageDao {
 
     @Override
     public void addNewProject(Project project) {
-        System.out.println("new project: " + project.getName());
+        System.out.println("new project: " + project);
         projectRepository.save(project);
     }
 

@@ -27,11 +27,13 @@ public class ProjectController {
 
     @GetMapping("/projects")
     public List<Project> getProjects() {
+        System.out.println("cica");
         List<Project> projects = mainPageService.getProjects();
         for (Project project : projects) {
             System.out.println(project.getName());
         }
         return mainPageService.getProjects();
+
     }
 
     @PostMapping("/newprojects")
@@ -67,5 +69,7 @@ public class ProjectController {
         Long longId = Long.valueOf(id);
         mainPageService.setMemberToCoWorker(longId);
     }
+
+
 
 }

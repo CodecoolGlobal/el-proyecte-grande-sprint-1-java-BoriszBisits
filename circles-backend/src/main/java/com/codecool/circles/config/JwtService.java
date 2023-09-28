@@ -22,9 +22,6 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    // Generate a secure key with a size of 256 bits (32 bytes)
-
-
     private static  final  String SECRET_KEY = "MIIBVQIBADANBgkqhkiG9w0BAQEFAASCAT8wggE7AgEAAkEAkgI6jAWLkSRfuyyitdfSWaVsucP7YR7uueMfATkByTy0xH2xwwDmrSWYqePrJUlsgmZlhNqn";
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -67,6 +64,7 @@ public class JwtService {
         return  claimsResolver.apply(claims);
     }
     private Claims extrectAllClaims(String token){
+        System.out.println("token " + token);
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSingnInKey())
