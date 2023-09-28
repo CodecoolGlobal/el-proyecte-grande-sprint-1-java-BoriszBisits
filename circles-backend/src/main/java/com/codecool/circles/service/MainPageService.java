@@ -17,6 +17,7 @@ public class MainPageService {
     private MainPageDao mainPageDao;
     private MemberDao memberDao;
     private ProjectDao projectDao;
+
     @Autowired
 
     public MainPageService(MainPageDao mainPageDao, MemberDao memberDao, ProjectDao projectDao) {
@@ -26,25 +27,20 @@ public class MainPageService {
     }
 
 
-
     public List<Project> getProjects(String leader) {
-         Member member=memberDao.findMemberByName(leader);
-        System.out.println( "member projects"+ member.getProject());
+        Member member = memberDao.findMemberByName(leader);
+        System.out.println("member projects" + member.getProject());
         return member.getProject();
     }
 
     public void addNewProjects(Project project) {
         projectDao.save(project);
-        Member member=memberDao.findMemberByName(project.getLeader());
-        List <Project> projects=member.getProject();
+        Member member = memberDao.findMemberByName(project.getLeader());
+        List<Project> projects = member.getProject();
         projects.add(project);
 
         member.setProject(projects);
         memberDao.saveMember(member);
-
-
-
-
 
 
         mainPageDao.addNewProject(project);
@@ -68,12 +64,15 @@ public class MainPageService {
     public List<Member> getAllMemberWhoIsNotCoWorker() {
         return getAllMember().stream().filter(member -> member.isCoWorker() == false).toList();
     }
-    public List<Member>getALLMemberWoIsCoworker(){
-        return getAllMember().stream().filter(member -> member.isCoWorker() ==true).toList();
+
+    public List<Member> getALLMemberWoIsCoworker() {
+        return getAllMember().stream().filter(member -> member.isCoWorker() == true).toList();
     }
 
-    public void setMemberToCoWorker(Long id) {
-
+    public void setMemberToCoWorker(Long id, String leader) {
+        Member memberLeader = memberDao.findMemberByName(leader);
+        Member member = memberDao.getMemberById(id);
+        memberLeader.addCoworker(member);
         memberDao.setCoworker(id);
     }
 }

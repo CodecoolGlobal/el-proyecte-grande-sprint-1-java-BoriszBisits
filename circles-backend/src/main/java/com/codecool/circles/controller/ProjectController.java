@@ -5,6 +5,7 @@ import com.codecool.circles.model.Project;
 import com.codecool.circles.model.Task;
 import com.codecool.circles.service.MainPageService;
 import com.codecool.circles.service.ProjectService;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,11 @@ import java.util.List;
 public class ProjectController {
     private ProjectService projectService;
     private MainPageService mainPageService;
+@Data
+    private static class RequestData{
+        private String memberId;
+        private String leader;
+    }
 
     @Autowired
     public ProjectController(ProjectService projectService, MainPageService mainPageService) {
@@ -63,10 +69,13 @@ public class ProjectController {
     }
 
     @PostMapping("/project/members")
-    public void addMemberId(@RequestBody String id) {
-        System.out.println("coworker id: " + id);
-        Long longId = Long.valueOf(id);
-        mainPageService.setMemberToCoWorker(longId);
+    public void addMemberId(@RequestBody RequestData requestData) {
+        System.out.println("memebr id "+ requestData.memberId);
+        System.out.println("leader "+ requestData.leader);
+
+        // Long longId = Long.valueOf(id);
+       // mainPageService.setMemberToCoWorker(longId);
+        mainPageService.setMemberToCoWorker(Long.valueOf(requestData.memberId),requestData.leader);
     }
 
 
