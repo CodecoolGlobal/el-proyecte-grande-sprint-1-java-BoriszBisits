@@ -33,8 +33,23 @@ function ProjectList() {
     fetchMembers();
   }, []);
 
+  console.log("token" + localStorage.token)
+  console.log("name" + localStorage.username)
+
+  
+
+
   function fetchProjects() {
-    fetch("/projects")
+    const token = localStorage.getItem('token');
+  
+    const headers = {
+      'Authorization': `Bearer ${token}`
+    };
+  
+    fetch("/projectlist/projects", {
+      method: 'GET',
+      headers: headers
+    })
       .then((res) => {
         if (!res.ok) {
           throw new Error("Failed to fetch projects");
@@ -48,6 +63,7 @@ function ProjectList() {
         console.error("Error fetching projects:", error);
       });
   }
+  
 
   function fetchMembers() {
     fetch("/project/members")
@@ -73,9 +89,13 @@ function ProjectList() {
       name: newProject,
       members: users,
     };
-    fetch("/newprojects", {
+
+    let token = localStorage.getItem('token')
+    fetch("/projectlist/newprojects", {
       method: "POST",
       headers: {
+        'Authorization': `Bearer ${token}`,
+
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),

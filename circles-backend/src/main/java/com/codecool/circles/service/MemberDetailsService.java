@@ -34,22 +34,7 @@ public class MemberDetailsService implements UserDetailsService {
 
 
 
-  @Bean
-  public AuthenticationProvider authenticationProvider(){
-      DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-      authenticationProvider.setUserDetailsService(this);
-      authenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder());
-      return authenticationProvider;
-  }
 
-  @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-  }
-  @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
 
     @Override
