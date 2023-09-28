@@ -17,9 +17,18 @@ function Project() {
 
     // Define the fetchTasks function in the outer scope
     const fetchTasks = () => {
-        fetch(`/projectByid/${id}`)
+
+        const token = localStorage.getItem('token');
+
+
+
+        fetch(`/projectlist/projectByid/${id}`, {
+            method: 'GET',
+            headers: {'Authorization': `Bearer ${token}`}
+        })
             .then((res) => res.json())
             .then((data) => {
+                console.log(data);
                 setTasks(data);
             })
             .catch((error) => {
@@ -31,7 +40,12 @@ function Project() {
         // Fetch project data including available members when the component mounts
         fetchTasks();
 
-        fetch(`/projectByid/${id}`)
+        const token = localStorage.getItem('token');
+
+        fetch(`/projectByid/${id}`, {
+            method: 'GET',
+                headers: {'Authorization': `Bearer ${token}`}
+        })
             .then((res) => res.json())
             .then((data) => {
                 setTasks(data);
@@ -41,7 +55,10 @@ function Project() {
             });
 
         // Fetch available members from the server
-        fetch(`/project/coworkers`)
+        fetch(`/project/coworkers`, {
+            method: 'GET',
+                headers: {'Authorization': `Bearer ${token}`}
+        })
             .then((res) => res.json())
             .then((data) => {
                 setMembers(data);
@@ -79,6 +96,7 @@ function Project() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        const token = localStorage.getItem('token');
         const users = selectedMembers.map((memberId) => ({id: memberId}));
 
         const data = {
@@ -92,6 +110,7 @@ function Project() {
         fetch(`/${id}/new-task`, {
             method: 'POST',
             headers: {
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),

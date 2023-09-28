@@ -31,17 +31,26 @@ function Task() {
   }
 
   useEffect(() => {
-    fetch(`/projectByid/${id}/task/${taskId}`)
+    const token = localStorage.getItem('token');
+    const headers = {
+      'Authorization': `Bearer ${token}` // Note the backticks to interpolate the token
+    };
+
+    fetch(`/projectByid/${id}/task/${taskId}`, {
+      method: 'GET',
+      headers: headers
+    })
         .then((res) => res.json())
         .then((data) => {
           setTask(data);
           setSubTasks(data.subTaskList);
-          console.log("sub" + subTasks);
+          console.log("sub", subTasks);
         })
         .catch((error) => {
           console.error('Error fetching tasks:', error);
         });
   }, []);
+
 
   function fetchSubTasks() {
     fetch(`/projectByid/${id}/task/${taskId}`)
@@ -60,6 +69,8 @@ function Task() {
 
     const users = membersName.map(name => ({ name }));
 
+    const token = localStorage.getItem('token');
+
     const data = {
       name: subTaskName,
       description: description,
@@ -70,7 +81,8 @@ function Task() {
     fetch(`/projectByid/${id}/task/${taskId}/addSubTasks`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     })

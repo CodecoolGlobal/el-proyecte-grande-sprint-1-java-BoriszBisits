@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 
 function Registration() {
@@ -15,30 +16,51 @@ function Registration() {
     const [token, setToken] = useState(null)
 
 
+
+    const navigate = useNavigate();
+
+
     const handleRegistration = (e) => {
         e.preventDefault();
 
-        const data = {
-            name : username,
-            password : password
-        };
-        fetch(`/api/v1/auth/authenticate`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        }).then((res) => {
-            if (res.ok) {
-                res.json().then(data => {
-                    setToken(data.token)
-                    console.log("token " + token);
+        if (password == passwordConfirm) {
+            const data = {
+                name: username,
+                email: email,
+                password: password
+            };
+            fetch(`/api/v1/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+                .then((res) => {
+                    if (res.ok) {
+                        return res.json();
+                    } else {
+                        throw new Error('Failed to fetch data');
+                    }
+                })
+                .then((data) => {
+                    setToken(data.token); // Set the 'token' here
+                    console.log("token " + data.token); // Use data.token here
+
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('username', username);
+                    navigate('/');
+                })
+                .catch((error) => {
+                    console.error(error);
                 });
-            } else {
-                console.error('Failed to fetch data');
-            }
-        });
+        } else {
+            alert("Passwords do not match. Please make sure the passwords match.")
+        }
+
+
     };
+
 
 
 
