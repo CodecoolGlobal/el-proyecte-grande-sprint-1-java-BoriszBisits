@@ -37,6 +37,9 @@ function ProjectList() {
     setMembersName(updatedMembers);
   }
 
+
+ 
+
   useEffect(() => {
     fetchProjects();
     fetchMembers();
@@ -50,12 +53,13 @@ function ProjectList() {
 
   function fetchProjects() {
     const token = localStorage.getItem('token');
+    const leader = localStorage.getItem('username')
   
     const headers = {
       'Authorization': `Bearer ${token}`
     };
   
-    fetch("/projectlist/projects", {
+    fetch(`/projectlist/projects/${leader}`, {
       method: 'GET',
       headers: headers
     })
@@ -75,7 +79,16 @@ function ProjectList() {
   
 
   function fetchMembers() {
-    fetch("/project/members")
+     const token = localStorage.getItem('token');
+  
+    const headers = {
+      'Authorization': `Bearer ${token}`
+    };
+  
+    fetch("/projectlist/project/members", {
+      method: 'GET',
+      headers: headers
+    })
       .then((res) => {
         if (!res.ok) {
           throw new Error("Failed to fetch members");
@@ -93,11 +106,15 @@ function ProjectList() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    let leader = localStorage.getItem('username')
+
     const users = membersName.map((name) => ({ name }));
     const data = {
       name: newProject,
       members: users,
+      leader: leader,
     };
+    console.log("leader" + data.leader)
 
     let token = localStorage.getItem('token')
     fetch("/projectlist/newprojects", {
@@ -121,9 +138,13 @@ function ProjectList() {
   }
 
   function handleAddCoworker(memberId) {
-    fetch("/project/members", {
+    let token = localStorage.getItem('token')
+
+    fetch("/projectlist/project/members", {
       method: "POST",
       headers: {
+        'Authorization': `Bearer ${token}`,
+
         "Content-Type": "application/json",
       },
       body: JSON.stringify(memberId),
