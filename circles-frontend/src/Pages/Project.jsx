@@ -42,7 +42,7 @@ function Project() {
 
         const token = localStorage.getItem('token');
 
-        fetch(`/projectByid/${id}`, {
+        fetch(`/projectlist/projectByid/${id}`, {
             method: 'GET',
                 headers: {'Authorization': `Bearer ${token}`}
         })
