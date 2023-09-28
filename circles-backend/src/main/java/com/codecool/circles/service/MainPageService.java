@@ -22,8 +22,9 @@ public class MainPageService {
         this.memberDao = memberDao;
     }
 
-    public List<Project> getProjects() {
-        return mainPageDao.getProjects();
+    public List<Project> getProjects(String leader) {
+
+        return mainPageDao.getProjects().stream().filter(project -> project.getLeader().equals(leader)).toList();
     }
 
     public void addNewProjects(Project project) {
@@ -61,6 +62,7 @@ public class MainPageService {
     }
 
     public void setMemberToCoWorker(Long id) {
+
         memberDao.setCoworker(id);
     }
 }

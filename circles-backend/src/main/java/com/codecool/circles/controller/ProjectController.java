@@ -25,14 +25,12 @@ public class ProjectController {
         this.mainPageService = mainPageService;
     }
 
-    @GetMapping("/projects")
-    public List<Project> getProjects() {
-        System.out.println("cica");
-        List<Project> projects = mainPageService.getProjects();
-        for (Project project : projects) {
-            System.out.println(project.getName());
-        }
-        return mainPageService.getProjects();
+    @GetMapping("/projects/{leader}")
+    public List<Project> getProjects(@PathVariable String leader) {
+        System.out.println("leader " + leader);
+        //List<Project> projects = mainPageService.getProjects(leader);
+
+        return mainPageService.getProjects(leader);
 
     }
 
@@ -40,6 +38,7 @@ public class ProjectController {
     public ResponseEntity<Object> addNewProject(@RequestBody Project project) {
         System.out.println("project name: " + project.getName());
         System.out.println("project members" + project.getMembers());
+        System.out.println("project leader " + project.getLeader());
         mainPageService.addNewProjects(project);
         return new ResponseEntity<>("result successful result",
                 HttpStatus.OK);
@@ -69,6 +68,8 @@ public class ProjectController {
         Long longId = Long.valueOf(id);
         mainPageService.setMemberToCoWorker(longId);
     }
+
+
 
 
 
