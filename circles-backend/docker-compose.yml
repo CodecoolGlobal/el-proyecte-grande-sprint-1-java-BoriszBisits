@@ -4,7 +4,7 @@ services:
   kanban-postgres:
     image: "postgres:9.6-alpine"
     ports:
-      - 5000:5432
+      - "5000:5432"
     environment:
       POSTGRES_DB: circles
       POSTGRES_USER: user
@@ -22,7 +22,7 @@ services:
       DB_PORT: 5432
       DB_NAME: circles
     ports:
-      - 8080:8080
+      - "8080:8080"
     links:
       - kanban-postgres
 
@@ -32,10 +32,9 @@ services:
       dockerfile: Dockerfile_Production
     container_name: kanban-ui
     ports:
-      - 4200:80
+      - "4200:80"
     links:
       - kanban-app
-
 
 volumes:
   kanban-data:
