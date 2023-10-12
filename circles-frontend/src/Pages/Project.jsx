@@ -1,32 +1,122 @@
-import React, {useState, useEffect} from 'react';
-import {useParams, Link} from 'react-router-dom';
-import {confirmAlert} from 'react-confirm-alert';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import TaskCircle from '../Circle/TaskCircle';
-import '../Project.css';
+import {
+    Container,
+    Typography,
+    IconButton,
+    TextField,
+    Button,
+    Paper,
+    Grid,
+    Card,
+    CardContent,
+    List,
+    ListItem,
+    ListItemText,
+    MenuItem,
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import HeaderBar from '../Components/HeaderBar';
+
+const StyledContainer = styled(Container)({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: '20px',
+    marginBottom: '50px',
+    textAlign: 'center',
+});
+
+const StyledLeftColumn = styled(Grid)({
+    flex: '0 0 calc(70% - 8px)',
+    marginRight: '16px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+});
+
+const StyledRightColumn = styled(Grid)({
+    flex: '0 0 calc(30% - 8px)',
+    marginBottom: '20px',
+});
+
+const StyledTitle = styled(Typography)({
+    fontSize: '24px',
+    marginBottom: '20px',
+    textAlign: 'left',
+});
+
+const StyledTaskList = styled(List)({
+    padding: 0,
+});
+
+const StyledTaskItem = styled(ListItem)({
+    marginBottom: '20px',
+});
+
+const StyledTaskCard = styled(Card)({
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+});
+
+const StyledTaskCardContent = styled(CardContent)({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+});
+
+const StyledTaskText = styled(ListItemText)({
+    fontSize: '16px',
+    textDecoration: 'none',
+    '& a': {
+        textDecoration: 'none',
+        color: 'inherit',
+    },
+    margin: '5px',
+});
+
+const StyledAddTaskButton = styled(Button)({
+    marginBottom: '20px',
+});
+
+const StyledForm = styled('form')({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+});
+
+const StyledInput = styled(TextField)({
+    marginBottom: '8px',
+});
+
+const StyledButton = styled(Button)({
+    marginBottom: '20px',
+});
 
 function Project() {
-    const {id} = useParams();
+    const { id } = useParams();
     const [newTaskName, setNewTaskName] = useState('');
     const [tasks, setTasks] = useState([]);
-    const [deadline, setDeadLine] = useState('');
+    const [deadline, setDeadline] = useState('');
     const [colorOfCircle, setColorOfCircle] = useState('');
     const [selectedMembers, setSelectedMembers] = useState([]);
     const [members, setMembers] = useState([]);
-    const [isFormVisible, setIsFormVisible] = useState(false); // State to control form visibility
+    const [isFormVisible, setIsFormVisible] = useState(false);
 
-    // Define the fetchTasks function in the outer scope
     const fetchTasks = () => {
-
         const token = localStorage.getItem('token');
 
         fetch(`/api/projectlist/projectByid/${id}`, {
             method: 'GET',
-            headers: {'Authorization': `Bearer ${token}`}
+            headers: { Authorization: `Bearer ${token}` },
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log(data);
                 setTasks(data);
             })
             .catch((error) => {
@@ -41,7 +131,7 @@ function Project() {
 
         fetch(`/api/projectlist/projectByid/${id}`, {
             method: 'GET',
-            headers: {'Authorization': `Bearer ${token}`}
+            headers: { Authorization: `Bearer ${token}` },
         })
             .then((res) => res.json())
             .then((data) => {
@@ -53,12 +143,11 @@ function Project() {
 
         fetch(`/api/project/coworkers`, {
             method: 'GET',
-            headers: {'Authorization': `Bearer ${token}`}
+            headers: { Authorization: `Bearer ${token}` },
         })
             .then((res) => res.json())
             .then((data) => {
                 setMembers(data);
-                console.log(data);
             })
             .catch((error) => {
                 console.error('Error fetching members:', error);
@@ -93,7 +182,7 @@ function Project() {
         e.preventDefault();
 
         const token = localStorage.getItem('token');
-        const users = selectedMembers.map((memberId) => ({id: memberId}));
+        const users = selectedMembers.map((memberId) => ({ id: memberId }));
 
         const data = {
             name: newTaskName,
@@ -106,14 +195,14 @@ function Project() {
         fetch(`/api/${id}/new-task`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
         }).then((res) => {
             if (res.ok) {
                 setNewTaskName('');
-                setDeadLine('');
+                setDeadline('');
                 setSelectedMembers([]);
                 fetchTasks();
                 setIsFormVisible(false);
@@ -126,96 +215,101 @@ function Project() {
         return fetch(`/api/projectByid/${id}/task/${taskId}`, {
             method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
         }).then((res) => res.json());
     };
 
     return (
-        <div className="container">
-            <div className="left-column">
-                <h1 className="title">The Project</h1>
-                <div className="project-list">
-                    {tasks.map((task) => (
-                        <div key={task._id} className="project">
-                            <Link to={`/project/${id}/task/${task.id}`}>
-                                <p>{task.name}</p>
-                            </Link>
-                            <p>Members:</p>
-                            <ul>
-                                {task.members.map((member) => (
-                                    <li key={member.id}>{member.name}</li>
-                                ))}
-                            </ul>
-                            <button type="button" onClick={() => submitDelete(task.id)}>
-                                Delete
-                            </button>
-                        </div>
-                    ))}
-                </div>
-                <button
-                    type="button"
-                    onClick={() => setIsFormVisible(!isFormVisible)}
-                    className="add-task-button"
-                >
-                    {isFormVisible ? 'Hide Form' : 'Add Task'}
-                </button>
-                {isFormVisible && (
-                    <form onSubmit={handleSubmit} className="new-project-form">
-                        <div>
-                            <label htmlFor="name">Name</label>
-                            <input
+        <div>
+            <HeaderBar />
+            <StyledContainer>
+                <StyledLeftColumn>
+                    <StyledTitle variant="h4">My Project Tasks</StyledTitle>
+                    <StyledTaskList>
+                        {tasks.map((task) => (
+                            <StyledTaskItem key={task.id}>
+                                <StyledTaskCard>
+                                    <StyledTaskCardContent>
+                                        <StyledTaskText>
+                                            <Link to={`/project/${id}/task/${task.id}`}>{task.name}</Link>
+                                        </StyledTaskText>
+                                        <Button
+                                            onClick={() => submitDelete(task.id)}
+                                            variant="contained"
+                                            color="primary"
+                                        >
+                                            Delete
+                                        </Button>
+                                    </StyledTaskCardContent>
+                                </StyledTaskCard>
+                            </StyledTaskItem>
+                        ))}
+                    </StyledTaskList>
+                    <StyledAddTaskButton
+                        type="button"
+                        variant="contained"
+                        color="primary"
+                        onClick={() => setIsFormVisible(!isFormVisible)}
+                    >
+                        {isFormVisible ? 'Hide Form' : 'Add Task'}
+                    </StyledAddTaskButton>
+                    {isFormVisible && (
+                        <StyledForm onSubmit={handleSubmit}>
+                            <StyledInput
+                                variant="outlined"
+                                label="Name"
                                 type="text"
-                                id="name"
                                 value={newTaskName}
                                 onChange={(e) => setNewTaskName(e.target.value)}
                             />
-                        </div>
-                        <div>
-                            <label htmlFor="deadline">Deadline</label>
-                            <input
+                            <StyledInput
+                                variant="outlined"
+                                label="Deadline"
                                 type="text"
-                                id="deadline"
                                 value={deadline}
-                                onChange={(e) => setDeadLine(e.target.value)}
+                                onChange={(e) => setDeadline(e.target.value)}
                             />
-                        </div>
-                        <div>
-                            <label htmlFor="colorOfCircle">Color</label>
-                            <input
+                            <StyledInput
+                                variant="outlined"
+                                label="Color"
                                 type="text"
-                                id="colorOfCircle"
                                 value={colorOfCircle}
                                 onChange={(e) => setColorOfCircle(e.target.value)}
                             />
-                        </div>
-                        <div>
-                            <label htmlFor="add-member">Add Members</label>
-                            <select
-                                id="add-member"
-                                multiple
-                                value={selectedMembers}
-                                onChange={(e) =>
-                                    setSelectedMembers(Array.from(e.target.selectedOptions, (option) => option.value))
-                                }
+                            <StyledInput
+                                variant="outlined"
+                                label="Add Members"
+                                select
+                                SelectProps={{
+                                    multiple: true,
+                                    value: selectedMembers,
+                                    onChange: (e) =>
+                                        setSelectedMembers(
+                                            Array.from(
+                                                e.target.selectedOptions,
+                                                (option) => option.value
+                                            )
+                                        ),
+                                }}
                             >
                                 {members.map((member) => (
-                                    <option key={member.id} value={member.id}>
+                                    <MenuItem key={member.id} value={member.id}>
                                         {member.name}
-                                    </option>
+                                    </MenuItem>
                                 ))}
-                            </select>
-                        </div>
-                        <button type="submit">Add new task</button>
-                    </form>
-                )}
-            </div>
-            <div className="right-column">
-                <div className="task-circle">
-                    <TaskCircle projectId={id} tasks={tasks}/>
-                </div>
-            </div>
+                            </StyledInput>
+                            <StyledButton variant="contained" color="primary" type="submit">
+                                Add new task
+                            </StyledButton>
+                        </StyledForm>
+                    )}
+                </StyledLeftColumn>
+                <StyledRightColumn>
+                    <TaskCircle projectId={id} tasks={tasks} />
+                </StyledRightColumn>
+            </StyledContainer>
         </div>
     );
 }

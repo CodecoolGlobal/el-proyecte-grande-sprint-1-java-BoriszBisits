@@ -1,64 +1,108 @@
-import React, {useState, useEffect} from 'react';
-import {Link, useParams} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import TaskCircle from "../Circle/TaskCircle";
 import SubTaskCircle from "../Circle/SubTaskCircle";
-import {confirmAlert} from 'react-confirm-alert';
+import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import '../Task.css';
-import {useNavigate} from "react-router-dom";
+import {
+    Typography,
+    Container,
+    Grid,
+    Button,
+    TextField,
+    Card,
+    CardContent,
+    CardActions,
+    List,
+    ListItem,
+    ListItemText,
+} from '@mui/material';
+import HeaderBar from "../Components/HeaderBar";
+
+const useStyles = {
+    container: {
+        display: 'flex',
+        backgroundColor: '#f5f5f5',
+    },
+    leftContent: {
+        flex: '0 0 70%',
+        marginRight: '16px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+    },
+    title: {
+        fontSize: '24px',
+        marginBottom: '16px',
+    },
+    projectList: {
+        listStyle: 'none',
+        padding: 0,
+    },
+    projectCard: {
+        marginBottom: '16px',
+    },
+    newSubtaskForm: {
+        display: 'flex',
+        flexDirection: 'column',
+        marginTop: '16px',
+    },
+    formInput: {
+        marginBottom: '16px',
+    },
+    rightContent: {
+        flex: '0 0 30%',
+        marginBottom: '16px',
+    },
+};
 
 function Task() {
+    const classes = useStyles;
+    const { id, taskId } = useParams();
+    const [task, setTask] = useState({});
+    const [subTasks, setSubTasks] = useState([]);
+    const [subTaskName, setSubTaskName] = useState('');
+    const [description, setDescription] = useState('');
+    const [colorOfCircle, setColorOfCircle] = useState('');
+    const [membersName, setMembersName] = useState([]);
     const navigate = useNavigate();
 
-    const {id, taskId} = useParams();
-    const [task, setTask] = useState([]);
-    const [newSubTasks, setNewSubTasks] = useState([]);
-    const [subTasks, setSubTasks] = useState([]);
-    const [subTaskName, setSubTasksName] = useState(null)
-    const [description, setDescription] = useState(null)
-    const [colorOfCircle, setColorOfCircle] = useState("");
-    const [membersName, setMembersName] = useState([]);
+    const handleAddMember = () => {
+        setMembersName([...membersName, '']);
+    };
 
-    function handleAddMember() {
-        const abc = [...membersName, []]
-        setMembersName(abc);
-    }
-
-    function handleChange(onChangeValue, i) {
-        const inputdata = [...membersName]
-        inputdata[i] = onChangeValue.target.value
-        setMembersName(inputdata)
-    }
+    const handleChange = (e, i) => {
+        const updatedMembers = [...membersName];
+        updatedMembers[i] = e.target.value;
+        setMembersName(updatedMembers);
+    };
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         const headers = {
-            'Authorization': `Bearer ${token}` // Note the backticks to interpolate the token
+            Authorization: `Bearer ${token}`,
         };
 
         fetch(`/api/projectByid/${id}/task/${taskId}`, {
             method: 'GET',
-            headers: headers
+            headers: headers,
         })
             .then((res) => res.json())
             .then((data) => {
                 setTask(data);
                 setSubTasks(data.subTaskList);
-                console.log("sub", subTasks);
             })
             .catch((error) => {
                 console.error('Error fetching tasks:', error);
             });
-    }, []);
+    }, [id, taskId]);
 
-
-    function fetchSubTasks() {
+    const fetchSubTasks = () => {
         const token = localStorage.getItem('token');
 
         fetch(`/api/projectByid/${id}/task/${taskId}`, {
             method: 'GET',
-            headers: {'Authorization': `Bearer ${token}`}
-
+            headers: { Authorization: `Bearer ${token}` },
         })
             .then((res) => res.json())
             .then((data) => {
@@ -68,12 +112,12 @@ function Task() {
             .catch((error) => {
                 console.error('Error fetching tasks:', error);
             });
-    }
+    };
 
-    function handleSubmit(e) {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
-        const users = membersName.map(name => ({name}));
+        const users = membersName.map((name) => ({ name }));
 
         const token = localStorage.getItem('token');
 
@@ -81,41 +125,37 @@ function Task() {
             name: subTaskName,
             description: description,
             colorOfCircle: colorOfCircle,
-            memberList: users
-        }
+            memberList: users,
+        };
 
         fetch(`/api/projectByid/${id}/task/${taskId}/addSubTasks`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`,
-                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
         })
             .then((res) => {
                 if (res.ok) {
-                    // Clear form fields after successful submission
-                    setSubTasksName("");
-                    setDescription("");
-                    setColorOfCircle("")
+                    setSubTaskName('');
+                    setDescription('');
+                    setColorOfCircle('');
                     setMembersName([]);
-                    // Fetch updated tasks after adding a new task
                     fetchSubTasks();
                 }
             });
-    }
+    };
 
     const deleteSubTask = (subTaskId) => {
         const token = localStorage.getItem('token');
         return fetch(`/api/projectByid/${id}/task/${taskId}/subTask/${subTaskId}`, {
-            method: "DELETE",
+            method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
-        }).then((res) =>
-            res.json()
-        );
+        }).then((res) => res.json());
     };
 
     const submitDelete = (subTaskId) => {
@@ -125,17 +165,17 @@ function Task() {
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => handleDelete(subTaskId)
+                    onClick: () => handleDelete(subTaskId),
                 },
                 {
-                    label: 'No'
-                }
-            ]
+                    label: 'No',
+                },
+            ],
         });
     };
 
     const handleDelete = (subTaskId) => {
-        deleteSubTask(subTaskId)
+        deleteSubTask(subTaskId);
 
         setSubTasks((prevSubTasks) => {
             return prevSubTasks.filter((subTask) => subTask.id !== subTaskId);
@@ -143,74 +183,95 @@ function Task() {
     };
 
     return (
-        <div className="container">
-            <div className="left-content">
-                <h1 className="title">{task.name}</h1>
-                <div className="project-list">
-                    {subTasks &&
-                        subTasks.map((subTask) => (
-                            <div key={subTask.id} className="project">
-                                <p onClick={() => navigate(`/project/${id}/task/${task.id}/subtask/${subTask.id}`)}>
-                                    {subTask.name}
-                                </p>
-                                <button type="button" onClick={() => submitDelete(subTask.id)}>
+        <Container style={{ backgroundColor: '#f5f5f5' }}>
+            <HeaderBar />
+            <div className="d-flex">
+                <div className="w-70">
+                    <Typography variant="h4" className={classes.title}>
+                        {task.name}
+                    </Typography>
+                    {subTasks.map((subTask) => (
+                        <Card key={subTask.id} className={classes.projectCard}>
+                            <CardContent>
+                                <Typography variant="h6">{subTask.name}</Typography>
+                                <Typography variant="body2">{subTask.description}</Typography>
+                            </CardContent>
+                            <CardActions>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() =>
+                                        navigate(`/project/${id}/task/${task.id}/subtask/${subTask.id}`)
+                                    }
+                                >
+                                    View
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={() => submitDelete(subTask.id)}
+                                >
                                     Delete
-                                </button>
-                            </div>
-                        ))}
-                </div>
-                <form onSubmit={handleSubmit} className="new-subtask-form">
-                    <div>
-                        <label htmlFor="name">Name</label>
-                        <input
+                                </Button>
+                            </CardActions>
+                        </Card>
+                    ))}
+                    <form onSubmit={handleSubmit} className={classes.newSubtaskForm}>
+                        <TextField
+                            className={classes.formInput}
+                            variant="outlined"
+                            label="Name"
                             type="text"
-                            id="name"
                             value={subTaskName}
-                            onChange={(e) => {
-                                setSubTasksName(e.target.value);
-                            }}
+                            onChange={(e) => setSubTaskName(e.target.value)}
                         />
-                    </div>
-                    <div>
-                        <label htmlFor="description">Description</label>
-                        <input
+                        <TextField
+                            className={classes.formInput}
+                            variant="outlined"
+                            label="Description"
                             type="text"
-                            id="description"
                             value={description}
-                            onChange={(e) => {
-                                setDescription(e.target.value);
-                            }}
+                            onChange={(e) => setDescription(e.target.value)}
                         />
-                    </div>
-                    <div>
-                        <label htmlFor="colorOfCircle">Color</label>
-                        <input
+                        <TextField
+                            className={classes.formInput}
+                            variant="outlined"
+                            label="Color"
                             type="text"
-                            id="colorOfCircle"
                             value={colorOfCircle}
-                            onChange={(e) => {
-                                setColorOfCircle(e.target.value);
-                            }}
+                            onChange={(e) => setColorOfCircle(e.target.value)}
                         />
-                    </div>
-                    <div>
-                        <label htmlFor="add-member"></label>
-                        <button type="button" onClick={() => handleAddMember()}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            type="button"
+                            onClick={handleAddMember}
+                        >
                             Add Members
-                        </button>
-                        {membersName.map((data, i) => {
-                            return <input key={i} onChange={(e) => handleChange(e, i)}/>;
-                        })}
+                        </Button>
+                        {membersName.map((data, i) => (
+                            <TextField
+                                key={i}
+                                className={classes.formInput}
+                                variant="outlined"
+                                label="Member"
+                                type="text"
+                                value={data}
+                                onChange={(e) => handleChange(e, i)}
+                            />
+                        ))}
+                        <Button variant="contained" color="primary" type="submit">
+                            Add Sub-Tasks
+                        </Button>
+                    </form>
+                </div>
+                <div className="w-30">
+                    <div className={classes.taskCircle}>
+                        <SubTaskCircle subtasks={task.subTaskList} projectId={id} taskId={taskId} />
                     </div>
-                    <button type="submit">Add Sub-Tasks</button>
-                </form>
-            </div>
-            <div className="right-content">
-                <div className="task-circle">
-                    <SubTaskCircle subtasks={task.subTaskList} projectId={id} taskId={taskId}/>
                 </div>
             </div>
-        </div>
+        </Container>
     );
 }
 

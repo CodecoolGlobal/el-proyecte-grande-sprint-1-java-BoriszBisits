@@ -8,9 +8,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 function HeaderBar(){
 
-
-
-
     return (
         <div>
         <Box sx={{ flexGrow: 1 }}>
@@ -27,6 +24,5 @@ function HeaderBar(){
         </Box>
         </div>
     );
-
 }
 export default HeaderBar;
