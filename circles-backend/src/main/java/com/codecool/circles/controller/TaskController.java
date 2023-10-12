@@ -30,28 +30,27 @@ public class TaskController {
     }
 
 
-    @GetMapping("/project/coworkers")
+    @GetMapping("api/project/coworkers")
     public List<Member> getMembers() {
         return mainPageService.getALLMemberWoIsCoworker();
     }
 
 
-    @PostMapping("/{id}/new-task")
+    @PostMapping("api/{id}/new-task")
     public ResponseEntity<Object> addNewTaskToProject(@PathVariable Long id, @RequestBody Task task) {
-       // System.out.println("date controller: " + task.getDeadLine());
-        List<Member> memberList=task.getMembers();
-        for (Member member:memberList){
+        // System.out.println("date controller: " + task.getDeadLine());
+        List<Member> memberList = task.getMembers();
+        for (Member member : memberList) {
 
-            System.out.println("bejövök new task member id"+member.getId());
+            System.out.println("bejövök new task member id" + member.getId());
         }
         taskService.addNewTask(task, id);
 
         return new ResponseEntity<>("result successful result",
                 HttpStatus.OK);
-
     }
 
-    @DeleteMapping("projectByid/{projectId}/task/{taskId}")
+    @DeleteMapping("api/projectByid/{projectId}/task/{taskId}")
     public ResponseEntity<String> deleteTask(
             @PathVariable Long projectId,
             @PathVariable Long taskId
@@ -60,17 +59,17 @@ public class TaskController {
         return response;
     }
 
-    @GetMapping("/projectByid/{projectId}/task/{taskId}")
+    @GetMapping("api/projectByid/{projectId}/task/{taskId}")
     public Task getATaskById(@PathVariable String projectId, @PathVariable String taskId) {
         return taskService.getTaskByIds(Long.valueOf(taskId));
     }
 
-   /* @GetMapping("project/members")
-    public List<Member> getCoworkers(){
-        return taskService.getCoworkers();
-    }
-*/
-    @PostMapping("projectByid/{id}/task/{taskId}/addSubTasks")
+    /* @GetMapping("project/members")
+     public List<Member> getCoworkers(){
+         return taskService.getCoworkers();
+     }
+ */
+    @PostMapping("api/projectByid/{id}/task/{taskId}/addSubTasks")
     public ResponseEntity<Object> addNewSubTasks(@PathVariable Long id, @PathVariable Long taskId, @RequestBody SubTask subTask) {
 
         System.out.println("subtaskname " + subTask.getName());

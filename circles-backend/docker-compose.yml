@@ -2,13 +2,17 @@ version: '3.8'
 services:
 
   kanban-postgres:
-    image: "postgres:9.6-alpine"
+    #image: "postgres:9.6-alpine"
+    image: "postgres:13-alpine"  # Use a more recent PostgreSQL version
     ports:
       - "5000:5432"
     environment:
       POSTGRES_DB: circles
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
+      #new part
+    volumes:
+      - kanban-data:/var/lib/postgresql/data  # Persist database data
 
   kanban-app:
     build:
@@ -23,8 +27,11 @@ services:
       DB_NAME: circles
     ports:
       - "8080:8080"
-    links:
-      - kanban-postgres
+    #new part
+    #links:
+      #- kanban-postgres
+    depends_on:
+          - kanban-postgres  # Ensure the database is ready before starting the app
 
   kanban-ui:
     build:
@@ -33,8 +40,11 @@ services:
     container_name: kanban-ui
     ports:
       - "4200:80"
-    links:
-      - kanban-app
+    #newpart
+    #links:
+     # - kanban-app
+    depends_on:
+      - kanban-app  # Ensure the app is running before starting the UI
 
 volumes:
   kanban-data:

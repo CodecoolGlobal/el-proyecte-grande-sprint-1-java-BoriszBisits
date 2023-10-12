@@ -20,9 +20,7 @@ function Project() {
 
         const token = localStorage.getItem('token');
 
-
-
-        fetch(`/projectlist/projectByid/${id}`, {
+        fetch(`/api/projectlist/projectByid/${id}`, {
             method: 'GET',
             headers: {'Authorization': `Bearer ${token}`}
         })
@@ -37,14 +35,13 @@ function Project() {
     };
 
     useEffect(() => {
-        // Fetch project data including available members when the component mounts
         fetchTasks();
 
         const token = localStorage.getItem('token');
 
-        fetch(`/projectlist/projectByid/${id}`, {
+        fetch(`/api/projectlist/projectByid/${id}`, {
             method: 'GET',
-                headers: {'Authorization': `Bearer ${token}`}
+            headers: {'Authorization': `Bearer ${token}`}
         })
             .then((res) => res.json())
             .then((data) => {
@@ -54,10 +51,9 @@ function Project() {
                 console.error('Error fetching tasks:', error);
             });
 
-        // Fetch available members from the server
-        fetch(`/project/coworkers`, {
+        fetch(`/api/project/coworkers`, {
             method: 'GET',
-                headers: {'Authorization': `Bearer ${token}`}
+            headers: {'Authorization': `Bearer ${token}`}
         })
             .then((res) => res.json())
             .then((data) => {
@@ -107,7 +103,7 @@ function Project() {
             projectId: id,
         };
 
-        fetch(`/${id}/new-task`, {
+        fetch(`/api/${id}/new-task`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -116,22 +112,23 @@ function Project() {
             body: JSON.stringify(data),
         }).then((res) => {
             if (res.ok) {
-                // Clear form fields after successful submission
                 setNewTaskName('');
                 setDeadLine('');
                 setSelectedMembers([]);
-                // Fetch updated tasks after adding a new task
                 fetchTasks();
-                setIsFormVisible(false); // Hide the form after submission
+                setIsFormVisible(false);
             }
         });
     };
 
     const deleteTask = (taskId) => {
-        console.log('projectid: ' + id);
-        console.log('taskid' + taskId);
-        return fetch(`/projectByid/${id}/task/${taskId}`, {
+        const token = localStorage.getItem('token');
+        return fetch(`/api/projectByid/${id}/task/${taskId}`, {
             method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
         }).then((res) => res.json());
     };
 

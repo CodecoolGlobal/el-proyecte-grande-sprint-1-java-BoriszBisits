@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/projectlist")
+@RequestMapping("/api/projectlist")
 public class ProjectController {
     private ProjectService projectService;
     private MainPageService mainPageService;
