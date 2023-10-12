@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
-
+import {styled} from '@mui/material/styles';
+import {useNavigate} from 'react-router-dom';
+import {useParams, Link} from 'react-router-dom';
+import Container from '@mui/material/Container';
 
 function Registration() {
     // State variables to store the username and password input values
@@ -16,7 +17,6 @@ function Registration() {
     const [token, setToken] = useState(null)
 
 
-
     const navigate = useNavigate();
 
 
@@ -25,16 +25,12 @@ function Registration() {
 
         if (password == passwordConfirm) {
             const data = {
-                name: username,
-                email: email,
-                password: password
+                name: username, email: email, password: password
             };
             fetch(`/api/v1/auth/register`, {
-                method: 'POST',
-                headers: {
+                method: 'POST', headers: {
                     'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
+                }, body: JSON.stringify(data),
             })
                 .then((res) => {
                     if (res.ok) {
@@ -61,14 +57,14 @@ function Registration() {
 
     };
 
-
-
-
-
-    return (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-            <Typography variant="h4" style={{ marginBottom: '32px' }}>Registration</Typography>
-            <form onSubmit={handleRegistration} style={{ width: '300px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    return (<Container style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh'
+        }}>
+            <Typography variant="h4" style={{marginBottom: '15px'}}>Registration</Typography>
+            <Typography variant="subtitle1" style={{marginBottom: '30px'}}>Already have an account? <Link
+                to={`/`}>Log In</Link></Typography>
+            <form onSubmit={handleRegistration}
+                  style={{width: '300px', display: 'flex', flexDirection: 'column', gap: '16px'}}>
                 <TextField
                     label="Username"
                     variant="outlined"
@@ -113,13 +109,12 @@ function Registration() {
                     type="submit"
                     variant="contained"
                     color="primary"
-                    style={{ marginTop: '16px' }}
+                    style={{marginTop: '16px'}}
                 >
                     Register
                 </Button>
             </form>
-        </div>
-    );
+        </Container>);
 }
 
 export default Registration;

@@ -1,210 +1,217 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import {Link, useParams} from 'react-router-dom';
 import TaskCircle from "../Circle/TaskCircle";
 import SubTaskCircle from "../Circle/SubTaskCircle";
-import { confirmAlert } from 'react-confirm-alert';
+import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import '../Task.css';
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 function Task() {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  const { id, taskId } = useParams();
-  const [task, setTask] = useState([]);
-  const [newSubTasks, setNewSubTasks] = useState([]);
-  const [subTasks, setSubTasks] = useState([]);
-  const [subTaskName, setSubTasksName] = useState(null)
-  const [description, setDescription] = useState(null)
-  const [colorOfCircle, setColorOfCircle] = useState("");
-  const [membersName, setMembersName] = useState([]);
+    const {id, taskId} = useParams();
+    const [task, setTask] = useState([]);
+    const [newSubTasks, setNewSubTasks] = useState([]);
+    const [subTasks, setSubTasks] = useState([]);
+    const [subTaskName, setSubTasksName] = useState(null)
+    const [description, setDescription] = useState(null)
+    const [colorOfCircle, setColorOfCircle] = useState("");
+    const [membersName, setMembersName] = useState([]);
 
-  function handleAddMember() {
-    const abc = [...membersName, []]
-    setMembersName(abc);
-  }
-
-  function handleChange(onChangeValue, i) {
-    const inputdata = [...membersName]
-    inputdata[i] = onChangeValue.target.value
-    setMembersName(inputdata)
-  }
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const headers = {
-      'Authorization': `Bearer ${token}` // Note the backticks to interpolate the token
-    };
-
-    fetch(`/projectByid/${id}/task/${taskId}`, {
-      method: 'GET',
-      headers: headers
-    })
-        .then((res) => res.json())
-        .then((data) => {
-          setTask(data);
-          setSubTasks(data.subTaskList);
-          console.log("sub", subTasks);
-        })
-        .catch((error) => {
-          console.error('Error fetching tasks:', error);
-        });
-  }, []);
-
-
-  function fetchSubTasks() {
-    const token = localStorage.getItem('token');
-
-    fetch(`/projectByid/${id}/task/${taskId}`,{
-      method: 'GET',
-      headers:  {'Authorization': `Bearer ${token}` }
-
-    })
-        .then((res) => res.json())
-        .then((data) => {
-          setTask(data);
-          setSubTasks(data.subTaskList);
-        })
-        .catch((error) => {
-          console.error('Error fetching tasks:', error);
-        });
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    const users = membersName.map(name => ({ name }));
-
-    const token = localStorage.getItem('token');
-
-    const data = {
-      name: subTaskName,
-      description: description,
-      colorOfCircle: colorOfCircle,
-      memberList: users
+    function handleAddMember() {
+        const abc = [...membersName, []]
+        setMembersName(abc);
     }
 
-    fetch(`/projectByid/${id}/task/${taskId}/addSubTasks`, {
-      method: 'POST',
-      headers: {
-          'Authorization': `Bearer ${token}`,
-          "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-        .then((res) => {
-          if (res.ok) {
-            // Clear form fields after successful submission
-            setSubTasksName("");
-            setDescription("");
-            setColorOfCircle("")
-            setMembersName([]);
-            // Fetch updated tasks after adding a new task
-            fetchSubTasks();
-          }
-        });
-  }
+    function handleChange(onChangeValue, i) {
+        const inputdata = [...membersName]
+        inputdata[i] = onChangeValue.target.value
+        setMembersName(inputdata)
+    }
 
-  const deleteSubTask = (subTaskId) => {
-    return fetch(`/projectByid/${id}/task/${taskId}/subTask/${subTaskId}`, { method: "DELETE" }).then((res) =>
-        res.json()
-    );
-  };
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const headers = {
+            'Authorization': `Bearer ${token}` // Note the backticks to interpolate the token
+        };
 
-  const submitDelete = (subTaskId) => {
-    confirmAlert({
-      title: 'Confirm to delete',
-      message: 'Are you sure to delete this task?',
-      buttons: [
-        {
-          label: 'Yes',
-          onClick: () => handleDelete(subTaskId)
-        },
-        {
-          label: 'No'
+        fetch(`/api/projectByid/${id}/task/${taskId}`, {
+            method: 'GET',
+            headers: headers
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setTask(data);
+                setSubTasks(data.subTaskList);
+                console.log("sub", subTasks);
+            })
+            .catch((error) => {
+                console.error('Error fetching tasks:', error);
+            });
+    }, []);
+
+
+    function fetchSubTasks() {
+        const token = localStorage.getItem('token');
+
+        fetch(`/api/projectByid/${id}/task/${taskId}`, {
+            method: 'GET',
+            headers: {'Authorization': `Bearer ${token}`}
+
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setTask(data);
+                setSubTasks(data.subTaskList);
+            })
+            .catch((error) => {
+                console.error('Error fetching tasks:', error);
+            });
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        const users = membersName.map(name => ({name}));
+
+        const token = localStorage.getItem('token');
+
+        const data = {
+            name: subTaskName,
+            description: description,
+            colorOfCircle: colorOfCircle,
+            memberList: users
         }
-      ]
-    });
-  };
 
-  const handleDelete = (subTaskId) => {
-    deleteSubTask(subTaskId)
+        fetch(`/api/projectByid/${id}/task/${taskId}/addSubTasks`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((res) => {
+                if (res.ok) {
+                    // Clear form fields after successful submission
+                    setSubTasksName("");
+                    setDescription("");
+                    setColorOfCircle("")
+                    setMembersName([]);
+                    // Fetch updated tasks after adding a new task
+                    fetchSubTasks();
+                }
+            });
+    }
 
-    setSubTasks((prevSubTasks) => {
-      return prevSubTasks.filter((subTask) => subTask.id !== subTaskId);
-    });
-  };
+    const deleteSubTask = (subTaskId) => {
+        const token = localStorage.getItem('token');
+        return fetch(`/api/projectByid/${id}/task/${taskId}/subTask/${subTaskId}`, {
+            method: "DELETE",
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        }).then((res) =>
+            res.json()
+        );
+    };
 
-  return (
-      <div className="container">
-        <div className="left-content">
-          <h1 className="title">{task.name}</h1>
-          <div className="project-list">
-            {subTasks &&
-                subTasks.map((subTask) => (
-                    <div key={subTask.id} className="project">
-                      <p onClick={() => navigate(`/project/${id}/task/${task.id}/subtask/${subTask.id}`)}>
-                        {subTask.name}
-                      </p>
-                      <button type="button" onClick={() => submitDelete(subTask.id)}>
-                        Delete
-                      </button>
+    const submitDelete = (subTaskId) => {
+        confirmAlert({
+            title: 'Confirm to delete',
+            message: 'Are you sure to delete this task?',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => handleDelete(subTaskId)
+                },
+                {
+                    label: 'No'
+                }
+            ]
+        });
+    };
+
+    const handleDelete = (subTaskId) => {
+        deleteSubTask(subTaskId)
+
+        setSubTasks((prevSubTasks) => {
+            return prevSubTasks.filter((subTask) => subTask.id !== subTaskId);
+        });
+    };
+
+    return (
+        <div className="container">
+            <div className="left-content">
+                <h1 className="title">{task.name}</h1>
+                <div className="project-list">
+                    {subTasks &&
+                        subTasks.map((subTask) => (
+                            <div key={subTask.id} className="project">
+                                <p onClick={() => navigate(`/project/${id}/task/${task.id}/subtask/${subTask.id}`)}>
+                                    {subTask.name}
+                                </p>
+                                <button type="button" onClick={() => submitDelete(subTask.id)}>
+                                    Delete
+                                </button>
+                            </div>
+                        ))}
+                </div>
+                <form onSubmit={handleSubmit} className="new-subtask-form">
+                    <div>
+                        <label htmlFor="name">Name</label>
+                        <input
+                            type="text"
+                            id="name"
+                            value={subTaskName}
+                            onChange={(e) => {
+                                setSubTasksName(e.target.value);
+                            }}
+                        />
                     </div>
-                ))}
-          </div>
-          <form onSubmit={handleSubmit} className="new-subtask-form">
-            <div>
-              <label htmlFor="name">Name</label>
-              <input
-                  type="text"
-                  id="name"
-                  value={subTaskName}
-                  onChange={(e) => {
-                    setSubTasksName(e.target.value);
-                  }}
-              />
+                    <div>
+                        <label htmlFor="description">Description</label>
+                        <input
+                            type="text"
+                            id="description"
+                            value={description}
+                            onChange={(e) => {
+                                setDescription(e.target.value);
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="colorOfCircle">Color</label>
+                        <input
+                            type="text"
+                            id="colorOfCircle"
+                            value={colorOfCircle}
+                            onChange={(e) => {
+                                setColorOfCircle(e.target.value);
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="add-member"></label>
+                        <button type="button" onClick={() => handleAddMember()}>
+                            Add Members
+                        </button>
+                        {membersName.map((data, i) => {
+                            return <input key={i} onChange={(e) => handleChange(e, i)}/>;
+                        })}
+                    </div>
+                    <button type="submit">Add Sub-Tasks</button>
+                </form>
             </div>
-            <div>
-              <label htmlFor="description">Description</label>
-              <input
-                  type="text"
-                  id="description"
-                  value={description}
-                  onChange={(e) => {
-                    setDescription(e.target.value);
-                  }}
-              />
+            <div className="right-content">
+                <div className="task-circle">
+                    <SubTaskCircle subtasks={task.subTaskList} projectId={id} taskId={taskId}/>
+                </div>
             </div>
-            <div>
-              <label htmlFor="colorOfCircle">Color</label>
-              <input
-                  type="text"
-                  id="colorOfCircle"
-                  value={colorOfCircle}
-                  onChange={(e) => {
-                    setColorOfCircle(e.target.value);
-                  }}
-              />
-            </div>
-            <div>
-              <label htmlFor="add-member"></label>
-              <button type="button" onClick={() => handleAddMember()}>
-                Add Members
-              </button>
-              {membersName.map((data, i) => {
-                return <input key={i} onChange={(e) => handleChange(e, i)} />;
-              })}
-            </div>
-            <button type="submit">Add Sub-Tasks</button>
-          </form>
         </div>
-        <div className="right-content">
-          <div className="task-circle">
-            <SubTaskCircle subtasks={task.subTaskList} projectId={id} taskId={taskId} />
-          </div>
-        </div>
-      </div>
-  );
+    );
 }
 
 export default Task;

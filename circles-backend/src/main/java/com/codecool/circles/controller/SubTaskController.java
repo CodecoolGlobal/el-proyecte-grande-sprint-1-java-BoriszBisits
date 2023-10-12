@@ -24,12 +24,12 @@ public class SubTaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping("/projectByid/{projectId}/task/{taskId}/subtask/{subTaskId}")
+    @GetMapping("api/projectByid/{projectId}/task/{taskId}/subtask/{subTaskId}")
     public SubTask getSubTaskById(@PathVariable String projectId, @PathVariable String taskId, @PathVariable String subTaskId) {
         return taskService.getTaskByIds(Long.valueOf(taskId)).getSubTaskById(Long.valueOf(subTaskId));
     }
 
-    @DeleteMapping("projectByid/{projectId}/task/{taskId}/subTask/{subTaskId}")
+    @DeleteMapping("api/projectByid/{projectId}/task/{taskId}/subTask/{subTaskId}")
     public ResponseEntity<String> deleteSubTask(
             @PathVariable Long subTaskId
     ) {

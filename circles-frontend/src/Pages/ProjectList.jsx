@@ -38,7 +38,7 @@ function ProjectList() {
   }
 
 
- 
+
 
   useEffect(() => {
     fetchProjects();
@@ -48,18 +48,18 @@ function ProjectList() {
   console.log("token" + localStorage.token)
   console.log("name" + localStorage.username)
 
-  
+
 
 
   function fetchProjects() {
     const token = localStorage.getItem('token');
     const leader = localStorage.getItem('username')
-  
+
     const headers = {
       'Authorization': `Bearer ${token}`
     };
-  
-    fetch(`/projectlist/projects/${leader}`, {
+
+    fetch(`/api/projectlist/projects/${leader}`, {
       method: 'GET',
       headers: headers
     })
@@ -76,16 +76,16 @@ function ProjectList() {
         console.error("Error fetching projects:", error);
       });
   }
-  
+
 
   function fetchMembers() {
      const token = localStorage.getItem('token');
-  
+
     const headers = {
       'Authorization': `Bearer ${token}`
     };
-  
-    fetch("/projectlist/project/members", {
+
+    fetch("/api/projectlist/project/members", {
       method: 'GET',
       headers: headers
     })
@@ -118,7 +118,7 @@ function ProjectList() {
     console.log("leader" + data.leader)
 
     let token = localStorage.getItem('token')
-    fetch("/projectlist/newprojects", {
+    fetch("/api/projectlist/newprojects", {
       method: "POST",
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -143,7 +143,7 @@ function ProjectList() {
     leader:localStorage.getItem('username')}
     let token = localStorage.getItem('token')
 
-    fetch("/projectlist/project/members", {
+    fetch("/api/projectlist/project/members", {
       method: "POST",
       headers: {
         'Authorization': `Bearer ${token}`,
