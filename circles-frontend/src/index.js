@@ -15,8 +15,6 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 const router = createBrowserRouter([
     {
         path: "/",
-        // element: <Layout />,
-        // errorElement: <ErrorPage />,
         children: [
             {
                 path: "/",
