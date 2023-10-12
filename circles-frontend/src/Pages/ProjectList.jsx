@@ -107,7 +107,7 @@ function ProjectList() {
 
     const [eventCount, setEventCount] = useState(() => 0);
 
-    const membersPerPage = 10;
+    const membersPerPage = 5;
 
     function handleAddMember() {
         const updatedMembers = [...membersName, ""];
