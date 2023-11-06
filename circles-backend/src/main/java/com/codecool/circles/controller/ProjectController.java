@@ -33,10 +33,9 @@ public class ProjectController {
 
     @GetMapping("/projects/{leader}")
     public List<Project> getProjects(@PathVariable String leader) {
-        System.out.println("leader " + leader);
         //List<Project> projects = mainPageService.getProjects(leader);
 
-        return mainPageService.getProjects(leader);
+        return mainPageService.getOwnedProjects(leader);
 
     }
 

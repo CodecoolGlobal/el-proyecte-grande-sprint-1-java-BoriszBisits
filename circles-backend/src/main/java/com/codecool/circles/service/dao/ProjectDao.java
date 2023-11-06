@@ -15,6 +15,7 @@ public interface ProjectDao {
     public void getTaskSavedToProject(Long id , Task task);
 
     public Project getProjectById(Long projectId);
+    public Project getProjectByName(String name);
 
     public void save(Project project);
 

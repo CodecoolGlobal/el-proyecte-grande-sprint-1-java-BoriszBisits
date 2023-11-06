@@ -51,6 +51,11 @@ public class ProjectDaoImpl implements ProjectDao {
     }
 
     @Override
+    public Project getProjectByName(String name) {
+        return projectRepository.findProjectByName(name);
+    }
+
+    @Override
     public void save(Project project) {
         projectRepository.save(project);
     }

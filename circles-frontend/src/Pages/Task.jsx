@@ -75,6 +75,7 @@ function Task() {
         const updatedMembers = [...membersName];
         updatedMembers[i] = e.target.value;
         setMembersName(updatedMembers);
+        console.log(membersName)
     };
 
     useEffect(() => {

@@ -38,7 +38,7 @@ function Login() {
                 localStorage.setItem('username', username)
                 setToken(data.token);
                 setIsLoggedIn(true);
-                navigate('/project-list');
+                navigate('/mainpage');
             })
             .catch((error) => {
                 alert('Authentication failed. Please check your credentials.');
