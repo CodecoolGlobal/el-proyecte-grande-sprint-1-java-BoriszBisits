@@ -69,7 +69,6 @@ public class MemberDaoImpl implements MemberDao{
 
     public void setCoworker(Long id){
         Member member = getMemberById(id);
-        member.setCoWorker(true);
         memberRepository.save(member);
     }
 

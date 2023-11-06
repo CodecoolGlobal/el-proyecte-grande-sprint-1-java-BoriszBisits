@@ -20,8 +20,12 @@ public class Project {
     //   @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private Member owner;
     @ManyToMany
-    @JoinTable(name = "member_project", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "member_id"))
+    @JoinTable(name = "co_worker_project", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "member_id"))
     private List<Member> members = new ArrayList<>();
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Task> taskList = new ArrayList<>();

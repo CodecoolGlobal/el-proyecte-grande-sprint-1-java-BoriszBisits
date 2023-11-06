@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import ProjectList from "./Pages/ProjectList";
+import MainPage from "./Pages/MainPage";
 import Project from './Pages/Project';
 import Task from "./Pages/Task";
 import SubTask from "./Pages/SubTask";
@@ -25,12 +25,12 @@ const router = createBrowserRouter([
                 element: <Registration />,
             },
             {
-                path: "/project-list",
-                element: <ProjectList />,
+                path: "/mainpage",
+                element: <MainPage />,
             },
             {
-                path: "/projects",
-                element: <ProjectList />,
+                path: "/maingpage",
+                element: <MainPage />,
             },
 
             {

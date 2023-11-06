@@ -31,7 +31,7 @@ public class TaskService {
     }
 
     public List<Member> getCoworkers() {
-        return memberDao.getAllMember().stream().filter(member -> member.isCoWorker() == true).toList();
+        return memberDao.getAllMember();
     }
 
     public void addSubTaskToTaskById(Long taskId, SubTask subTask) {

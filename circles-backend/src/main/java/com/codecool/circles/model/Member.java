@@ -3,7 +3,6 @@ package com.codecool.circles.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 
 
 import java.util.ArrayList;
@@ -25,11 +24,11 @@ public class Member {
     @JsonIgnore
     @ManyToMany
     @JoinTable(
-            name = "member_project",
+            name = "co_worker_project",
             joinColumns = @JoinColumn(name = "member_id"),
             inverseJoinColumns = @JoinColumn(name = "project_id")
     )
-    private List<Project> project = new ArrayList<>();
+    private List<Project> coWorkerProjects = new ArrayList<>();
 
 
     @JsonIgnore
@@ -60,7 +59,10 @@ public class Member {
             inverseJoinColumns = @JoinColumn(name = "subtask_id")
     )
     private List<SubTask> subTaskList =new ArrayList<>();
-    private boolean isCoWorker = false;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Project> ownedProjects = new ArrayList<>();
+
     private String password;
     private String email;
     @Enumerated(EnumType.STRING)
@@ -77,7 +79,7 @@ public class Member {
         taskList.add(task);
     }
     public void addProjet(Project project1){
-        project.add(project1);
+        coWorkerProjects.add(project1);
     }
 
     public String getPassword() {

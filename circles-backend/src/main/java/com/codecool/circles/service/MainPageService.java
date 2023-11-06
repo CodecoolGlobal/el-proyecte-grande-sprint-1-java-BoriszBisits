@@ -2,15 +2,14 @@ package com.codecool.circles.service;
 
 import com.codecool.circles.model.Member;
 import com.codecool.circles.model.Project;
-import com.codecool.circles.model.Task;
 import com.codecool.circles.service.dao.MainPageDao;
 import com.codecool.circles.service.dao.MemberDao;
 import com.codecool.circles.service.dao.ProjectDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MainPageService {
@@ -27,21 +26,24 @@ public class MainPageService {
     }
 
 
-    public List<Project> getProjects(String leader) {
+    public List<Project> getOwnedProjects(String leader) {
         Member member = memberDao.findMemberByName(leader);
-        System.out.println("member projects" + member.getProject());
-        return member.getProject();
+        System.out.println("owned-projexts " + member.getOwnedProjects());
+        List<Project> ownedProjects = mainPageDao.getProjects().stream().filter(project -> project.getLeader().equals(leader)).toList();
+        return ownedProjects;
     }
 
     public void addNewProjects(Project project) {
         projectDao.save(project);
         Member member = memberDao.findMemberByName(project.getLeader());
-        List<Project> projects = member.getProject();
-        projects.add(project);
+        List<Project> ownedProjects = member.getOwnedProjects();
+        ownedProjects.add(project);
+        System.out.println("projekjei az embernek meg az uj projectt"+ ownedProjects);
+        member.setOwnedProjects(ownedProjects);
+       // member.setCoWorkerProjects(projects);
 
-        member.setProject(projects);
         memberDao.saveMember(member);
-
+        System.out.println("owned" + member.getOwnedProjects());
 
         mainPageDao.addNewProject(project);
     }
@@ -62,11 +64,11 @@ public class MainPageService {
     }
 
     public List<Member> getAllMemberWhoIsNotCoWorker() {
-        return getAllMember().stream().filter(member -> member.isCoWorker() == false).toList();
+        return getAllMember();
     }
 
     public List<Member> getALLMemberWoIsCoworker() {
-        return getAllMember().stream().filter(member -> member.isCoWorker() == true).toList();
+        return getAllMember();
     }
 
     public void setMemberToCoWorker(Long id, String leader) {
