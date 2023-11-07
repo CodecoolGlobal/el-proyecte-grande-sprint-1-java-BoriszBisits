@@ -58,19 +58,19 @@ public class MemberDaoImpl implements MemberDao{
     }
 
     @Override
-    public List<Member> getAllMember() {
-        return memberRepository.findAll();
-    }
+    public List<Member> getNotCoworkers(Long projectId) {
+        List<Member> memberList = memberRepository.findAll();
+        List<Member> filteredMembers = memberList.stream().filter(member -> !member.getCoWorkerProjects().contains(projectId)).toList();
+        return filteredMembers;    }
+
 
     @Override
     public Member getMemberById(Long id) {
         return memberRepository.findById(id).get();
     }
 
-    public void setCoworker(Long id){
-        Member member = getMemberById(id);
-        memberRepository.save(member);
-    }
+
+
 
     @Override
     public Member findMemberByName(String name) {

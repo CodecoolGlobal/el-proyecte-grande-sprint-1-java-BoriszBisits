@@ -31,12 +31,12 @@ public class ProjectDaoImpl implements ProjectDao {
 
     @Override
     public void addUser(Long projectId, Member member) {
-        getProjectById(projectId).addUser(member);
+
     }
 
     @Override
     public void addUsers(Long projectId, List<Member> member) {
-        getProjectById(projectId).addUsers(member);
+
     }
 
     @Override

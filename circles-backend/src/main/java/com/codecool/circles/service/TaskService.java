@@ -30,9 +30,9 @@ public class TaskService {
         this.memberDao = memberDao;
     }
 
-    public List<Member> getCoworkers() {
-        return memberDao.getAllMember();
-    }
+//    public List<Member> getCoworkers() {
+//        return memberDao.getAllMember();
+//    }
 
     public void addSubTaskToTaskById(Long taskId, SubTask subTask) {
         Task task = taskDao.getTask(taskId);
@@ -62,7 +62,7 @@ public class TaskService {
         //List<Task> tasks=member1.getTaskList();
        // tasks.add(task);
         member1.addTask(task);
-        member1.addProjet(project);
+        //member1.addProjet(project);
         memberDao.saveMember(member1);
 
        }

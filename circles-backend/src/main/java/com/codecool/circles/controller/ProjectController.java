@@ -17,36 +17,21 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/projectlist")
 public class ProjectController {
-    private ProjectService projectService;
-    private MainPageService mainPageService;
-@Data
+
+    @Data
     private static class RequestData{
         private String memberId;
         private String leader;
+        private String projectId;
     }
+    private ProjectService projectService;
+    private MainPageService mainPageService;
+
 
     @Autowired
     public ProjectController(ProjectService projectService, MainPageService mainPageService) {
         this.projectService = projectService;
         this.mainPageService = mainPageService;
-    }
-
-    @GetMapping("/projects/{leader}")
-    public List<Project> getProjects(@PathVariable String leader) {
-        //List<Project> projects = mainPageService.getProjects(leader);
-
-        return mainPageService.getOwnedProjects(leader);
-
-    }
-
-    @PostMapping("/newprojects")
-    public ResponseEntity<Object> addNewProject(@RequestBody Project project) {
-        System.out.println("project name: " + project.getName());
-        System.out.println("project members" + project.getMembers());
-        System.out.println("project leader " + project.getLeader());
-        mainPageService.addNewProjects(project);
-        return new ResponseEntity<>("result successful result",
-                HttpStatus.OK);
     }
 
     @GetMapping("/projectByid/{projectId}")
@@ -62,15 +47,19 @@ public class ProjectController {
         return projectService.getAllTaskByProjectId(projectUUID);
     }
 
-    @GetMapping("/project/members")
-    public List<Member> getMembers() {
-        return mainPageService.getAllMemberWhoIsNotCoWorker();
+    @GetMapping("/project/members/{id}")
+    public List<Member> getCoWorkersByProject(@PathVariable String id) {
+        System.out.println("projectIdinget " + id);
+        System.out.println("workes " + mainPageService.getAllMemberWhoIsNotCoWorker(Long.valueOf(id)));
+        return mainPageService.getAllMemberWhoIsNotCoWorker(Long.valueOf(id));
     }
+
 
     @PostMapping("/project/members")
     public void addMemberId(@RequestBody RequestData requestData) {
         System.out.println("memebr id "+ requestData.memberId);
         System.out.println("leader "+ requestData.leader);
+        System.out.println("project id" + requestData.projectId);
 
         // Long longId = Long.valueOf(id);
        // mainPageService.setMemberToCoWorker(longId);

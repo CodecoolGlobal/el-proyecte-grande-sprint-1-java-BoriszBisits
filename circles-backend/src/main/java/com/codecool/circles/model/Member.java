@@ -1,9 +1,9 @@
 package com.codecool.circles.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +17,10 @@ import java.util.List;
 @Table(name = "member")
 public class Member {
     @Id
-    // @JsonIgnore
     @GeneratedValue
     private Long id;
     private String name;
-    @JsonIgnore
+
     @ManyToMany
     @JoinTable(
             name = "co_worker_project",
@@ -31,40 +30,36 @@ public class Member {
     private List<Project> coWorkerProjects = new ArrayList<>();
 
 
-    @JsonIgnore
-    // TODO:  Use @JsonManagedReference and @JsonBackReference annotations on the two side
-    //        (Read the documentation for both)
     @ManyToMany
     @JoinTable(
             name = "member_task",
             joinColumns = @JoinColumn(name = "member_id"),
             inverseJoinColumns = @JoinColumn(name = "task_id")
     )
+    private List<Task> taskList = new ArrayList<>();
 
-    private List<Task> taskList=new ArrayList<>();
-    @JsonIgnore
     @ManyToMany
-
     @JoinTable(
             name = "member_coworker",
             joinColumns = @JoinColumn(name = "member_id"),
             inverseJoinColumns = @JoinColumn(name = "coworker_id")
     )
     private List<Member> coWorkers = new ArrayList<>();
-    @JsonIgnore
+
     @ManyToMany
     @JoinTable(
             name = "member_subtask",
             joinColumns = @JoinColumn(name = "member_id"),
             inverseJoinColumns = @JoinColumn(name = "subtask_id")
     )
-    private List<SubTask> subTaskList =new ArrayList<>();
+    private List<SubTask> subTaskList = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner")
     private List<Project> ownedProjects = new ArrayList<>();
 
     private String password;
     private String email;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -75,10 +70,12 @@ public class Member {
     public void setName(String name) {
         this.name = name;
     }
-    public void addTask(Task task){
+
+    public void addTask(Task task) {
         taskList.add(task);
     }
-    public void addProjet(Project project1){
+
+    public void addProject(Project project1) {
         coWorkerProjects.add(project1);
     }
 

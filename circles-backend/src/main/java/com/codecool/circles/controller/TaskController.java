@@ -30,10 +30,10 @@ public class TaskController {
     }
 
 
-    @GetMapping("api/project/coworkers")
-    public List<Member> getMembers() {
-        return mainPageService.getALLMemberWoIsCoworker();
-    }
+//    @GetMapping("api/project/coworkers")
+//    public List<Member> getMembers() {
+//        return mainPageService.getALLMemberWoIsCoworker();
+//    }
 
 
     @PostMapping("api/{id}/new-task")
