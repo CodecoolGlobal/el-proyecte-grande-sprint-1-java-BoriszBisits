@@ -50,7 +50,6 @@ public class ProjectController {
     @GetMapping("/project/members/{id}")
     public List<Member> getCoWorkersByProject(@PathVariable String id) {
         System.out.println("projectIdinget " + id);
-        System.out.println("workes " + mainPageService.getAllMemberWhoIsNotCoWorker(Long.valueOf(id)));
         return mainPageService.getAllMemberWhoIsNotCoWorker(Long.valueOf(id));
     }
 
