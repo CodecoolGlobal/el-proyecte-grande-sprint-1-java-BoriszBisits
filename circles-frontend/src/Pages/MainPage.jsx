@@ -151,6 +151,7 @@ function ProjectList() {
                 if (res.ok) {
                     setNewProject("");
                     fetchProjects();
+                    console.log(newProject)
                 }
             })
             .catch((error) => {
