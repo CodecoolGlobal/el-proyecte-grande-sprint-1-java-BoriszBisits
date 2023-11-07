@@ -1,6 +1,7 @@
 package com.codecool.circles.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -25,6 +26,7 @@ public class Project {
     @JoinColumn(name = "owner_id")
     private Member owner;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "co_worker_project",
@@ -75,6 +77,10 @@ public class Project {
 
     public List<Task> getAllTask() {
         return taskList;
+    }
+    public void addMemberToProject(Project project ,Member member) {
+        //project.getMembers().add(member);
+        members.add(member);
     }
 
     public Task getTaskById(Long taskId) {

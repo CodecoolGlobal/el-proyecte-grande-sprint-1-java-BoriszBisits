@@ -217,7 +217,7 @@ function Project() {
                 console.error('Error fetching tasks:', error);
             });
 
-        fetch(`/api/project/coworkers`, {
+        /*fetch(`/api/project/coworkers`, {
             method: 'GET',
             headers: { Authorization: `Bearer ${token}` },
         })
@@ -226,7 +226,7 @@ function Project() {
             })
             .catch((error) => {
                 console.error('Error fetching members:', error);
-            });
+            });*/
     }, [id]);
 
     const submitDelete = (taskId) => {
