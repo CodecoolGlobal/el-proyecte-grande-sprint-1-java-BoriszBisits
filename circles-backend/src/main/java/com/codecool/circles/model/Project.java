@@ -43,6 +43,8 @@ public class Project {
 
     private String leader;
 
+    private String type;
+
     public Project(String name) {
         this.name = name;
     }

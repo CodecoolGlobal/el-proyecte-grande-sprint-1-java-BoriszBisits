@@ -21,6 +21,7 @@ public class MainPageController {
     private static class RequestData{
         private String memberId;
         private String leader;
+        private String type;
     }
 @Autowired
     public MainPageController(ProjectService projectService, MainPageService mainPageService) {
@@ -40,6 +41,7 @@ public class MainPageController {
         System.out.println("project name: " + project.getName());
         System.out.println("project members" + project.getMembers());
         System.out.println("project leader " + project.getLeader());
+        System.out.println("project type " + project.getType());
         mainPageService.addNewProjects(project);
         return new ResponseEntity<>("result successful result",
                 HttpStatus.OK);
