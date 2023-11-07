@@ -11,7 +11,6 @@ import Login from './Pages/Login';
 import Profile from './Pages/Profile';
 import Registration from './Pages/Registration';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Profile from './Pages/Profile';
 
 const router = createBrowserRouter([
     {
