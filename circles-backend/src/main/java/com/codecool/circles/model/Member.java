@@ -36,7 +36,15 @@ public class Member {
     )
     private List<Task> taskList = new ArrayList<>();
 
+    private InterestType interestType;
 
+    public InterestType getInterestType() {
+        return interestType;
+    }
+
+    public void setInterestType(InterestType interestType) {
+        this.interestType = interestType;
+    }
 
     @ManyToMany
     @JoinTable(
