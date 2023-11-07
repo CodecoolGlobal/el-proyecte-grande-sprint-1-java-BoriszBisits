@@ -73,17 +73,12 @@ public class MainPageService {
 //        return getAllMember();
 //    }
 
-    public void setMemberToCoWorker(Long id, String leader) {
-        Member member = memberDao.getMemberById(id);
-        Project project = projectDao.getProjectById(id);
-        List<Project> coWorkerProjects = member.getCoWorkerProjects();
-        coWorkerProjects.add(project);
-        member.setCoWorkerProjects(coWorkerProjects);
+    public void setMemberToCoWorker(Long projectId, String leader,Long memberId) {
+        Member member = memberDao.getMemberById(memberId);
+        Project project = projectDao.getProjectById(projectId);
+        project.addMemberToProject(project,member);
         memberDao.saveMember(member);
-        List<Member> coWorkers = project.getMembers();
-        coWorkers.add(member);
-        project.setMembers(coWorkers);
-        projectDao.save(project);
+
 
     }
 }

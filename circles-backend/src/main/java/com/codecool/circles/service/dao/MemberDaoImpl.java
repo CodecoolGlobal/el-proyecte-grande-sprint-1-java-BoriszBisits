@@ -1,7 +1,9 @@
 package com.codecool.circles.service.dao;
 
 import com.codecool.circles.model.Member;
+import com.codecool.circles.model.Project;
 import com.codecool.circles.repositories.MemberRepository;
+import com.codecool.circles.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -10,9 +12,11 @@ import java.util.*;
 @Repository
 public class MemberDaoImpl implements MemberDao{
     private MemberRepository memberRepository;
+    private ProjectRepository projectRepository;
     @Autowired
-    public MemberDaoImpl(MemberRepository memberRepository) {
+    public MemberDaoImpl(MemberRepository memberRepository ,ProjectRepository projectRepository) {
         this.memberRepository = memberRepository;
+        this.projectRepository = projectRepository;
     }
 
     @Override
@@ -60,8 +64,10 @@ public class MemberDaoImpl implements MemberDao{
     @Override
     public List<Member> getNotCoworkers(Long projectId) {
         List<Member> memberList = memberRepository.findAll();
-        List<Member> filteredMembers = memberList.stream().filter(member -> !member.getCoWorkerProjects().contains(projectId)).toList();
-        return filteredMembers;    }
+
+       Project project=projectRepository.findById(projectId).get();
+       List<Member> filteredMemerlist=memberList.stream().filter(member -> !member.getCoProjects().contains(project)).toList();
+        return filteredMemerlist;    }
 
 
     @Override

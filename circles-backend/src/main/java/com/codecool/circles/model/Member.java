@@ -1,7 +1,5 @@
 package com.codecool.circles.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,7 +25,7 @@ public class Member {
             joinColumns = @JoinColumn(name = "member_id"),
             inverseJoinColumns = @JoinColumn(name = "project_id")
     )
-    private List<Project> coWorkerProjects = new ArrayList<>();
+    private List<Project> coProjects = new ArrayList<>();
 
 
     @ManyToMany
@@ -38,13 +36,7 @@ public class Member {
     )
     private List<Task> taskList = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "member_coworker",
-            joinColumns = @JoinColumn(name = "member_id"),
-            inverseJoinColumns = @JoinColumn(name = "coworker_id")
-    )
-    private List<Member> coWorkers = new ArrayList<>();
+
 
     @ManyToMany
     @JoinTable(
@@ -76,7 +68,7 @@ public class Member {
     }
 
     public void addProject(Project project1) {
-        coWorkerProjects.add(project1);
+        coProjects.add(project1);
     }
 
     public String getPassword() {
@@ -87,7 +79,5 @@ public class Member {
         return role;
     }
 
-    public void addCoworker(Member coWorker) {
-        coWorkers.add(coWorker);
-    }
+
 }

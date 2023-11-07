@@ -62,7 +62,7 @@ public class ProjectController {
 
         // Long longId = Long.valueOf(id);
        // mainPageService.setMemberToCoWorker(longId);
-        mainPageService.setMemberToCoWorker(Long.valueOf(requestData.memberId),requestData.leader);
+        mainPageService.setMemberToCoWorker(Long.valueOf(requestData.projectId),requestData.leader, Long.valueOf(requestData.memberId));
     }
 
 
