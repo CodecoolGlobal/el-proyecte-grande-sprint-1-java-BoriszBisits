@@ -39,7 +39,7 @@ public class ProfileController {
 
     @GetMapping("/profile/types")
     public  List<InterestType> getAllType() {
-        System.out.println(List.of(InterestType.values()));
+        System.out.println("types" + List.of(InterestType.values()));
         return List.of(InterestType.values());
     }
 

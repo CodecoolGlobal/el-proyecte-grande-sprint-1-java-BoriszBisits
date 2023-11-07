@@ -120,27 +120,41 @@ function ProjectList() {
   }, []);
 
   function fetchProjectTypes() {
-    fetch('/api/projectlist/projecttypes')
-      .then((response) => response.json())
+    const token = localStorage.getItem("token");
+    const leader = localStorage.getItem("username");
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    fetch(`/api/profile/types`, {
+      method: "GET",
+      headers: headers,
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch projects");
+        }
+        return res.json();
+      })
       .then((data) => {
-        setProjectTypes(data); // Set the project types in state
+        setProjectTypes(data);
       })
       .catch((error) => {
-        console.error('Error fetching project types:', error);
+        console.error("Error fetching projects:", error);
       });
   }
 
   function fetchProjects() {
-    const token = localStorage.getItem('token');
-    const leader = localStorage.getItem('username')
+    const token = localStorage.getItem("token");
+    const leader = localStorage.getItem("username");
 
     const headers = {
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     };
 
     fetch(`/api/projectlist/projects/${leader}`, {
-      method: 'GET',
-      headers: headers
+      method: "GET",
+      headers: headers,
     })
       .then((res) => {
         if (!res.ok) {
@@ -158,18 +172,20 @@ function ProjectList() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    let leader = localStorage.getItem('username')
+    let leader = localStorage.getItem("username");
     const data = {
       name: newProject,
       leader: leader,
-      type: selectedProjectType // Include the selected project type in the data
+      type: selectedProjectType,
     };
 
-    let token = localStorage.getItem('token')
+    console.log("Selected project type: " + selectedProjectType);
+
+    let token = localStorage.getItem("token");
     fetch("/api/projectlist/newprojects", {
       method: "POST",
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
@@ -186,7 +202,7 @@ function ProjectList() {
   }
 
   return (
-    <div style={{ backgroundColor: '#f5f5f5' }}>
+    <div style={{ backgroundColor: "#f5f5f5" }}>
       <HeaderBar />
       <StyledContainer>
         <StyledLeftPanel>
@@ -200,7 +216,7 @@ function ProjectList() {
               value={newProject}
               onChange={(e) => setNewProject(e.target.value)}
             />
-            <FormControl variant="outlined" style={{ marginBottom: '8px' }}>
+            <FormControl variant="outlined" style={{ marginBottom: "8px" }}>
               <InputLabel id="project-type-label">Project Type</InputLabel>
               <Select
                 labelId="project-type-label"
@@ -209,8 +225,8 @@ function ProjectList() {
                 onChange={(e) => setSelectedProjectType(e.target.value)}
               >
                 {projectTypes.map((type) => (
-                  <MenuItem key={type.id} value={type.id}>
-                    {type.name}
+                  <MenuItem key={type} value={type}>
+                    {type}
                   </MenuItem>
                 ))}
               </Select>
