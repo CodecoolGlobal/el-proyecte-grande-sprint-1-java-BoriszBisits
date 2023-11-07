@@ -8,8 +8,8 @@ import com.codecool.circles.service.dao.ProjectDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+
 
 @Service
 public class MainPageService {
@@ -34,8 +34,10 @@ public class MainPageService {
     }
 
     public void addNewProjects(Project project) {
+
         projectDao.save(project);
         Member member = memberDao.findMemberByName(project.getLeader());
+
         List<Project> ownedProjects = member.getOwnedProjects();
         ownedProjects.add(project);
         System.out.println("projekjei az embernek meg az uj projectt"+ ownedProjects);
@@ -59,22 +61,29 @@ public class MainPageService {
 //        member.setTaskList(tasks);
 //        memberDao.saveMember(member);
 
-    public List<Member> getAllMember() {
-        return memberDao.getAllMember();
+    public List<Member> getNotCoWorkers(Long projectId) {
+        return memberDao.getNotCoworkers(projectId);
     }
 
-    public List<Member> getAllMemberWhoIsNotCoWorker() {
-        return getAllMember();
+    public List<Member> getAllMemberWhoIsNotCoWorker(Long projectId) {
+        return getNotCoWorkers(projectId);
     }
 
-    public List<Member> getALLMemberWoIsCoworker() {
-        return getAllMember();
-    }
+//    public List<Member> getALLMemberWoIsCoworker() {
+//        return getAllMember();
+//    }
 
     public void setMemberToCoWorker(Long id, String leader) {
-        Member memberLeader = memberDao.findMemberByName(leader);
         Member member = memberDao.getMemberById(id);
-        memberLeader.addCoworker(member);
-        memberDao.setCoworker(id);
+        Project project = projectDao.getProjectById(id);
+        List<Project> coWorkerProjects = member.getCoWorkerProjects();
+        coWorkerProjects.add(project);
+        member.setCoWorkerProjects(coWorkerProjects);
+        memberDao.saveMember(member);
+        List<Member> coWorkers = project.getMembers();
+        coWorkers.add(member);
+        project.setMembers(coWorkers);
+        projectDao.save(project);
+
     }
 }

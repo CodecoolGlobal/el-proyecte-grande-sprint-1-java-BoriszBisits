@@ -1,6 +1,7 @@
 package com.codecool.circles.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,19 +18,23 @@ import java.util.List;
 @Table(name = "project")
 public class Project {
     @Id
-    //   @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private Member owner;
+
     @ManyToMany
-    @JoinTable(name = "co_worker_project", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "member_id"))
+    @JoinTable(
+            name = "co_worker_project",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id")
+    )
     private List<Member> members = new ArrayList<>();
+
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Task> taskList = new ArrayList<>();
-
 
     @JsonProperty("name")
     private String name;
@@ -60,24 +65,17 @@ public class Project {
         this.taskList = taskList;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void addUser(Member member) {
         members.add(member);
-
     }
 
     public void addUsers(List<Member> userlist) {
         members.addAll(userlist);
-
     }
 
     public List<Task> getAllTask() {
         return taskList;
     }
-
 
     public Task getTaskById(Long taskId) {
         for (Task task : taskList) {
@@ -93,16 +91,17 @@ public class Project {
     }
 
     public boolean removeTaskById(Long taskId) {
-
         Task taskToRemove = null;
         for (Task task : taskList) {
-            if (task.getId().equals(taskId)) taskToRemove = task;
-            break;
+            if (task.getId().equals(taskId)) {
+                taskToRemove = task;
+                break;
+            }
         }
 
         if (taskToRemove != null) {
             taskList.remove(taskToRemove);
-            System.out.println("deleted task :" + taskToRemove.getName());
+            System.out.println("Deleted task: " + taskToRemove.getName());
             return true;
         }
         return false;
@@ -116,7 +115,3 @@ public class Project {
         return id;
     }
 }
-
-
-
-
