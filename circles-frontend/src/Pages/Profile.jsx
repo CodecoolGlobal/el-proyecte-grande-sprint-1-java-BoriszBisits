@@ -8,9 +8,10 @@ import {
   Button,
 } from "@mui/material";
 import HeaderBar from "../Components/HeaderBar";
+import Autocomplete from "@mui/material/Autocomplete";
 
 function Profile() {
-  const [interest, setInterest] = useState("");
+  const [interest, setInterest] = useState([]);
   const [savedInterest, setSavedInterest] = useState("");
   const [profile, setProfile] = useState({});
   const [filteredInterests, setFilteredInterests] = useState([]);
@@ -20,7 +21,6 @@ function Profile() {
     fetchInterest();
     fetchInterests();
   }, []);
-
   function fetchInterests() {
     const token = localStorage.getItem("token");
     const leader = localStorage.getItem("username");
@@ -62,7 +62,7 @@ function Profile() {
     })
       .then((res) => {
         if (!res.ok) {
-          throw  Error("Failed to fetch projects");
+          throw Error("Failed to fetch projects");
         }
         return res.json();
       })
@@ -74,19 +74,55 @@ function Profile() {
       });
   }
 
+  
   const handleSearchQuery = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
     filterInterests(query);
   };
 
-  const saveInterest = () => {
-    // You can perform any logic here to save the interest to your data store or state.
-    // For now, we'll just set the savedInterest state.
-    setSavedInterest(interest);
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+    
+    const token = localStorage.getItem("token");
+    const leader = localStorage.getItem("username");
+
+    // Prepare the data to send to the backend
+    const dataToSend = {
+      interest: searchQuery,
+      user:leader
+      // Add any other relevant data you want to send
+    };
+
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    fetch(`/api/profile/type`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(dataToSend),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to save interest");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Interest saved successfully", data);
+        setSavedInterest(searchQuery); // Update the saved interest in the state
+
+        // You can update the state or perform any other necessary actions here
+      })
+      .catch((error) => {
+        console.error("Error saving interest:", error);
+        // Handle the error, show an error message, etc.
+      });
   };
 
-  // Function to filter interests based on search query
   const filterInterests = (searchQuery) => {
     const filtered = interest.filter((item) =>
       item.toLowerCase().includes(searchQuery.toLowerCase())
@@ -101,34 +137,40 @@ function Profile() {
       <Container maxWidth="sm" style={{ marginTop: "20px" }}>
         <Typography variant="h5">Edit Your Profile</Typography>
 
-        <TextField
-          label="Search Interests"
-          variant="outlined"
-          fullWidth
-          value={searchQuery}
-          onChange={handleSearchQuery}
-          placeholder="Start typing to filter interests"
-          style={{ marginBottom: "20px" }}
-        />
+        <form onSubmit={handleSubmit}>
+          <Autocomplete
+            id="interest-autocomplete"
+            options={filteredInterests}
+            getOptionLabel={(option) => option}
+            value={searchQuery}
+            onChange={(event, newValue) => setSearchQuery(newValue)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Search Interests"
+                variant="outlined"
+                fullWidth
+                placeholder="Start typing to filter interests"
+              />
+            )}
+            isOptionEqualToValue={(option, value) => option === value}
+          />
 
-        {filteredInterests.map((item) => (
-          <div key={item}>{item}</div>
-        ))}
+          {savedInterest && (
+            <Typography variant="body1">
+              Your interest type: {savedInterest}
+            </Typography>
+          )}
 
-        {savedInterest && (
-          <Typography variant="body1">
-            Your interest type: {savedInterest}
-          </Typography>
-        )}
-
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={saveInterest}
-          style={{ marginBottom: "20px" }}
-        >
-          Save
-        </Button>
+          <Button
+            type="submit" // Trigger the submit action
+            variant="contained"
+            color="primary"
+            style={{ marginTop: "20px" }}
+          >
+            Save
+          </Button>
+        </form>
       </Container>
     </Container>
   );
