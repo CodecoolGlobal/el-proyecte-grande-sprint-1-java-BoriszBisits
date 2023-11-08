@@ -89,7 +89,7 @@ function Profile() {
 
     // Prepare the data to send to the backend
     const dataToSend = {
-      interest: searchQuery,
+      interest: searchQuery.name,
       user:leader
       // Add any other relevant data you want to send
     };
@@ -141,7 +141,7 @@ function Profile() {
           <Autocomplete
             id="interest-autocomplete"
             options={filteredInterests}
-            getOptionLabel={(option) => option}
+            getOptionLabel={(option) => option.name}
             value={searchQuery}
             onChange={(event, newValue) => setSearchQuery(newValue)}
             renderInput={(params) => (
