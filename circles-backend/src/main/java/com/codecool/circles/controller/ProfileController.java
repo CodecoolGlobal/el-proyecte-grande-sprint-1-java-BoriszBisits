@@ -6,10 +6,9 @@ import com.codecool.circles.model.Task;
 import com.codecool.circles.service.MemberService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +19,11 @@ public class ProfileController {
     @Data
     private static class RequestData{
         private String username;
+    }
+    @Data
+    private static class RequestDataInterest{
+        private String interest;
+        private String user;
     }
     @Autowired
     public ProfileController(MemberService memberService) {
@@ -41,6 +45,15 @@ public class ProfileController {
     public  List<InterestType> getAllType() {
         System.out.println("types" + List.of(InterestType.values()));
         return List.of(InterestType.values());
+    }
+
+    @PostMapping("/profile/type")
+    public ResponseEntity<Object> addNewInterest( @RequestBody RequestDataInterest data) {
+        System.out.println("interest " + data.interest);
+        System.out.println("uuser " + data.user);
+
+        return new ResponseEntity<>("result successful result",
+                HttpStatus.OK);
     }
 
 

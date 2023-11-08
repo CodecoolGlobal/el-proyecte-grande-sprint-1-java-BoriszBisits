@@ -46,6 +46,15 @@ const StyledRightPanel = styled(Container)({
     marginBottom: "20px", display: "flex", flexDirection: "column", alignItems: "flex-start",
 });
 
+const StyledLeftPanel = styled(Container)({
+    flex: "0 0 calc(50% - 8px)",
+    marginRight: "16px",
+    marginBottom: "20px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+  });
+
 const StyledHeader = styled(Typography)({
     fontSize: "24px",
     marginBottom: "20px",
@@ -331,6 +340,7 @@ function Project() {
         <div>
             <HeaderBar />
             <StyledContainer>
+                <StyledLeftPanel>
                 <StyledLeftColumn>
                     <StyledTitle variant="h4">My Project Tasks</StyledTitle>
                     <StyledTaskList>
@@ -394,6 +404,7 @@ function Project() {
                 <StyledRightColumn>
                     <TaskCircle projectId={id} tasks={tasks} />
                 </StyledRightColumn>
+                </StyledLeftPanel>
                 <StyledRightPanel>
                 <StyledHeader variant="h4">All Members:</StyledHeader>
                 <div className="search-bar" style={{marginBottom: "20px"}}>
