@@ -10,19 +10,20 @@ import Autocomplete from "@mui/material/Autocomplete";
 
 function Profile() {
   const [interest, setInterest] = useState([]);
+  const [subtypes, setSubtypes] = useState([]);
   const [savedInterest, setSavedInterest] = useState("");
   const [profile, setProfile] = useState({});
   const [filteredInterests, setFilteredInterests] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [subtypeInput, setSubtypeInput] = useState("");
 
   useEffect(() => {
     fetchInterest();
     fetchInterests();
-  }, []);
+  }, [savedInterest]);
 
   function fetchInterests() {
     const token = localStorage.getItem("token");
-    const leader = localStorage.getItem("username");
 
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -32,18 +33,13 @@ function Profile() {
       method: "GET",
       headers: headers,
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch projects");
-        }
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         setInterest(data);
-        setFilteredInterests(data); // Initialize filtered interests with all interests
+        setFilteredInterests(data);
       })
       .catch((error) => {
-        console.error("Error fetching projects:", error);
+        console.error("Error fetching interests:", error);
       });
   }
 
@@ -59,18 +55,13 @@ function Profile() {
       method: "GET",
       headers: headers,
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw Error("Failed to fetch projects");
-        }
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log(data)
         setProfile(data);
       })
       .catch((error) => {
-        console.error("Error fetching projects:", error);
+        console.error("Error fetching profile:", error);
       });
   }
 
@@ -80,17 +71,16 @@ function Profile() {
     filterInterests(query);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent the default form submission behavior
+  const handleInterestSubmit = (e) => {
+    e.preventDefault();
 
     const token = localStorage.getItem("token");
     const leader = localStorage.getItem("username");
 
-    // Prepare the data to send to the backend
     const dataToSend = {
-      interest: searchQuery.name,
+      interest: searchQuery,
       user: leader,
-      // Add any other relevant data you want to send
+      subtype: subtypeInput,
     };
 
     const headers = {
@@ -103,29 +93,71 @@ function Profile() {
       headers: headers,
       body: JSON.stringify(dataToSend),
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to save interest");
-        }
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
-        console.log("Interest saved successfully", data);
-        setSavedInterest(searchQuery); // Update the saved interest in the state
-
-        // You can update the state or perform any other necessary actions here
+        setSavedInterest(searchQuery);
+        fetchSubtypes(profile.types);
       })
       .catch((error) => {
         console.error("Error saving interest:", error);
-        // Handle the error, show an error message, etc.
       });
-  }
+  };
 
-  const filterInterests = (searchQuery) => {
+  const handleSubtypeSubmit = (e) => {
+    e.preventDefault();
+
+    const token = localStorage.getItem("token");
+    const leader = localStorage.getItem("username");
+    //console.log("subtypeInput"+subtypeInput)
+    const dataToSend = {
+      subtype: subtypeInput,
+      user: leader,
+    };
+    //console.log("dataToSend"+dataToSend.subtype)
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    fetch(`/api/profile/addsubtype`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(dataToSend),
+    
+    })
+      fetchInterest()
+  };
+
+  const filterInterests = (query) => {
     const filtered = interest.filter((item) =>
-      item.toLowerCase().includes(searchQuery.toLowerCase())
+      item.toLowerCase().includes(query.toLowerCase())
     );
     setFilteredInterests(filtered);
+  };
+
+  const fetchSubtypes = (selectedTypes) => {
+    const token = localStorage.getItem("token");
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    const requestBody = JSON.stringify({ selectedTypes });
+
+    fetch("/api/profile/subtypes", {
+      method: "POST",
+      headers: headers,
+      body: requestBody,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setSubtypes(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching subtypes:", error);
+      });
   };
 
   return (
@@ -133,36 +165,45 @@ function Profile() {
       <HeaderBar />
 
       <Container maxWidth="sm" style={{ marginTop: "20px" }}>
-        <Typography variant="h5">Edit Your Profile</Typography>
-         {profile && profile.ownedProjects && profile.ownedProjects.length > 0 && (
-          <div>
-            <Typography variant="h6">Your Projects:</Typography>
-            <ul>
-              {profile.ownedProjects.map((project, index) => (
-                <li key={index}>{project.name}</li>
-              ))}
-            </ul>
-          </div>
-        )}  
+        <Typography variant="h5">{profile.name+"'s Profile"}</Typography>
 
         {profile && profile.types && profile.types.length > 0 && (
           <div>
-            <Typography variant="h6">Your Project Types:</Typography>
+            <Typography variant="h6">Your Interest Types:</Typography>
             <ul>
               {profile.types.map((projectType, index) => (
                 <li key={index}>{projectType.name}</li>
               ))}
             </ul>
+
           </div>
+          
+        )}
+        {profile && profile.subTypes && profile.subTypes.length > 0 && (
+          <div>
+            <Typography variant="h6">Your Interest in SubTypes:</Typography>
+            <ul>
+              {profile.subTypes.map((projectType, index) => (
+                <li key={index}>{projectType.name}</li>
+              ))}
+            </ul>
+
+          </div>
+          
         )}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleInterestSubmit}>
           <Autocomplete
             id="interest-autocomplete"
             options={filteredInterests}
             getOptionLabel={(option) => option.name}
-            value={searchQuery}
-            onChange={(event, newValue) => setSearchQuery(newValue)}
+            value={
+              filteredInterests.find((option) => option.name === searchQuery) ||
+              null
+            }
+            onChange={(event, newValue) =>
+              setSearchQuery(newValue ? newValue.name : "")
+            }
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -172,22 +213,59 @@ function Profile() {
                 placeholder="Start typing to filter interests"
               />
             )}
-            isOptionEqualToValue={(option, value) => option === value}
           />
 
           {savedInterest && (
             <Typography variant="body1">
-              Your interest type: {savedInterest}
+              Your interest type: {savedInterest.name}
             </Typography>
           )}
 
           <Button
-            type="submit" // Trigger the submit action
+            type="submit"
             variant="contained"
             color="primary"
             style={{ marginTop: "20px" }}
           >
-            Save
+            Save Interest
+          </Button>
+        </form>
+
+        <form onSubmit={handleSubtypeSubmit}>
+          <Autocomplete
+            id="subtype-autocomplete"
+            options={subtypes}
+            getOptionLabel={(option) => option.name}
+            value={
+              subtypes.find((option) => option.name === subtypeInput) || null
+            }
+            onChange={(event, newValue) =>
+              setSubtypeInput(newValue ? newValue.name : "")
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Search Subtypes"
+                variant="outlined"
+                fullWidth
+                placeholder="Start typing to filter subtypes"
+              />
+            )}
+          />
+
+          {subtypeInput && (
+            <Typography variant="body1">
+              Your selected subtype: {subtypeInput}
+            </Typography>
+          )}
+
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            style={{ marginTop: "20px" }}
+          >
+            Save Subtype
           </Button>
         </form>
       </Container>

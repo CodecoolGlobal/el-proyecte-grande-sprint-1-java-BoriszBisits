@@ -11,4 +11,6 @@ public interface TypeRepository extends JpaRepository<Type, Long> {
     @Query("SELECT t FROM Type t WHERE t.name = :name")
     Type findTypeByName(@Param("name") String name);
 
+
+
 }
