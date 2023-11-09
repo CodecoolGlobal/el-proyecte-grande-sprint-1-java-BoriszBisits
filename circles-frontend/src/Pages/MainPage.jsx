@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 import {
   AppBar,
   Box,
@@ -200,6 +202,40 @@ function ProjectList() {
         console.error("Error creating project:", error);
       });
   }
+  const submitDelete = (projectId) => {
+    confirmAlert({
+        title: 'Confirm to delete',
+        message: 'Are you sure to delete this task?',
+        buttons: [
+            {
+                label: 'Yes',
+                onClick: () => handleDelete(projectId),
+            },
+            {
+                label: 'No',
+            },
+        ],
+    });
+};
+
+const handleDelete = (projectId) => {
+    deleteProject(projectId);
+
+    setProjects((projects) => {
+        return projects.filter((project) => project.id !== projectId);
+    });
+};
+
+const deleteProject = (projectId) => {
+    const token = localStorage.getItem('token');
+    return fetch(`/api/projectlist/projectByid/${projectId}`, {
+        method: 'DELETE',
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    }).then((res) => res.json());
+};
 
   return (
     <div style={{ backgroundColor: "#f5f5f5" }}>
@@ -243,6 +279,13 @@ function ProjectList() {
             <StyledPaper onClick={() => navigate(`/project/${project.id}`)}>
               {project.name}
             </StyledPaper>
+            <Button
+                                            onClick={() => submitDelete(project.id)}
+                                            variant="contained"
+                                            color="primary"
+                                        >
+                                            Delete
+                                        </Button>
           </Grid>
         ))}
       </StyledGrid>
