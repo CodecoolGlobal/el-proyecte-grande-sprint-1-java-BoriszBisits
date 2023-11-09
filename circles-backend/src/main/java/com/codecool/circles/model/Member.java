@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -18,6 +20,25 @@ public class Member {
     @GeneratedValue
     private Long id;
     private String name;
+
+
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "member_type",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "type_id")
+    )
+    private Set<Type> types = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "member_sub_type",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "sub_type_id")
+    )
+    private Set<SubType> subTypes = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
