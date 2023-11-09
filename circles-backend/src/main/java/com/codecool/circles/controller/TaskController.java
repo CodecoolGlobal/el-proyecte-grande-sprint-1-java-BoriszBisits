@@ -6,6 +6,7 @@ import com.codecool.circles.model.Task;
 import com.codecool.circles.service.MainPageService;
 import com.codecool.circles.service.ProjectService;
 import com.codecool.circles.service.TaskService;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +16,19 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/")
 public class TaskController {
     ProjectService projectService;
     TaskService taskService;
     MainPageService mainPageService;
 
+    @Data
+    private static class RequestData{
+        private String memberId;
+        private String leader;
+        private String projectId;
+        private String taskId;
+    }
 
     @Autowired
     public TaskController(ProjectService projectService, TaskService taskService, MainPageService mainPageService) {
@@ -30,13 +38,12 @@ public class TaskController {
     }
 
 
-//    @GetMapping("api/project/coworkers")
-//    public List<Member> getMembers() {
-//        return mainPageService.getALLMemberWoIsCoworker();
-//    }
+    @GetMapping("project/coworkers/{id}/task/{taskId}")
+    public List<Member> getCoWorkers(@PathVariable String id,@ PathVariable String taskId){
+        return taskService.getCoWorkers(Long.valueOf(id), Long.valueOf(taskId));
+    }
 
-
-    @PostMapping("api/{id}/new-task")
+    @PostMapping("{id}/new-task")
     public ResponseEntity<Object> addNewTaskToProject(@PathVariable Long id, @RequestBody Task task) {
         // System.out.println("date controller: " + task.getDeadLine());
         List<Member> memberList = task.getMembers();
@@ -49,8 +56,17 @@ public class TaskController {
         return new ResponseEntity<>("result successful result",
                 HttpStatus.OK);
     }
+    @PostMapping("/task/members")
+    public void addMemberToTask(@RequestBody RequestData requestData) {
 
-    @DeleteMapping("api/projectByid/{projectId}/task/{taskId}")
+        // Long longId = Long.valueOf(id);
+        // mainPageService.setMemberToCoWorker(longId);
+        System.out.println("taskid " + requestData.taskId);
+        System.out.println("memberiid " + requestData.memberId);
+        taskService.addMemberToTask(Long.valueOf(requestData.taskId), Long.valueOf(requestData.memberId));
+    }
+
+    @DeleteMapping("projectByid/{projectId}/task/{taskId}")
     public ResponseEntity<String> deleteTask(
             @PathVariable Long projectId,
             @PathVariable Long taskId
@@ -59,7 +75,7 @@ public class TaskController {
         return response;
     }
 
-    @GetMapping("api/projectByid/{projectId}/task/{taskId}")
+    @GetMapping("projectByid/{projectId}/task/{taskId}")
     public Task getATaskById(@PathVariable String projectId, @PathVariable String taskId) {
         return taskService.getTaskByIds(Long.valueOf(taskId));
     }
@@ -69,7 +85,7 @@ public class TaskController {
          return taskService.getCoworkers();
      }
  */
-    @PostMapping("api/projectByid/{id}/task/{taskId}/addSubTasks")
+    @PostMapping("projectByid/{id}/task/{taskId}/addSubTasks")
     public ResponseEntity<Object> addNewSubTasks(@PathVariable Long id, @PathVariable Long taskId, @RequestBody SubTask subTask) {
 
         System.out.println("subtaskname " + subTask.getName());

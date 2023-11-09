@@ -2,8 +2,10 @@ package com.codecool.circles.service.dao;
 
 import com.codecool.circles.model.Member;
 import com.codecool.circles.model.Project;
+import com.codecool.circles.model.Task;
 import com.codecool.circles.repositories.MemberRepository;
 import com.codecool.circles.repositories.ProjectRepository;
+import com.codecool.circles.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -13,10 +15,12 @@ import java.util.*;
 public class MemberDaoImpl implements MemberDao{
     private MemberRepository memberRepository;
     private ProjectRepository projectRepository;
+    private TaskRepository taskRepository;
     @Autowired
-    public MemberDaoImpl(MemberRepository memberRepository ,ProjectRepository projectRepository) {
+    public MemberDaoImpl(MemberRepository memberRepository ,ProjectRepository projectRepository,TaskRepository taskRepository) {
         this.memberRepository = memberRepository;
         this.projectRepository = projectRepository;
+        this.taskRepository = taskRepository;
     }
 
     @Override
@@ -81,5 +85,15 @@ public class MemberDaoImpl implements MemberDao{
     @Override
     public Member findMemberByName(String name) {
         return memberRepository.findMemberByName(name);
+    }
+
+    @Override
+    public List<Member> getCoWorkers(Long projectId,Long taskId) {
+        List<Member> memberList = memberRepository.findAll();
+        Project project=projectRepository.findById(projectId).get();
+        Task task = taskRepository.findById(taskId).get();
+        List<Member> membersOnTheProject =memberList.stream().filter(member -> member.getCoProjects().contains(project)).toList();
+List<Member> membersNotOnTheTask = membersOnTheProject.stream().filter(member -> !member.getTaskList().contains(task)).toList();
+        return membersNotOnTheTask;
     }
 }

@@ -43,8 +43,13 @@ public class Task {
         return colorOfCircle;
     }
 
-
-    @ManyToMany(mappedBy = "taskList")
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "member_task",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id")
+    )
     private List<Member> members = new ArrayList<>();
 
     public void setDeadLine(LocalDate deadLine) {
@@ -108,6 +113,13 @@ public class Task {
             }
         }
         return null;
+    }
+
+    public void addMemberToTask(Member member){
+        members.add(member);
+        for(Member member1 : members){
+            System.out.println("ember " + member1.getName());
+        }
     }
     /*public boolean removeSubTaskById(UUID subTaskId) {
 
