@@ -1,8 +1,10 @@
 package com.codecool.circles.controller;
 
 import com.codecool.circles.model.Project;
+import com.codecool.circles.model.Task;
 import com.codecool.circles.service.MainPageService;
 import com.codecool.circles.service.ProjectService;
+import com.codecool.circles.service.TaskService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import java.util.List;
 public class MainPageController {
     private ProjectService projectService;
     private MainPageService mainPageService;
+    private TaskService taskService;
 
     @Data
     private static class RequestData{
@@ -24,9 +27,10 @@ public class MainPageController {
         private String type;
     }
 @Autowired
-    public MainPageController(ProjectService projectService, MainPageService mainPageService) {
+    public MainPageController(ProjectService projectService, MainPageService mainPageService,TaskService taskService) {
     this.projectService = projectService;
     this.mainPageService = mainPageService;
+    this.taskService = taskService;
     }
 
     @GetMapping("/projects/{leader}")
@@ -45,5 +49,15 @@ public class MainPageController {
         mainPageService.addNewProjects(project);
         return new ResponseEntity<>("result successful result",
                 HttpStatus.OK);
+    }
+    @DeleteMapping("/projectByid/{projectId}")
+    public ResponseEntity<String> deleteProject(
+            @PathVariable Long projectId
+    ) {
+        for(Task task : projectService.getProjectById(projectId).getAllTask()){
+            taskService.deleteTaskById(task.getId());
+        }
+        ResponseEntity<String> response = mainPageService.deleteProjectById(projectId);
+        return response;
     }
 }

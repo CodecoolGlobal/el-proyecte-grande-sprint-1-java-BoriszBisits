@@ -2,10 +2,13 @@ package com.codecool.circles.service;
 
 import com.codecool.circles.model.Member;
 import com.codecool.circles.model.Project;
+import com.codecool.circles.model.SubTask;
+import com.codecool.circles.model.Task;
 import com.codecool.circles.service.dao.MainPageDao;
 import com.codecool.circles.service.dao.MemberDao;
 import com.codecool.circles.service.dao.ProjectDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -78,7 +81,11 @@ public class MainPageService {
         Project project = projectDao.getProjectById(projectId);
         project.addMemberToProject(project,member);
         memberDao.saveMember(member);
+    }
 
+    public ResponseEntity<String> deleteProjectById(Long projectId) {
 
+        ResponseEntity<String> response = mainPageDao.deleteProjectById(projectId);
+        return response;
     }
 }

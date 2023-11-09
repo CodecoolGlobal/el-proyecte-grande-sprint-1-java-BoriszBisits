@@ -74,6 +74,11 @@ public class TaskService {
     }
 
     public ResponseEntity<String> deleteTaskById(Long taskId) {
+        Task task = taskDao.getTask(taskId);
+        List<SubTask> subTasksForDelete = task.getSubTaskList();
+        for(SubTask subTaskForDelete : subTasksForDelete){
+            subTaskDao.deleteSubtaskById(subTaskForDelete.getId());
+        }
         ResponseEntity<String> response = taskDao.deleteTaskById(taskId);
         return response;
     }
@@ -82,8 +87,6 @@ public class TaskService {
         Task task = taskDao.getTask(taskId);
         task.addMemberToTask(member);
         memberDao.saveMember(member);
-
-
     }
 
 }

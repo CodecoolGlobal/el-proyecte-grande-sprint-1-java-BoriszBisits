@@ -16,4 +16,6 @@ public interface MemberDao {
     public Member findMemberByName(String name);
 
     public List<Member> getCoWorkers(Long projectId,Long taskId);
+
+    public List<Member> getSubTaskWorkers(Long projectId,Long taskId,Long subTaskId);
 }

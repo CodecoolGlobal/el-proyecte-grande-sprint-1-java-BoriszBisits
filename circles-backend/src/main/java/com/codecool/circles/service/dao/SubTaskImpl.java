@@ -46,6 +46,11 @@ private SubTaskRepository subTaskRepository;
     }
 
     @Override
+    public SubTask getSubTask(Long subTaskId) {
+        return subTaskRepository.findById(subTaskId).get();
+    }
+
+    @Override
     public void saveSubTask(SubTask subTask) {
         subTaskRepository.save(subTask);
     }
