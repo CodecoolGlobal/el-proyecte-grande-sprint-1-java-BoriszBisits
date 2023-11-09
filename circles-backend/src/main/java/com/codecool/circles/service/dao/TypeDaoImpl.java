@@ -1,5 +1,6 @@
 package com.codecool.circles.service.dao;
 
+import com.codecool.circles.model.SubType;
 import com.codecool.circles.model.Type;
 import com.codecool.circles.repositories.TypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,4 +24,6 @@ public class TypeDaoImpl implements  TypeDao{
     public Type getTypeByName(String typename) {
         return typeRepository.findTypeByName(typename);
     }
+
+
 }
