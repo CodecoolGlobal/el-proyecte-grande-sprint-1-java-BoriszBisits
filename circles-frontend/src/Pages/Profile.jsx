@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  AppBar,
-  Toolbar,
   Container,
   Typography,
   TextField,
@@ -21,6 +19,7 @@ function Profile() {
     fetchInterest();
     fetchInterests();
   }, []);
+
   function fetchInterests() {
     const token = localStorage.getItem("token");
     const leader = localStorage.getItem("username");
@@ -67,6 +66,7 @@ function Profile() {
         return res.json();
       })
       .then((data) => {
+        console.log(data);
         setProfile(data);
       })
       .catch((error) => {
@@ -74,7 +74,6 @@ function Profile() {
       });
   }
 
-  
   const handleSearchQuery = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -83,17 +82,16 @@ function Profile() {
 
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevent the default form submission behavior
-    
+
     const token = localStorage.getItem("token");
     const leader = localStorage.getItem("username");
 
     // Prepare the data to send to the backend
     const dataToSend = {
       interest: searchQuery.name,
-      user:leader
+      user: leader,
       // Add any other relevant data you want to send
     };
-
 
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -121,7 +119,7 @@ function Profile() {
         console.error("Error saving interest:", error);
         // Handle the error, show an error message, etc.
       });
-  };
+  }
 
   const filterInterests = (searchQuery) => {
     const filtered = interest.filter((item) =>
@@ -136,6 +134,27 @@ function Profile() {
 
       <Container maxWidth="sm" style={{ marginTop: "20px" }}>
         <Typography variant="h5">Edit Your Profile</Typography>
+         {profile && profile.ownedProjects && profile.ownedProjects.length > 0 && (
+          <div>
+            <Typography variant="h6">Your Projects:</Typography>
+            <ul>
+              {profile.ownedProjects.map((project, index) => (
+                <li key={index}>{project.name}</li>
+              ))}
+            </ul>
+          </div>
+        )}  
+
+        {profile && profile.types && profile.types.length > 0 && (
+          <div>
+            <Typography variant="h6">Your Project Types:</Typography>
+            <ul>
+              {profile.types.map((projectType, index) => (
+                <li key={index}>{projectType.name}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <Autocomplete

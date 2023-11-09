@@ -44,14 +44,14 @@ public class ProfileController {
     public List<Type> getAllType() {
        List<Type> types=typeService.getAllType();
         System.out.println("Kiolvasás eredmánye a type tűblűbol");
-       for (Type type:types){
+      /* for (Type type:types){
 
            System.out.println(type.getName());
            for (SubType subType:type.getSubTypes()){
                System.out.println(subType.getName());
 
            }
-       }
+       }*/
         return typeService.getAllType();
     }
 
