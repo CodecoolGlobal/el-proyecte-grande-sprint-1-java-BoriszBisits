@@ -224,9 +224,9 @@ function ProjectList() {
                 value={selectedProjectType}
                 onChange={(e) => setSelectedProjectType(e.target.value)}
               >
-                {projectTypes.map((type) => (
-                  <MenuItem key={type} value={type}>
-                    {type}
+                {projectTypes.map((type,i) => (
+                  <MenuItem key={type} value={type.name}>
+                    {type.name}
                   </MenuItem>
                 ))}
               </Select>

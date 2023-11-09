@@ -29,12 +29,15 @@ public class SubTask {
     private Task task;
 
     private String colorOfCircle;
+
     @JsonIgnore
-    @ManyToMany(mappedBy = "subTaskList")
+    @ManyToMany
+    @JoinTable(
+            name = "member_subtask",
+            joinColumns = @JoinColumn(name = "subtask_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id")
+    )
     private List<Member> memberList;
-
-
-
 
 
     public String getColorOfCircle() {
@@ -121,4 +124,7 @@ public class SubTask {
         return false;
     }
 
+    public void addMemberToSubtaskTask(Member member) {
+        memberList.add(member);
+    }
 }

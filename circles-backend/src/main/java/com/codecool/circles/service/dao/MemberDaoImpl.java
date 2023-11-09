@@ -2,9 +2,11 @@ package com.codecool.circles.service.dao;
 
 import com.codecool.circles.model.Member;
 import com.codecool.circles.model.Project;
+import com.codecool.circles.model.SubTask;
 import com.codecool.circles.model.Task;
 import com.codecool.circles.repositories.MemberRepository;
 import com.codecool.circles.repositories.ProjectRepository;
+import com.codecool.circles.repositories.SubTaskRepository;
 import com.codecool.circles.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -16,11 +18,16 @@ public class MemberDaoImpl implements MemberDao{
     private MemberRepository memberRepository;
     private ProjectRepository projectRepository;
     private TaskRepository taskRepository;
+    private SubTaskRepository subTaskRepository;
     @Autowired
-    public MemberDaoImpl(MemberRepository memberRepository ,ProjectRepository projectRepository,TaskRepository taskRepository) {
+    public MemberDaoImpl(MemberRepository memberRepository,
+                         ProjectRepository projectRepository,
+                         TaskRepository taskRepository,
+                         SubTaskRepository subTaskRepository) {
         this.memberRepository = memberRepository;
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;
+        this.subTaskRepository = subTaskRepository;
     }
 
     @Override
@@ -96,4 +103,19 @@ public class MemberDaoImpl implements MemberDao{
 List<Member> membersNotOnTheTask = membersOnTheProject.stream().filter(member -> !member.getTaskList().contains(task)).toList();
         return membersNotOnTheTask;
     }
+
+    @Override
+    public List<Member> getSubTaskWorkers(Long projectId, Long taskId, Long subTaskId) {
+        List<Member> memberList = memberRepository.findAll();
+        Task task = taskRepository.findById(taskId).get();
+        SubTask subtask = subTaskRepository.findById(subTaskId).get();
+        List<Member> membersOnTask = memberList.stream().filter(member -> member.getTaskList().contains(task)).toList();
+        List<Member> membersNotOnTheTask = membersOnTask.stream().filter(member -> !member.getSubTaskList().contains(subtask)).toList();
+
+        return membersNotOnTheTask;
+
+
+    }
+
+
 }

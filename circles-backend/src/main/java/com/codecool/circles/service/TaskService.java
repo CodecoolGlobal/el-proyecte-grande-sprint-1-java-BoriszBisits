@@ -82,8 +82,6 @@ public class TaskService {
         Task task = taskDao.getTask(taskId);
         task.addMemberToTask(member);
         memberDao.saveMember(member);
-
-
     }
 
 }
