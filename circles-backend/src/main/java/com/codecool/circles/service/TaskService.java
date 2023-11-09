@@ -66,15 +66,24 @@ public class TaskService {
         memberDao.saveMember(member1);
 
        }
-
-
-
       //  taskDao.addTask(task);
+    }
+
+    public List<Member> getCoWorkers(Long projectId,Long taskId){
+        return memberDao.getCoWorkers(projectId,taskId);
     }
 
     public ResponseEntity<String> deleteTaskById(Long taskId) {
         ResponseEntity<String> response = taskDao.deleteTaskById(taskId);
         return response;
+    }
+    public void addMemberToTask(Long taskId, Long memberId) {
+        Member member = memberDao.getMemberById(memberId);
+        Task task = taskDao.getTask(taskId);
+        task.addMemberToTask(member);
+        memberDao.saveMember(member);
+
+
     }
 
 }

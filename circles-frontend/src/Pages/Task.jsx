@@ -18,6 +18,8 @@ import {
     ListItemText,
 } from '@mui/material';
 import HeaderBar from "../Components/HeaderBar";
+import { styled } from '@mui/material/styles';
+
 
 const useStyles = {
     container: {
@@ -31,6 +33,7 @@ const useStyles = {
         flexDirection: 'column',
         alignItems: 'flex-start',
     },
+    
     title: {
         fontSize: '24px',
         marginBottom: '16px',
@@ -55,30 +58,108 @@ const useStyles = {
         marginBottom: '16px',
     },
 };
+const StyledRightPanel = styled(Container)({
+    flex: "0 0 calc(50% - 8px)",
+    marginBottom: "20px", display: "flex", flexDirection: "column", alignItems: "flex-start",
+});
+const StyledHeader = styled(Typography)({
+    fontSize: "24px",
+    marginBottom: "20px",
+    textAlign: "left",
+});
+
+const StyledAddMembersButton = styled(Button)({
+    marginBottom: "20px",
+    float: "right",
+});
+const StyledList = styled(List)({
+    padding: 0,
+});
+const StyledListItem = styled(ListItem)({
+    marginBottom: "8px",
+    "&:last-child": {
+        marginBottom: "20px",
+    },
+});
+
+const StyledListItemText = styled(ListItemText)({
+    fontSize: "16px",
+});
+
+const StyledLeftPanel = styled(Container)({
+    flex: "0 0 calc(50% - 8px)",
+    marginRight: "16px",
+    marginBottom: "20px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+  });
 
 function Task() {
     const classes = useStyles;
     const { id, taskId } = useParams();
+    const navigate = useNavigate();
     const [task, setTask] = useState({});
     const [subTasks, setSubTasks] = useState([]);
     const [subTaskName, setSubTaskName] = useState('');
     const [description, setDescription] = useState('');
     const [colorOfCircle, setColorOfCircle] = useState('');
     const [membersName, setMembersName] = useState([]);
-    const navigate = useNavigate();
+    const [allMembers, setAllMembers] = useState([]);
+    const [filteredMembers, setFilteredMembers] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [eventCount, setEventCount] = useState(() => 0);
 
-    const handleAddMember = () => {
-        setMembersName([...membersName, '']);
-    };
+    const membersPerPage = 5;
 
-    const handleChange = (e, i) => {
-        const updatedMembers = [...membersName];
-        updatedMembers[i] = e.target.value;
+    function handleAddMember() {
+        const updatedMembers = [...membersName, ""];
         setMembersName(updatedMembers);
-        console.log(membersName)
-    };
+    }
+console.log("id" + id)
+    function handleChange(onChangeValue, i) {
+        const updatedMembers = [...membersName];
+        updatedMembers[i] = onChangeValue.target.value;
+        setMembersName(updatedMembers);
+    }
 
+    function fetchMembers() {
+        const token = localStorage.getItem('token');
+
+        const headers = {
+            'Authorization': `Bearer ${token}`
+        };
+
+        fetch(`/api/project/coworkers/${id}/task/${taskId}`, {
+            method: 'GET', headers: headers
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Failed to fetch members");
+                }
+                return res.json();
+            })
+            .then((data) => {
+                data = data.filter(member => member.name !== localStorage.getItem("username"))
+                setAllMembers(data);
+                setFilteredMembers(data);
+                console.log("all" + allMembers)
+            })
+            .catch((error) => {
+                console.error("Error fetching members:", error);
+            });
+    }
+
+    useEffect(() =>{
+        fetchMembers()
+
+    },[])
+
+    
     useEffect(() => {
+
+
         const token = localStorage.getItem('token');
         const headers = {
             Authorization: `Bearer ${token}`,
@@ -142,8 +223,8 @@ function Task() {
                     setSubTaskName('');
                     setDescription('');
                     setColorOfCircle('');
-                    setMembersName([]);
                     fetchSubTasks();
+
                 }
             });
     };
@@ -174,6 +255,42 @@ function Task() {
             ],
         });
     };
+
+    function handleAddCoworker(memberId) {
+
+        console.log("taskid " + taskId)
+        let data = {
+            memberId: memberId, leader: localStorage.getItem('username'),
+            projectId: id,
+            taskId: taskId
+        }
+        let token = localStorage.getItem('token')
+
+        fetch("/api/task/members", {
+            method: "POST", headers: {
+                'Authorization': `Bearer ${token}`,
+
+                "Content-Type": "application/json",
+            }, body: JSON.stringify(data),
+        })
+            .then((res) => {
+                if (res.ok) {
+                    fetchMembers();
+                }
+            })
+            .catch((error) => {
+                console.error("Error adding coworker:", error);
+            });
+    }
+
+    function filterMembers(searchQuery) {
+        return allMembers.filter((member) => member.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    }
+
+    const indexOfLastMember = currentPage * membersPerPage;
+    const indexOfFirstMember = indexOfLastMember - membersPerPage;
+    const currentMembers = filteredMembers.slice(indexOfFirstMember, indexOfLastMember);
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     const handleDelete = (subTaskId) => {
         deleteSubTask(subTaskId);
@@ -242,25 +359,46 @@ function Task() {
                             value={colorOfCircle}
                             onChange={(e) => setColorOfCircle(e.target.value)}
                         />
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            type="button"
-                            onClick={handleAddMember}
-                        >
-                            Add Members
-                        </Button>
-                        {membersName.map((data, i) => (
-                            <TextField
-                                key={i}
-                                className={classes.formInput}
-                                variant="outlined"
-                                label="Member"
-                                type="text"
-                                value={data}
-                                onChange={(e) => handleChange(e, i)}
-                            />
-                        ))}
+         <StyledRightPanel>
+                <StyledHeader variant="h4">Add Memeber:</StyledHeader>
+                <div className="search-bar" style={{marginBottom: "20px"}}>
+                    <StyledAddMembersButton
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        onClick={handleAddMember}
+                    >
+                        Add Members
+                    </StyledAddMembersButton>
+                    <TextField
+                        variant="outlined"
+                        type="search"
+                        label="Search members"
+                        value={searchQuery}
+                        style={{marginBottom: "20px", float: "right", marginRight: "10px"}}
+                        onChange={(e) => {
+                           // setEventCount((old) => old + 1);
+                            const newSearchQuery = e.target.value;
+                            setSearchQuery(newSearchQuery);
+                            setFilteredMembers(filterMembers(newSearchQuery));
+                        }}
+                    />
+                </div>
+                <StyledList>
+                    {currentMembers.map((member) => (
+                        <StyledListItem key={member.id}>
+                            <StyledListItemText>{member.name}</StyledListItemText>
+                            <Button
+                                onClick={() => handleAddCoworker(member.id)}
+                                variant="contained"
+                                color="primary"
+                            >
+                                Add Coworker
+                            </Button>
+                        </StyledListItem>
+                    ))}
+                </StyledList>
+        </StyledRightPanel>
                         <Button variant="contained" color="primary" type="submit">
                             Add Sub-Tasks
                         </Button>
