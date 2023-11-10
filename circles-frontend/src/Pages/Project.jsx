@@ -53,7 +53,7 @@ const StyledLeftPanel = styled(Container)({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
-  });
+});
 
 const StyledHeader = styled(Typography)({
     fontSize: "24px",
@@ -144,12 +144,14 @@ function Project() {
     const [tasks, setTasks] = useState([]);
     const [deadline, setDeadline] = useState('');
     const [colorOfCircle, setColorOfCircle] = useState('');
+    const [selectedSubtype, setSelectedSubtype] = useState('');
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [membersName, setMembersName] = useState([]);
     const [allMembers, setAllMembers] = useState([]);
     const [filteredMembers, setFilteredMembers] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [subTypes, setSubtypes] = useState([]);
 
     const [eventCount, setEventCount] = useState(() => 0);
 
@@ -166,15 +168,34 @@ function Project() {
         setMembersName(updatedMembers);
     }
 
+    function fetchSubtypes() {
+        const token = localStorage.getItem('token');
+
+        fetch(`/api/project/subtypes/${id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Failed to fetch subtypes");
+                }
+                return res.json();
+            })
+            .then((data) => {
+                setSubtypes(data);
+            })
+            .catch((error) => {
+                console.error("Error fetching subtypes:", error);
+            });
+    }
+
     function fetchMembers() {
         const token = localStorage.getItem('token');
 
-        const headers = {
-            'Authorization': `Bearer ${token}`
-        };
-
         fetch(`/api/projectlist/project/members/${id}`, {
-            method: 'GET', headers: headers
+            method: 'GET', headers: { Authorization: `Bearer ${token}` },
         })
             .then((res) => {
                 if (!res.ok) {
@@ -186,12 +207,12 @@ function Project() {
                 data = data.filter(member => member.name !== localStorage.getItem("username"))
                 setAllMembers(data);
                 setFilteredMembers(data);
-                console.log("all" + allMembers)
             })
             .catch((error) => {
                 console.error("Error fetching members:", error);
             });
     }
+
     const fetchTasks = () => {
         const token = localStorage.getItem('token');
 
@@ -211,6 +232,7 @@ function Project() {
     useEffect(() => {
         fetchTasks();
         fetchMembers();
+        fetchSubtypes();
 
         const token = localStorage.getItem('token');
 
@@ -225,17 +247,6 @@ function Project() {
             .catch((error) => {
                 console.error('Error fetching tasks:', error);
             });
-
-        /*fetch(`/api/project/coworkers`, {
-            method: 'GET',
-            headers: { Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-            })
-            .catch((error) => {
-                console.error('Error fetching members:', error);
-            });*/
     }, [id]);
 
     const submitDelete = (taskId) => {
@@ -266,12 +277,13 @@ function Project() {
         e.preventDefault();
 
         const token = localStorage.getItem('token');
-
+        console.log(selectedSubtype)
         const data = {
             name: newTaskName,
             deadLine: deadline,
             colorOfCircle: colorOfCircle,
             projectId: id,
+            subtype: selectedSubtype, 
         };
 
         fetch(`/api/${id}/new-task`, {
@@ -285,6 +297,8 @@ function Project() {
             if (res.ok) {
                 setNewTaskName('');
                 setDeadline('');
+                setColorOfCircle('');
+                setSelectedSubtype(''); 
                 fetchTasks();
                 setIsFormVisible(false);
             }
@@ -304,7 +318,8 @@ function Project() {
 
     function handleAddCoworker(memberId) {
         let data = {
-            memberId: memberId, leader: localStorage.getItem('username'),
+            memberId: memberId,
+            leader: localStorage.getItem('username'),
             projectId: id
         }
         let token = localStorage.getItem('token')
@@ -312,7 +327,6 @@ function Project() {
         fetch("/api/projectlist/project/members", {
             method: "POST", headers: {
                 'Authorization': `Bearer ${token}`,
-
                 "Content-Type": "application/json",
             }, body: JSON.stringify(data),
         })
@@ -335,116 +349,127 @@ function Project() {
     const currentMembers = filteredMembers.slice(indexOfFirstMember, indexOfLastMember);
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-
     return (
         <div>
             <HeaderBar />
             <StyledContainer>
                 <StyledLeftPanel>
-                <StyledLeftColumn>
-                    <StyledTitle variant="h4">My Project Tasks</StyledTitle>
-                    <StyledTaskList>
-                        {tasks.map((task) => (
-                            <StyledTaskItem key={task.id}>
-                                <StyledTaskCard>
-                                    <StyledTaskCardContent>
-                                        <StyledTaskText>
-                                            <Link to={`/project/${id}/task/${task.id}`}>{task.name}</Link>
-                                        </StyledTaskText>
-                                        <Button
-                                            onClick={() => submitDelete(task.id)}
-                                            variant="contained"
-                                            color="primary"
-                                        >
-                                            Delete
-                                        </Button>
-                                    </StyledTaskCardContent>
-                                </StyledTaskCard>
-                            </StyledTaskItem>
-                        ))}
-                    </StyledTaskList>
-                    <StyledAddTaskButton
-                        type="button"
-                        variant="contained"
-                        color="primary"
-                        onClick={() => setIsFormVisible(!isFormVisible)}
-                    >
-                        {isFormVisible ? 'Hide Form' : 'Add Task'}
-                    </StyledAddTaskButton>
-                    {isFormVisible && (
-                        <StyledForm onSubmit={handleSubmit}>
-                            <StyledInput
-                                variant="outlined"
-                                label="Name"
-                                type="text"
-                                value={newTaskName}
-                                onChange={(e) => setNewTaskName(e.target.value)}
-                            />
-                            <StyledInput
-                                variant="outlined"
-                                label="Deadline"
-                                type="text"
-                                value={deadline}
-                                onChange={(e) => setDeadline(e.target.value)}
-                            />
-                            <StyledInput
-                                variant="outlined"
-                                label="Color"
-                                type="text"
-                                value={colorOfCircle}
-                                onChange={(e) => setColorOfCircle(e.target.value)}
-                            />
-                          
-                            <StyledButton variant="contained" color="primary" type="submit">
-                                Add new task
-                            </StyledButton>
-                        </StyledForm>
-                    )}
-                </StyledLeftColumn>
-                <StyledRightColumn>
-                    <TaskCircle projectId={id} tasks={tasks} />
-                </StyledRightColumn>
+                    <StyledLeftColumn>
+                        <StyledTitle variant="h4">My Project Tasks</StyledTitle>
+                        <StyledTaskList>
+                            {tasks.map((task) => (
+                                <StyledTaskItem key={task.id}>
+                                    <StyledTaskCard>
+                                        <StyledTaskCardContent>
+                                            <StyledTaskText>
+                                                <Link to={`/project/${id}/task/${task.id}`}>{task.name}</Link>
+                                            </StyledTaskText>
+                                            <Button
+                                                onClick={() => submitDelete(task.id)}
+                                                variant="contained"
+                                                color="primary"
+                                            >
+                                                Delete
+                                            </Button>
+                                        </StyledTaskCardContent>
+                                    </StyledTaskCard>
+                                </StyledTaskItem>
+                            ))}
+                        </StyledTaskList>
+                        <StyledAddTaskButton
+                            type="button"
+                            variant="contained"
+                            color="primary"
+                            onClick={() => setIsFormVisible(!isFormVisible)}
+                        >
+                            {isFormVisible ? 'Hide Form' : 'Add Task'}
+                        </StyledAddTaskButton>
+                        {isFormVisible && (
+                            <StyledForm onSubmit={handleSubmit}>
+                                <StyledInput
+                                    variant="outlined"
+                                    label="Name"
+                                    type="text"
+                                    value={newTaskName}
+                                    onChange={(e) => setNewTaskName(e.target.value)}
+                                />
+                                <StyledInput
+                                    variant="outlined"
+                                    label="Deadline"
+                                    type="text"
+                                    value={deadline}
+                                    onChange={(e) => setDeadline(e.target.value)}
+                                />
+                                <StyledInput
+                                    variant="outlined"
+                                    label="Color"
+                                    type="text"
+                                    value={colorOfCircle}
+                                    onChange={(e) => setColorOfCircle(e.target.value)}
+                                />
+                                <StyledInput
+                                    variant="outlined"
+                                    label="Subtype"
+                                    select
+                                    value={selectedSubtype}
+                                    onChange={(e) => setSelectedSubtype(e.target.value)}
+                                    style={{ marginBottom: '8px' }}
+                                >
+                                    {subTypes.map((subtype) => (
+                                        <MenuItem key={subtype.id} value={subtype.name}>
+                                            {subtype.name}
+                                        </MenuItem>
+                                    ))}
+                                </StyledInput>
+                                <StyledButton variant="contained" color="primary" type="submit">
+                                    Add new task
+                                </StyledButton>
+                            </StyledForm>
+                        )}
+                    </StyledLeftColumn>
+                    <StyledRightColumn>
+                        <TaskCircle projectId={id} tasks={tasks} />
+                    </StyledRightColumn>
                 </StyledLeftPanel>
                 <StyledRightPanel>
-                <StyledHeader variant="h4">All Members:</StyledHeader>
-                <div className="search-bar" style={{marginBottom: "20px"}}>
-                    <StyledAddMembersButton
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        onClick={handleAddMember}
-                    >
-                        Add Members
-                    </StyledAddMembersButton>
-                    <TextField
-                        variant="outlined"
-                        type="search"
-                        label="Search members"
-                        value={searchQuery}
-                        style={{marginBottom: "20px", float: "right", marginRight: "10px"}}
-                        onChange={(e) => {
-                           // setEventCount((old) => old + 1);
-                            const newSearchQuery = e.target.value;
-                            setSearchQuery(newSearchQuery);
-                            setFilteredMembers(filterMembers(newSearchQuery));
-                        }}
-                    />
-                </div>
-                <StyledList>
-                    {currentMembers.map((member) => (
-                        <StyledListItem key={member.id}>
-                            <StyledListItemText>{member.name}</StyledListItemText>
-                            <Button
-                                onClick={() => handleAddCoworker(member.id)}
-                                variant="contained"
-                                color="primary"
-                            >
-                                Add Coworker
-                            </Button>
-                        </StyledListItem>
-                    ))}
-                </StyledList>
-        </StyledRightPanel>
+                    <StyledHeader variant="h4">All Members:</StyledHeader>
+                    <div className="search-bar" style={{ marginBottom: "20px" }}>
+                        <StyledAddMembersButton
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            onClick={handleAddMember}
+                        >
+                            Add Members
+                        </StyledAddMembersButton>
+                        <TextField
+                            variant="outlined"
+                            type="search"
+                            label="Search members"
+                            value={searchQuery}
+                            style={{ marginBottom: "20px", float: "right", marginRight: "10px" }}
+                            onChange={(e) => {
+                                const newSearchQuery = e.target.value;
+                                setSearchQuery(newSearchQuery);
+                                setFilteredMembers(filterMembers(newSearchQuery));
+                            }}
+                        />
+                    </div>
+                    <StyledList>
+                        {currentMembers.map((member) => (
+                            <StyledListItem key={member.id}>
+                                <StyledListItemText>{member.name}</StyledListItemText>
+                                <Button
+                                    onClick={() => handleAddCoworker(member.id)}
+                                    variant="contained"
+                                    color="primary"
+                                >
+                                    Add Coworker
+                                </Button>
+                            </StyledListItem>
+                        ))}
+                    </StyledList>
+                </StyledRightPanel>
             </StyledContainer>
         </div>
     );

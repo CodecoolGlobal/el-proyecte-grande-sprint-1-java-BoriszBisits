@@ -2,10 +2,10 @@ package com.codecool.circles.controller;
 
 import com.codecool.circles.model.Member;
 import com.codecool.circles.model.SubTask;
+import com.codecool.circles.model.SubType;
 import com.codecool.circles.model.Task;
-import com.codecool.circles.service.MainPageService;
-import com.codecool.circles.service.ProjectService;
-import com.codecool.circles.service.TaskService;
+import com.codecool.circles.service.*;
+
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +21,9 @@ public class TaskController {
     ProjectService projectService;
     TaskService taskService;
     MainPageService mainPageService;
+SubTypeService subTypeService;
+TypeService typeService;
+
 
     @Data
     private static class RequestData{
@@ -29,24 +32,47 @@ public class TaskController {
         private String projectId;
         private String taskId;
     }
-
     @Autowired
-    public TaskController(ProjectService projectService, TaskService taskService, MainPageService mainPageService) {
+
+    public TaskController(ProjectService projectService, TaskService taskService, MainPageService mainPageService, SubTypeService subTypeService, TypeService typeService) {
         this.projectService = projectService;
         this.taskService = taskService;
         this.mainPageService = mainPageService;
+        this.subTypeService = subTypeService;
+        this.typeService = typeService;
     }
 
 
+
+
+
+
+
+
+
+
+
+///api/project/coworkers/${id}/task/${taskId}
     @GetMapping("project/coworkers/{id}/task/{taskId}")
     public List<Member> getCoWorkers(@PathVariable String id,@ PathVariable String taskId){
         return taskService.getCoWorkers(Long.valueOf(id), Long.valueOf(taskId));
     }
+    ///api/project/subtypes/{id}
+    @GetMapping("project/subtypes/{id}")
+    public List<SubType> getSubTypes(@PathVariable String id){
+        System.out.println("------------------------Subtypeok kerese---------------------");
+        System.out.println(id+"project id");
+        System.out.println("subtypok-----------------------------------------------------");
+        System.out.println(subTypeService.getSubtypesByProjectId(id));
 
+        return subTypeService.getSubtypesByProjectId(id);
+    }
     @PostMapping("{id}/new-task")
     public ResponseEntity<Object> addNewTaskToProject(@PathVariable Long id, @RequestBody Task task) {
         // System.out.println("date controller: " + task.getDeadLine());
         List<Member> memberList = task.getMembers();
+        System.out.println("-----------------------subtype of Taskk"+task.getSubtype());
+        System.out.println(task);
         for (Member member : memberList) {
 
             System.out.println("bejövök new task member id" + member.getId());

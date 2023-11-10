@@ -35,7 +35,7 @@ public class SubTaskController {
         this.subTaskService = subTaskService;
         this.taskService = taskService;
     }
-
+///api/project/coworkers/${id}/task/${taskId}/subtask/${subTaskId}
     @GetMapping("api/projectByid/{projectId}/task/{taskId}/subtask/{subTaskId}")
     public SubTask getSubTaskById(@PathVariable String projectId, @PathVariable String taskId, @PathVariable String subTaskId) {
         return taskService.getTaskByIds(Long.valueOf(taskId)).getSubTaskById(Long.valueOf(subTaskId));
