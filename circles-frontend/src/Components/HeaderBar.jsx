@@ -13,7 +13,7 @@ function HeaderBar() {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
 
-  console.log(localStorage.getItem('token'))
+ // console.log(localStorage.getItem('token'))
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
