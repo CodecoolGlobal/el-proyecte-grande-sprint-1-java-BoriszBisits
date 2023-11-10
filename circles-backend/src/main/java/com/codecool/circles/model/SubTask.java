@@ -1,10 +1,12 @@
 package com.codecool.circles.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -28,6 +30,8 @@ public class SubTask {
     @ManyToOne
     private Task task;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate deadLine;
     private String colorOfCircle;
 
     @JsonIgnore
