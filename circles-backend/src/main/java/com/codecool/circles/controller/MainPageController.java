@@ -33,11 +33,18 @@ public class MainPageController {
     this.taskService = taskService;
     }
 
-    @GetMapping("/projects/{leader}")
+    @GetMapping("/owned-projects/{leader}")
     public List<Project> getProjects(@PathVariable String leader) {
         //List<Project> projects = mainPageService.getProjects(leader);
 
         return mainPageService.getOwnedProjects(leader);
+    }
+
+    @GetMapping("/projects/{worker}")
+    public List<Project> getProjectsWhereIamACoWorker(@PathVariable String worker) {
+
+        System.out.println("projects what i work on " + mainPageService.getProjectsWhereIAmACoWorker(worker) );
+        return mainPageService.getProjectsWhereIAmACoWorker(worker);
     }
 
     @PostMapping("/newprojects")

@@ -31,9 +31,14 @@ public class MainPageService {
 
     public List<Project> getOwnedProjects(String leader) {
         Member member = memberDao.findMemberByName(leader);
-        System.out.println("owned-projexts " + member.getOwnedProjects());
         List<Project> ownedProjects = mainPageDao.getProjects().stream().filter(project -> project.getLeader().equals(leader)).toList();
         return ownedProjects;
+    }
+
+    public List<Project> getProjectsWhereIAmACoWorker(String worker) {
+        Member member = memberDao.findMemberByName(worker);
+        List<Project> projectsWhereIAmACoWorker = mainPageDao.getProjects().stream().filter(project -> project.getMembers().contains(member)).toList();
+        return projectsWhereIAmACoWorker;
     }
 
     public void addNewProjects(Project project) {

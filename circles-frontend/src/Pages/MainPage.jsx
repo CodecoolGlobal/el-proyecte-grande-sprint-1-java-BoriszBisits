@@ -115,10 +115,12 @@ function ProjectList() {
   const [newProject, setNewProject] = useState("");
   const [projectTypes, setProjectTypes] = useState([]);
   const [selectedProjectType, setSelectedProjectType] = useState(""); // Added state for selected project type
+  const [projectsWhereIWork, setProjectsWhereIWork] = useState([])
 
   useEffect(() => {
     fetchProjects();
     fetchProjectTypes();
+    fetchProjectsWhatIWorkOn()
   }, []);
 
   function fetchProjectTypes() {
@@ -146,6 +148,31 @@ function ProjectList() {
       });
   }
 
+  function fetchProjectsWhatIWorkOn() {
+    const token = localStorage.getItem("token");
+    const worker = localStorage.getItem("username");
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    fetch(`/api/projectlist/projects/${worker}`, {
+      method: "GET",
+      headers: headers,
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch projects");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setProjectsWhereIWork(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching projects:", error);
+      });
+  }
   function fetchProjects() {
     const token = localStorage.getItem("token");
     const leader = localStorage.getItem("username");
@@ -154,7 +181,7 @@ function ProjectList() {
       Authorization: `Bearer ${token}`,
     };
 
-    fetch(`/api/projectlist/projects/${leader}`, {
+    fetch(`/api/projectlist/owned-projects/${leader}`, {
       method: "GET",
       headers: headers,
     })
@@ -286,6 +313,15 @@ const deleteProject = (projectId) => {
                                         >
                                             Delete
                                         </Button>
+          </Grid>
+        ))}
+      </StyledGrid>
+      <StyledGrid container spacing={3}>
+        {projectsWhereIWork && projectsWhereIWork.map((project, index) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+            <StyledPaper onClick={() => navigate(`/project/${project.id}`)}>
+              {project.name}
+            </StyledPaper>
           </Grid>
         ))}
       </StyledGrid>
