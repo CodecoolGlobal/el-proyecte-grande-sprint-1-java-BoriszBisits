@@ -47,6 +47,12 @@ function SubTask() {
     const [filteredMembers, setFilteredMembers] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [remainingTime, setRemainingTime] = useState({
+        days: 0,
+        hours: 0,
+        minutes: 0,
+    });
+
     const [eventCount, setEventCount] = useState(() => 0);
 
     const membersPerPage = 5;
@@ -149,10 +155,42 @@ function SubTask() {
     const currentMembers = filteredMembers.slice(indexOfFirstMember, indexOfLastMember);
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+    function calculateTimeUntilDeadline() {
+        const deadlineString = subTask.deadLine;
+        const deadlineDate = new Date(deadlineString);
+        const currentDate = new Date();
+        const timeDifference = deadlineDate - currentDate;
+
+        const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        const hoursLeft = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutesLeft = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+        const secondsLeft = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+        setRemainingTime({
+            days: daysLeft,
+            hours: hoursLeft,
+            minutes: minutesLeft,
+        });
+    }
+
+    useEffect(() => {
+        calculateTimeUntilDeadline();
+
+        const intervalId = setInterval(() => {
+            calculateTimeUntilDeadline();
+        }, 60000);
+
+        return () => clearInterval(intervalId);
+    }, [subTask.deadLine]);
+
     return (
         <div style={{ backgroundColor: '#f5f5f5' }}>
             <HeaderBar />
             <Container maxWidth="md" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <Typography variant="h6">
+                        Time left until deadline: {remainingTime.days} days, {remainingTime.hours} hours,{' '}
+                        {remainingTime.minutes} minutes
+                    </Typography>
                 <Paper elevation={3} style={{ padding: '20px', width: '100%' }}>
                     <Typography variant="h4" align="center" gutterBottom>
                         Subtask Details

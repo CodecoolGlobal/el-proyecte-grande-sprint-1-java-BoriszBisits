@@ -104,12 +104,18 @@ function Task() {
     const [subTaskName, setSubTaskName] = useState('');
     const [description, setDescription] = useState('');
     const [colorOfCircle, setColorOfCircle] = useState('');
+    const [deadLine, setDeadline] = useState('')
     const [membersName, setMembersName] = useState([]);
     const [allMembers, setAllMembers] = useState([]);
     const [filteredMembers, setFilteredMembers] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [eventCount, setEventCount] = useState(() => 0);
+    const [remainingTime, setRemainingTime] = useState({
+        days: 0,
+        hours: 0,
+        minutes: 0,
+    });
 
     const membersPerPage = 5;
 
@@ -173,11 +179,41 @@ console.log("id" + id)
             .then((data) => {
                 setTask(data);
                 setSubTasks(data.subTaskList);
+
             })
             .catch((error) => {
                 console.error('Error fetching tasks:', error);
             });
     }, [id, taskId]);
+
+    function calculateTimeUntilDeadline() {
+        const deadlineString = task.deadLine;
+        const deadlineDate = new Date(deadlineString);
+        const currentDate = new Date();
+        const timeDifference = deadlineDate - currentDate;
+
+        const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        const hoursLeft = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutesLeft = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+        const secondsLeft = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+        setRemainingTime({
+            days: daysLeft,
+            hours: hoursLeft,
+            minutes: minutesLeft,
+        });
+    }
+
+    useEffect(() => {
+        calculateTimeUntilDeadline();
+
+        const intervalId = setInterval(() => {
+            calculateTimeUntilDeadline();
+        }, 60000);
+
+        return () => clearInterval(intervalId);
+    }, [task.deadLine]);
+      
 
     const fetchSubTasks = () => {
         const token = localStorage.getItem('token');
@@ -196,6 +232,19 @@ console.log("id" + id)
             });
     };
 
+    function checkDeadlineIsValid(e) {
+        const deadlineString = deadLine;
+        const deadlineDate = new Date(deadlineString);
+        const currentDate = new Date();
+    
+        if (deadlineDate > currentDate) {
+            console.log("Valid deadline. Proceeding with submission.");
+            handleSubmit(e);
+        } else {
+            console.log("Invalid deadline. Please choose a date at least one day ahead.");
+        }
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -208,6 +257,7 @@ console.log("id" + id)
             description: description,
             colorOfCircle: colorOfCircle,
             memberList: users,
+            deadLine: deadLine
         };
 
         fetch(`/api/projectByid/${id}/task/${taskId}/addSubTasks`, {
@@ -308,6 +358,10 @@ console.log("id" + id)
                     <Typography variant="h4" className={classes.title}>
                         {task.name}
                     </Typography>
+                    <Typography variant="h6">
+                        Time left until deadline: {remainingTime.days} days, {remainingTime.hours} hours,{' '}
+                        {remainingTime.minutes} minutes
+                    </Typography>
                     {subTasks.map((subTask) => (
                         <Card key={subTask.id} className={classes.projectCard}>
                             <CardContent>
@@ -334,14 +388,22 @@ console.log("id" + id)
                             </CardActions>
                         </Card>
                     ))}
-                    <form onSubmit={handleSubmit} className={classes.newSubtaskForm}>
-                        <TextField
+                    <form onSubmit={checkDeadlineIsValid} className={classes.newSubtaskForm}>
+                    <TextField
                             className={classes.formInput}
                             variant="outlined"
                             label="Name"
                             type="text"
                             value={subTaskName}
                             onChange={(e) => setSubTaskName(e.target.value)}
+                        />
+                         <TextField
+                            className={classes.formInput}
+                            variant="outlined"
+                            label="Deadline"
+                            type="text"
+                            value={deadLine}
+                            onChange={(e) => setDeadline(e.target.value)}
                         />
                         <TextField
                             className={classes.formInput}
@@ -358,47 +420,45 @@ console.log("id" + id)
                             type="text"
                             value={colorOfCircle}
                             onChange={(e) => setColorOfCircle(e.target.value)}
-                        />
-         <StyledRightPanel>
-                <StyledHeader variant="h4">Add Memeber:</StyledHeader>
-                <div className="search-bar" style={{marginBottom: "20px"}}>
-                    <StyledAddMembersButton
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        onClick={handleAddMember}
-                    >
-                        Add Members
-                    </StyledAddMembersButton>
-                    <TextField
-                        variant="outlined"
-                        type="search"
-                        label="Search members"
-                        value={searchQuery}
-                        style={{marginBottom: "20px", float: "right", marginRight: "10px"}}
-                        onChange={(e) => {
-                           // setEventCount((old) => old + 1);
-                            const newSearchQuery = e.target.value;
-                            setSearchQuery(newSearchQuery);
-                            setFilteredMembers(filterMembers(newSearchQuery));
-                        }}
-                    />
-                </div>
-                <StyledList>
-                    {currentMembers.map((member) => (
-                        <StyledListItem key={member.id}>
-                            <StyledListItemText>{member.name}</StyledListItemText>
-                            <Button
-                                onClick={() => handleAddCoworker(member.id)}
-                                variant="contained"
-                                color="primary"
-                            >
-                                Add Coworker
-                            </Button>
-                        </StyledListItem>
-                    ))}
-                </StyledList>
-        </StyledRightPanel>
+                        />                        <StyledRightPanel>
+                            <StyledHeader variant="h4">Add Member:</StyledHeader>
+                            <div className="search-bar" style={{ marginBottom: "20px" }}>
+                                <StyledAddMembersButton
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleAddMember}
+                                >
+                                    Add Members
+                                </StyledAddMembersButton>
+                                <TextField
+                                    variant="outlined"
+                                    type="search"
+                                    label="Search members"
+                                    value={searchQuery}
+                                    style={{ marginBottom: "20px", float: "right", marginRight: "10px" }}
+                                    onChange={(e) => {
+                                        const newSearchQuery = e.target.value;
+                                        setSearchQuery(newSearchQuery);
+                                        setFilteredMembers(filterMembers(newSearchQuery));
+                                    }}
+                                />
+                            </div>
+                            <StyledList>
+                                {currentMembers.map((member) => (
+                                    <StyledListItem key={member.id}>
+                                        <StyledListItemText>{member.name}</StyledListItemText>
+                                        <Button
+                                            onClick={() => handleAddCoworker(member.id)}
+                                            variant="contained"
+                                            color="primary"
+                                        >
+                                            Add Coworker
+                                        </Button>
+                                    </StyledListItem>
+                                ))}
+                            </StyledList>
+                        </StyledRightPanel>
                         <Button variant="contained" color="primary" type="submit">
                             Add Sub-Tasks
                         </Button>

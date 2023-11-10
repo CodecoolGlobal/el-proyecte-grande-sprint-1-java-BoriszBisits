@@ -273,6 +273,19 @@ function Project() {
         });
     };
 
+    function checkDeadlineIsValid(e) {
+        const deadlineString = deadline;
+        const deadlineDate = new Date(deadlineString);
+        const currentDate = new Date();
+    
+        if (deadlineDate > currentDate ) {
+            console.log("Valid deadline. Proceeding with submission.");
+            handleSubmit(e);
+        } else {
+            console.log("Invalid deadline. Please choose a date at least one day ahead.");
+        }
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -385,7 +398,7 @@ function Project() {
                             {isFormVisible ? 'Hide Form' : 'Add Task'}
                         </StyledAddTaskButton>
                         {isFormVisible && (
-                            <StyledForm onSubmit={handleSubmit}>
+                            <StyledForm onSubmit={checkDeadlineIsValid}>
                                 <StyledInput
                                     variant="outlined"
                                     label="Name"
