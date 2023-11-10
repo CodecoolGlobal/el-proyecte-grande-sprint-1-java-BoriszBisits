@@ -367,71 +367,6 @@ function Project() {
             <HeaderBar />
             <StyledContainer>
                 <StyledLeftPanel>
-<<<<<<< HEAD
-                <StyledLeftColumn>
-                    <StyledTitle variant="h4">My Project Tasks</StyledTitle>
-                    <StyledTaskList>
-                        {tasks.map((task) => (
-                            <StyledTaskItem key={task.id}>
-                                <StyledTaskCard>
-                                    <StyledTaskCardContent>
-                                        <StyledTaskText>
-                                            <Link to={`/project/${id}/task/${task.id}`}>{task.name}</Link>
-                                        </StyledTaskText>
-                                        <Button
-                                            onClick={() => submitDelete(task.id)}
-                                            variant="contained"
-                                            color="primary"
-                                        >
-                                            Delete
-                                        </Button>
-                                    </StyledTaskCardContent>
-                                </StyledTaskCard>
-                            </StyledTaskItem>
-                        ))}
-                    </StyledTaskList>
-                    <StyledAddTaskButton
-                        type="button"
-                        variant="contained"
-                        color="primary"
-                        onClick={() => setIsFormVisible(!isFormVisible)}
-                    >
-                        {isFormVisible ? 'Hide Form' : 'Add Task'}
-                    </StyledAddTaskButton>
-                    {isFormVisible && (
-                        <StyledForm onSubmit={checkDeadlineIsValid}>
-                            <StyledInput
-                                variant="outlined"
-                                label="Name"
-                                type="text"
-                                value={newTaskName}
-                                onChange={(e) => setNewTaskName(e.target.value)}
-                            />
-                            <StyledInput
-                                variant="outlined"
-                                label="Deadline"
-                                type="text"
-                                value={deadline}
-                                onChange={(e) => setDeadline(e.target.value)}
-                            />
-                            <StyledInput
-                                variant="outlined"
-                                label="Color"
-                                type="text"
-                                value={colorOfCircle}
-                                onChange={(e) => setColorOfCircle(e.target.value)}
-                            />
-                          
-                            <StyledButton variant="contained" color="primary" type="submit">
-                                Add new task
-                            </StyledButton>
-                        </StyledForm>
-                    )}
-                </StyledLeftColumn>
-                <StyledRightColumn>
-                    <TaskCircle projectId={id} tasks={tasks} />
-                </StyledRightColumn>
-=======
                     <StyledLeftColumn>
                         <StyledTitle variant="h4">My Project Tasks</StyledTitle>
                         <StyledTaskList>
@@ -463,7 +398,7 @@ function Project() {
                             {isFormVisible ? 'Hide Form' : 'Add Task'}
                         </StyledAddTaskButton>
                         {isFormVisible && (
-                            <StyledForm onSubmit={handleSubmit}>
+                            <StyledForm onSubmit={checkDeadlineIsValid}>
                                 <StyledInput
                                     variant="outlined"
                                     label="Name"
@@ -508,7 +443,6 @@ function Project() {
                     <StyledRightColumn>
                         <TaskCircle projectId={id} tasks={tasks} />
                     </StyledRightColumn>
->>>>>>> development
                 </StyledLeftPanel>
                 <StyledRightPanel>
                     <StyledHeader variant="h4">All Members:</StyledHeader>
