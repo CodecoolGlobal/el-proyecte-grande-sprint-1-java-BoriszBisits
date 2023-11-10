@@ -24,6 +24,7 @@ public class Task {
     // @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String subtype;
 
 
     private String name;

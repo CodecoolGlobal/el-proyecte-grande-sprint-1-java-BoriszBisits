@@ -6,6 +6,7 @@ import com.codecool.circles.model.SubTask;
 import com.codecool.circles.model.Task;
 import com.codecool.circles.service.dao.MemberDao;
 import com.codecool.circles.service.dao.SubTaskDao;
+import com.codecool.circles.service.dao.TaskDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,16 +20,20 @@ public class SubTaskService {
     @Autowired
     private SubTaskDao subTaskDao;
     private MemberDao memberDao;
-
+    private TaskDao taskDao;
 
     @Autowired
-    public SubTaskService(SubTaskDao subTaskDao, MemberDao memberDao) {
-
+    public SubTaskService(SubTaskDao subTaskDao, MemberDao memberDao, TaskDao taskDao) {
         this.subTaskDao = subTaskDao;
         this.memberDao = memberDao;
+        this.taskDao = taskDao;
     }
 
+
+
+
     public List<Member> getWorkersOnSubtask(Long projectId, Long taskId, Long subTaskId) {
+
         return memberDao.getSubTaskWorkers(projectId, taskId, subTaskId);
     }
 
