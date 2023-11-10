@@ -1,9 +1,6 @@
 package com.codecool.circles.service;
 
-import com.codecool.circles.model.Member;
-import com.codecool.circles.model.Project;
-import com.codecool.circles.model.SubTask;
-import com.codecool.circles.model.Task;
+import com.codecool.circles.model.*;
 import com.codecool.circles.service.dao.MemberDao;
 import com.codecool.circles.service.dao.ProjectDao;
 import com.codecool.circles.service.dao.SubTaskDao;
@@ -12,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -70,7 +68,20 @@ public class TaskService {
     }
 
     public List<Member> getCoWorkers(Long projectId,Long taskId){
-        return memberDao.getCoWorkers(projectId,taskId);
+        String tasksSubtypeName=taskDao.getTask(taskId).getSubtype();
+        List<Member>members=memberDao.getCoWorkers(projectId,taskId);
+        List<Member>filteredMembers=new ArrayList<>();
+        for (Member member:members){
+            List<String> membersSubtypesName=new ArrayList<>();
+            for (SubType subType:member.getSubTypes()){
+                membersSubtypesName.add(subType.getName());
+            }
+            if(membersSubtypesName.contains(tasksSubtypeName)){
+                filteredMembers.add(member);
+            }
+        }
+
+        return filteredMembers;
     }
 
     public ResponseEntity<String> deleteTaskById(Long taskId) {

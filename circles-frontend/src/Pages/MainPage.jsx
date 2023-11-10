@@ -288,7 +288,7 @@ const deleteProject = (projectId) => {
                 onChange={(e) => setSelectedProjectType(e.target.value)}
               >
                 {projectTypes.map((type,i) => (
-                  <MenuItem key={type} value={type.name}>
+                  <MenuItem key={i} value={type.name}>
                     {type.name}
                   </MenuItem>
                 ))}
@@ -321,6 +321,7 @@ const deleteProject = (projectId) => {
           <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
             <StyledPaper onClick={() => navigate(`/project/${project.id}`)}>
               {project.name}
+              {project.type}
             </StyledPaper>
           </Grid>
         ))}

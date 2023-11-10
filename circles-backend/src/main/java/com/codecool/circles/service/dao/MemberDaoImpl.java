@@ -100,7 +100,8 @@ public class MemberDaoImpl implements MemberDao{
         Project project=projectRepository.findById(projectId).get();
         Task task = taskRepository.findById(taskId).get();
         List<Member> membersOnTheProject =memberList.stream().filter(member -> member.getCoProjects().contains(project)).toList();
-List<Member> membersNotOnTheTask = membersOnTheProject.stream().filter(member -> !member.getTaskList().contains(task)).toList();
+        List<Member> membersNotOnTheTask = membersOnTheProject.stream().filter(member -> !member.getTaskList().contains(task)).toList();
+
         return membersNotOnTheTask;
     }
 

@@ -1,6 +1,7 @@
 package com.codecool.circles.service;
 
 import com.codecool.circles.model.SubType;
+import com.codecool.circles.service.dao.ProjectDao;
 import com.codecool.circles.service.dao.SubTaskDao;
 import com.codecool.circles.service.dao.SubTypeDao;
 import com.codecool.circles.service.dao.TypeDao;
@@ -14,11 +15,16 @@ import java.util.List;
 public class SubTypeService {
     private TypeDao typeDao;
     private SubTypeDao subTypeDao;
+    private ProjectDao projectDao;
     @Autowired
-    public SubTypeService(TypeDao typeDao, SubTypeDao subTypeDao) {
+    public SubTypeService(TypeDao typeDao, SubTypeDao subTypeDao, ProjectDao projectDao) {
         this.typeDao = typeDao;
         this.subTypeDao = subTypeDao;
+        this.projectDao = projectDao;
     }
+
+
+
 
     public List<SubType> getSubtypesByTypeId(Long typeId){
         List<SubType>subTypes=subTypeDao.getAllSubTypes();
@@ -32,6 +38,14 @@ public class SubTypeService {
         }
         return subTypes;
     }
+public List<SubType> getSubtypesByProjectId(String id){
+        String projectsTypeName=projectDao.getProjectById(Long.valueOf(id)).getType();
+        List<SubType>subtypes=typeDao.getTypeByName(projectsTypeName).getSubTypes();
+    System.out.println(subtypes);
+    return subtypes;
+
+
+}
 
 
 }

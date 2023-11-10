@@ -1,9 +1,6 @@
 package com.codecool.circles.service;
 
-import com.codecool.circles.model.Member;
-import com.codecool.circles.model.Project;
-import com.codecool.circles.model.SubTask;
-import com.codecool.circles.model.Task;
+import com.codecool.circles.model.*;
 import com.codecool.circles.service.dao.MainPageDao;
 import com.codecool.circles.service.dao.MemberDao;
 import com.codecool.circles.service.dao.ProjectDao;
@@ -11,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 @Service
@@ -74,7 +73,23 @@ public class MainPageService {
     }
 
     public List<Member> getAllMemberWhoIsNotCoWorker(Long projectId) {
-        return getNotCoWorkers(projectId);
+        List<Member> members=getNotCoWorkers(projectId);
+        String type=projectDao.getProjectById(projectId).getType();
+        List<Member>filteredMembers=new ArrayList<>();
+
+        for (Member member:members){
+            Set<Type> typesOfMember=member.getTypes();
+            List<String>nameOfTypes=new ArrayList<>();
+            for (Type type1:typesOfMember){
+                nameOfTypes.add(type1.getName());
+            }
+            if (nameOfTypes.contains(type)){
+                filteredMembers.add(member);
+            }
+
+        }
+
+        return filteredMembers;
     }
 
 //    public List<Member> getALLMemberWoIsCoworker() {
