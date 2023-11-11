@@ -48,6 +48,13 @@ public class Member {
     )
     private List<Project> coProjects = new ArrayList<>();
 
+    @OneToMany
+    @JoinTable(
+            name = "member_note",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "note_id"))
+    private List<Note>notes=new ArrayList<>();
+
 
     @ManyToMany
     @JoinTable(

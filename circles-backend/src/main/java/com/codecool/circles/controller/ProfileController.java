@@ -2,6 +2,7 @@ package com.codecool.circles.controller;
 
 import com.codecool.circles.model.*;
 import com.codecool.circles.service.MemberService;
+import com.codecool.circles.service.NoteService;
 import com.codecool.circles.service.SubTypeService;
 import com.codecool.circles.service.TypeService;
 import lombok.Data;
@@ -24,17 +25,27 @@ public class ProfileController {
         private String user;
         private List<Type> selectedTypes;
         private String subtype;
+        private String receiver;
+        private String sender;
+        private String message;
 
     }
     private MemberService memberService;
     private TypeService typeService;
     private SubTypeService subTypeService;
+    private NoteService noteService;
+
     @Autowired
-    public ProfileController(MemberService memberService, TypeService typeService, SubTypeService subTypeService) {
+
+    public ProfileController(MemberService memberService, TypeService typeService, SubTypeService subTypeService, NoteService noteService) {
         this.memberService = memberService;
         this.typeService = typeService;
         this.subTypeService = subTypeService;
+        this.noteService = noteService;
     }
+
+
+
 
 
 
@@ -82,7 +93,32 @@ public class ProfileController {
          memberService.addSubTypeToMember(data.subtype, data.user);;
 
     }
+    @GetMapping("/profile/allcoworkers/{leader}")
+    public List<Member> getCoWorkersAllCoworkers(@PathVariable String leader) {
+        System.out.println("profilename " + leader);
+        return memberService.getAllCoworkers(leader);
+    }
+//profile/sendmessage
 
+    @PostMapping("/profile/sendmessage")
+    public void addNewMassege(@RequestBody RequestDataInterest data) {
+        System.out.println("---------------------------------------------");
+        System.out.println("receiver"+data.receiver);
+        System.out.println("sender"+data.sender);
+        System.out.println("message"+data.message);
+
+
+        noteService.addNewNote(data.sender, data.receiver,data.message);
+        List<Note>notes =noteService.getAllNotes();
+        for (Note note:notes){
+            System.out.println("------------------note----------------");
+            System.out.println(note.getSender());
+            System.out.println(note.getMassege());
+            System.out.println(note.getReciverMember());
+            System.out.println("-------------------------------------");
+        }
+
+    }
 
 
 

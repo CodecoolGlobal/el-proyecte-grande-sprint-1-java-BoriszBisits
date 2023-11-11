@@ -10,6 +10,7 @@ public interface ProjectDao {
     public void addUser(Long projectId , Member member);
 
     public void addUsers(Long projectId,List<Member> member);
+    public List<Project>getAllProjects();
 
     public List<Task> getAllTasks(Long projectId);
     public void getTaskSavedToProject(Long id , Task task);

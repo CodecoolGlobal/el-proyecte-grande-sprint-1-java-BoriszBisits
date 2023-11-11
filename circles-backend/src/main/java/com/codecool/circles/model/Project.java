@@ -37,6 +37,14 @@ public class Project {
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Task> taskList = new ArrayList<>();
+    @JsonIgnore
+    @OneToMany
+    @JoinTable(
+            name = "notes_project",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "note_id")
+    )
+    private List<Note> chat=new ArrayList<>();
 
     @JsonProperty("name")
     private String name;
