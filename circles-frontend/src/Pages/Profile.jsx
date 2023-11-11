@@ -7,6 +7,8 @@ import {
 } from "@mui/material";
 import HeaderBar from "../Components/HeaderBar";
 import Autocomplete from "@mui/material/Autocomplete";
+import NotesList from "./NotesList";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 function Profile() {
   const [interest, setInterest] = useState([]);
@@ -142,7 +144,6 @@ function Profile() {
     })
      
 
-    // Clear the message input after sending
     setMessageInput("");
   };
 
@@ -383,6 +384,10 @@ function Profile() {
     </>
   )}
 </form>
+
+      
+      <NotesList />
+
       </Container>
     </Container>
   );
