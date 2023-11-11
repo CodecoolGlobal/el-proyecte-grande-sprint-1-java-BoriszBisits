@@ -31,6 +31,10 @@ function HeaderBar() {
     navigate('/mainpage'); 
     handleMenuClose();
   };
+  const navigateToMessages = () => {
+    navigate('/messages'); 
+    handleMenuClose();
+  };
 
   const navigateToLogin = () => {
     navigate('/'); 
@@ -65,6 +69,7 @@ function HeaderBar() {
       >
         <MenuItem onClick={navigateToProfile}>My Profile</MenuItem>
         <MenuItem onClick={navigateToProjects}>My Projects</MenuItem>
+        <MenuItem onClick={navigateToMessages}>My Messages</MenuItem>
         <MenuItem onClick={navigateToLogin}>Logout</MenuItem>
       </Menu>
     </div>
