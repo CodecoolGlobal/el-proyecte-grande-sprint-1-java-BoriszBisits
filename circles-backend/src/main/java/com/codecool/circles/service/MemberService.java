@@ -76,6 +76,7 @@ public class MemberService {
                 for (Member member : project.getMembers()) {
                     if (member.getName().equals(leader)) {
                         addUniqueMembers(members, project.getMembers());
+                        members.add(memberDao.findMemberByName(project.getLeader()));
                         break;
                     }
                 }
