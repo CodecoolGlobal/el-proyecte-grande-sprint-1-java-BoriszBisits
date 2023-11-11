@@ -16,11 +16,53 @@ function Profile() {
   const [filteredInterests, setFilteredInterests] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [subtypeInput, setSubtypeInput] = useState("");
+  const [allCoworkers, setAllCoworkers] = useState([]);
+  const [coworkerSearchQuery, setCoworkerSearchQuery] = useState("");
+  const [filteredCoworkers, setFilteredCoworkers] = useState(allCoworkers);
+  const [selectedCoworker, setSelectedCoworker] = useState(null);
+  const [messageInput, setMessageInput] = useState("");
+  const [allMessages, setAllMessages] = useState([]);
 
   useEffect(() => {
     fetchInterest();
     fetchInterests();
+    fetchAllCoworkers();
   }, [savedInterest]);
+
+  const handleCoworkerSearchQuery = (e) => {
+    const query = e.target.value;
+    setCoworkerSearchQuery(query);
+    filterCoworkers(query);
+  };
+
+  const filterCoworkers = (query) => {
+    const filtered = allCoworkers.filter((coworker) =>
+      coworker.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredCoworkers(filtered);
+  };
+
+  function fetchAllCoworkers() {
+    const token = localStorage.getItem("token");
+    const leader = localStorage.getItem("username");
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    fetch(`/api/profile/allcoworkers/${leader}`, {
+      method: "GET",
+      headers: headers,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setAllCoworkers(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching profile:", error);
+      });
+  }
 
   function fetchInterests() {
     const token = localStorage.getItem("token");
@@ -57,7 +99,7 @@ function Profile() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
+        console.log(data);
         setProfile(data);
       })
       .catch((error) => {
@@ -69,6 +111,39 @@ function Profile() {
     const query = e.target.value;
     setSearchQuery(query);
     filterInterests(query);
+  };
+
+  const handleMessageSubmit = (e) => {
+    e.preventDefault();
+
+    if (!selectedCoworker || !messageInput) {
+      
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    const leader = localStorage.getItem("username");
+
+    const dataToSend = {
+      receiver: selectedCoworker.name,
+      sender: leader,
+      message: messageInput,
+    };
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    fetch(`/api/profile/sendmessage`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(dataToSend),
+    })
+     
+
+    // Clear the message input after sending
+    setMessageInput("");
   };
 
   const handleInterestSubmit = (e) => {
@@ -108,12 +183,10 @@ function Profile() {
 
     const token = localStorage.getItem("token");
     const leader = localStorage.getItem("username");
-    //console.log("subtypeInput"+subtypeInput)
     const dataToSend = {
       subtype: subtypeInput,
       user: leader,
     };
-    //console.log("dataToSend"+dataToSend.subtype)
 
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -124,9 +197,8 @@ function Profile() {
       method: "POST",
       headers: headers,
       body: JSON.stringify(dataToSend),
-    
-    })
-      fetchInterest()
+    });
+    fetchInterest();
   };
 
   const filterInterests = (query) => {
@@ -165,7 +237,7 @@ function Profile() {
       <HeaderBar />
 
       <Container maxWidth="sm" style={{ marginTop: "20px" }}>
-        <Typography variant="h5">{profile.name+"'s Profile"}</Typography>
+        <Typography variant="h5">{profile.name + "'s Profile"}</Typography>
 
         {profile && profile.types && profile.types.length > 0 && (
           <div>
@@ -175,21 +247,20 @@ function Profile() {
                 <li key={index}>{projectType.name}</li>
               ))}
             </ul>
-
           </div>
-          
         )}
+
         {profile && profile.subTypes && profile.subTypes.length > 0 && (
           <div>
-            <Typography variant="h6">Your Interest in SubTypes:</Typography>
+            <Typography variant="h6">
+              Your Interest in SubTypes:
+            </Typography>
             <ul>
               {profile.subTypes.map((projectType, index) => (
                 <li key={index}>{projectType.name}</li>
               ))}
             </ul>
-
           </div>
-          
         )}
 
         <form onSubmit={handleInterestSubmit}>
@@ -198,8 +269,9 @@ function Profile() {
             options={filteredInterests}
             getOptionLabel={(option) => option.name}
             value={
-              filteredInterests.find((option) => option.name === searchQuery) ||
-              null
+              filteredInterests.find(
+                (option) => option.name === searchQuery
+              ) || null
             }
             onChange={(event, newValue) =>
               setSearchQuery(newValue ? newValue.name : "")
@@ -237,7 +309,8 @@ function Profile() {
             options={subtypes}
             getOptionLabel={(option) => option.name}
             value={
-              subtypes.find((option) => option.name === subtypeInput) || null
+              subtypes.find((option) => option.name === subtypeInput) ||
+              null
             }
             onChange={(event, newValue) =>
               setSubtypeInput(newValue ? newValue.name : "")
@@ -268,6 +341,48 @@ function Profile() {
             Save Subtype
           </Button>
         </form>
+
+        <form onSubmit={handleMessageSubmit}>
+  <Autocomplete
+    id="coworker-autocomplete"
+    options={allCoworkers }
+    getOptionLabel={(option) => option.name}
+    value={selectedCoworker}
+    onChange={(event, newValue) => setSelectedCoworker(newValue)}
+    renderInput={(params) => (
+      <TextField
+        {...params}
+        label="Select Coworker"
+        variant="outlined"
+        fullWidth
+        placeholder="Start typing to filter coworkers"
+      />
+    )}
+  />
+
+  {selectedCoworker && (
+    <>
+      <TextField
+        label={`Message to ${selectedCoworker.name}`}
+        variant="outlined"
+        fullWidth
+        value={messageInput}
+        onChange={(e) => setMessageInput(e.target.value)}
+        placeholder="Type your message here"
+        style={{ marginTop: "10px" }}
+      />
+
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        style={{ marginTop: "20px" }}
+      >
+        Send Message
+      </Button>
+    </>
+  )}
+</form>
       </Container>
     </Container>
   );

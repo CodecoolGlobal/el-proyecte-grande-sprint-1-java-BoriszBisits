@@ -40,6 +40,11 @@ public class ProjectDaoImpl implements ProjectDao {
     }
 
     @Override
+    public List<Project> getAllProjects() {
+        return projectRepository.findAll();
+    }
+
+    @Override
     public List<Task> getAllTasks(Long projectId) {
         System.out.println("daoimpl" + projectId);
         return getProjectById(projectId).getAllTask();
