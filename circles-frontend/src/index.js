@@ -9,6 +9,7 @@ import SubTask from "./Pages/SubTask";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from './Pages/Login';
 import Profile from './Pages/Profile';
+import NotesList from './Pages/NotesList';
 import Registration from './Pages/Registration';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
             {
                 path: "/profile",
                 element: <Profile />,
+            },
+            {
+                path: "/messages",
+                element: <NotesList />,
             },
             {
                 path: "/",
