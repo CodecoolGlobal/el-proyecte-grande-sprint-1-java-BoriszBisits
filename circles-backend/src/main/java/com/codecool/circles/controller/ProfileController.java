@@ -99,10 +99,8 @@ public class ProfileController {
 @GetMapping("/profile/message/{leader}")
 public List<Note> getMessagesOfMember(@PathVariable String leader) {
     System.out.println("profilename in massage context " + leader);
-    List<Note>notes= noteService.getNotesOfMemberByName(leader);
-    for (Note note:notes){
-        System.out.println("note----------------------"+note.getMassege());
-    }
+
+
     return noteService.getNotesOfMemberByName(leader);
 }
 

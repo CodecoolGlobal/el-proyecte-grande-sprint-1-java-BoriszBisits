@@ -5,6 +5,7 @@ import com.codecool.circles.service.dao.MemberDao;
 import com.codecool.circles.service.dao.NoteDao;
 import com.codecool.circles.service.dao.ProjectDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContextExtensionsKt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -31,22 +32,39 @@ public class NoteService {
         Long memberId=memberDao.findMemberByName(leader).getId();
         List<Note>notes=noteDao.getAllNotes();
         List<Note> filteredNotes=new ArrayList<>();
-        for (Note note:notes){
-            System.out.println("note.getReciverMember().getId()"+note.getReciverMember().getId());
-            System.out.println("memberId"+memberId);
-            if (note.getReciverMember().getId().equals(memberId)){
-                filteredNotes.add(note);
-            }
-        }
+       for (Note note : notes) {
+
+
+           if (note.getReciverMember() != null) {
+
+               if (note.getReciverMember().getId().equals(memberId)) {
+                   filteredNotes.add(note);
+               }
+           } else {
+               System.out.println("Receiver Member or ID is null");
+               continue;
+           }
+       }
         return filteredNotes;
     }
 
     public List<Note> getNotesOfProjectByProjectId(Long id){
         List<Note>notes=noteDao.getAllNotes();
-        for (Note note:notes){
-            System.out.println("notes of project id  "+note.getReciverProject().getId());
+     List<Note>filteredNotes=new ArrayList<>();
+        for (Note note : notes) {
+
+
+            if (note.getReciverProject() != null) {
+
+                if (note.getReciverProject().getId().equals(id)) {
+                    filteredNotes.add(note);
+                }
+            } else {
+                System.out.println("Receiver Member or ID is null");
+                continue;
+            }
         }
-        return notes.stream().filter(note -> note.getReciverProject().getId().equals(id)).toList();
+        return filteredNotes;
     }
 
 
@@ -58,6 +76,7 @@ public class NoteService {
         note.setSender(memberDao.findMemberByName(senderName));
         note.setReciverMember(memberDao.findMemberByName(reciverName));
         note.setMassege(massege);
+
         noteDao.addNote(note);
     }
     public void addNewNoteForProject(String senderName, Long reciverProjectId, String massege){
