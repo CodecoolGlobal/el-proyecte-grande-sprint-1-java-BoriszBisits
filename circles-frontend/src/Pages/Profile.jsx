@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import HeaderBar from "../Components/HeaderBar";
 import Autocomplete from "@mui/material/Autocomplete";
-import NotesList from "./NotesList";
+import NotesList from "./NotesListOfProfile";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 function Profile() {

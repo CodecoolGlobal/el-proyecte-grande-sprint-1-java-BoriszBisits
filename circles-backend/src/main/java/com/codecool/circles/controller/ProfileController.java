@@ -10,17 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
 public class ProfileController {
 
     @Data
-    private static class RequestDataInterest{
+    public static class RequestDataInterest{
         private String interest;
         private String user;
         private List<Type> selectedTypes;
@@ -117,7 +114,7 @@ public List<Note> getMessagesOfMember(@PathVariable String leader) {
         System.out.println("message"+data.message);
 
 
-        noteService.addNewNote(data.sender, data.receiver,data.message);
+        noteService.addNewNoteForMembers(data.sender, data.receiver,data.message);
         List<Note>notes =noteService.getAllNotes();
         for (Note note:notes){
             System.out.println("------------------note----------------");
