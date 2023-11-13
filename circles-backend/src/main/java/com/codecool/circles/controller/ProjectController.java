@@ -1,9 +1,11 @@
 package com.codecool.circles.controller;
 
 import com.codecool.circles.model.Member;
+import com.codecool.circles.model.Note;
 import com.codecool.circles.model.Project;
 import com.codecool.circles.model.Task;
 import com.codecool.circles.service.MainPageService;
+import com.codecool.circles.service.NoteService;
 import com.codecool.circles.service.ProjectService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +25,21 @@ public class ProjectController {
         private String memberId;
         private String leader;
         private String projectId;
+        private String massege;
     }
     private ProjectService projectService;
     private MainPageService mainPageService;
-
-
+    private NoteService noteService;
     @Autowired
-    public ProjectController(ProjectService projectService, MainPageService mainPageService) {
+
+    public ProjectController(ProjectService projectService, MainPageService mainPageService, NoteService noteService) {
         this.projectService = projectService;
         this.mainPageService = mainPageService;
+        this.noteService = noteService;
     }
+
+
+
 
     @GetMapping("/projectByid/{projectId}")
     public List<Task> getProjectById(@PathVariable Long projectId) {
@@ -46,6 +53,30 @@ public class ProjectController {
         }
         return projectService.getAllTaskByProjectId(projectUUID);
     }
+
+    ///api/project/message/${id}
+
+
+    @GetMapping("/project/message/{id}")
+    public List<Note> getMessagesOfMember(@PathVariable String id) {
+        System.out.println("-----------------Message--------------------------");
+        System.out.println("project ID in massage context " + id);
+        List<Note>notes= noteService.getNotesOfProjectByProjectId(Long.valueOf(id));
+        for (Note note:notes){
+            System.out.println("note----------------------"+note.getMassege());
+        }
+        return noteService.getNotesOfProjectByProjectId(Long.valueOf(id));
+    }
+//"/api/projectlist/project/massege"
+@PostMapping("/project/massege")
+public void addNewMassege(@RequestBody RequestData requestData) {
+    System.out.println("-------------------------------------------------data in messegae context in project");
+    System.out.println("------------massege"+requestData.massege);
+    System.out.println("-------------leader"+requestData.leader);
+    System.out.println("------------projectID"+requestData.projectId);
+    noteService.addNewNoteForProject(requestData.leader,Long.valueOf(requestData.projectId), requestData.massege);
+    }
+
 
     @GetMapping("/project/members/{id}")
     public List<Member> getCoWorkersByProject(@PathVariable String id) {

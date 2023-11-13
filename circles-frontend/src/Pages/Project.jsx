@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import TaskCircle from '../Circle/TaskCircle';
+import NotesListOfProject from './NoteListOfProject';
 import {
     Container,
     Typography,
@@ -152,6 +153,8 @@ function Project() {
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [subTypes, setSubtypes] = useState([]);
+    const [scannedText, setScannedText] = useState('');
+    const [notes , setNotes]=useState([])
 
     const [eventCount, setEventCount] = useState(() => 0);
 
@@ -228,11 +231,36 @@ function Project() {
                 console.error('Error fetching tasks:', error);
             });
     };
+    
+  const fetchNotes = () => {
+    const token = localStorage.getItem("token");
+    const leader = localStorage.getItem("username");
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+console.log("project id in NotsListOfProject   "+id)
+    fetch(`/api/projectlist/project/message/${id}`, {
+      method: "GET",
+      headers: headers,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setNotes(data);
+       // setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching notes:", error);
+        //setError("Error fetching notes. Please try again later.");
+       // setLoading(false);
+      });
+  };
 
     useEffect(() => {
         fetchTasks();
         fetchMembers();
         fetchSubtypes();
+        fetchNotes();
 
         const token = localStorage.getItem('token');
 
@@ -242,12 +270,13 @@ function Project() {
         })
             .then((res) => res.json())
             .then((data) => {
+                console.log(data)
                 setTasks(data);
             })
             .catch((error) => {
                 console.error('Error fetching tasks:', error);
             });
-    }, [id]);
+    }, [id ]);
 
     const submitDelete = (taskId) => {
         confirmAlert({
@@ -316,6 +345,33 @@ function Project() {
                 setIsFormVisible(false);
             }
         });
+    };
+
+    const handleScanTextSubmit = () => {
+        let data = {
+            
+            leader: localStorage.getItem('username'),
+            projectId: id,
+            massege: scannedText,
+        }
+        console.log("Scanned Text:", scannedText);
+        let  token=localStorage.getItem('token')
+        fetch("/api/projectlist/project/massege", {
+            method: "POST", headers: {
+                'Authorization': `Bearer ${token}`,
+                "Content-Type": "application/json",
+            }, body: JSON.stringify(data),
+        })
+            .then((res) => {
+                if (res.ok) {
+                    fetchNotes();   
+                }
+            })
+            .catch((error) => {
+                console.error("Error adding coworker:", error);
+            });
+    
+        setScannedText('');
     };
 
     const deleteTask = (taskId) => {
@@ -437,9 +493,11 @@ function Project() {
                                 <StyledButton variant="contained" color="primary" type="submit">
                                     Add new task
                                 </StyledButton>
+                                
                             </StyledForm>
                         )}
                     </StyledLeftColumn>
+                    <NotesListOfProject notes={notes}/>
                     <StyledRightColumn>
                         <TaskCircle projectId={id} tasks={tasks} />
                     </StyledRightColumn>
@@ -466,8 +524,10 @@ function Project() {
                                 setSearchQuery(newSearchQuery);
                                 setFilteredMembers(filterMembers(newSearchQuery));
                             }}
+                            
                         />
                     </div>
+                   
                     <StyledList>
                         {currentMembers.map((member) => (
                             <StyledListItem key={member.id}>
@@ -484,8 +544,30 @@ function Project() {
                     </StyledList>
                 </StyledRightPanel>
             </StyledContainer>
+            <StyledContainer>
+                <StyledInput
+                    variant="outlined"
+                    label="Scan Text"
+                    type="text"
+                    value={scannedText}
+                    onChange={(e) => setScannedText(e.target.value)}
+                />
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleScanTextSubmit}
+                    style={{ marginLeft: '10px' }}
+                >
+                    Send Comment
+                </Button>
+            </StyledContainer>
+            
         </div>
+      
+        
+        
     );
+    
 }
 
 export default Project;

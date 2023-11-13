@@ -9,7 +9,7 @@ import SubTask from "./Pages/SubTask";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from './Pages/Login';
 import Profile from './Pages/Profile';
-import NotesList from './Pages/NotesList';
+import NotesListOfProfile from './Pages/NotesListOfProfile';
 import Registration from './Pages/Registration';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
@@ -23,7 +23,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/messages",
-                element: <NotesList />,
+                element: <NotesListOfProfile />,
             },
             {
                 path: "/",
