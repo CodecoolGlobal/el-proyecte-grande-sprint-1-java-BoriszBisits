@@ -4,6 +4,7 @@ import TaskCircle from "../Circle/TaskCircle";
 import SubTaskCircle from "../Circle/SubTaskCircle";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import ProgressCircle from '../Components/ProgressSubtaskCircle';
 import {
     Typography,
     Container,
@@ -111,6 +112,7 @@ function Task() {
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [eventCount, setEventCount] = useState(() => 0);
+    const [deadlineError, setDeadlineError] = useState(null);
     const [remainingTime, setRemainingTime] = useState({
         days: 0,
         hours: 0,
@@ -157,6 +159,7 @@ console.log("id" + id)
             });
     }
 
+
     useEffect(() =>{
         fetchMembers()
 
@@ -177,14 +180,17 @@ console.log("id" + id)
         })
             .then((res) => res.json())
             .then((data) => {
+                console.log("Task Data:", data); // Log the entire response
                 setTask(data);
                 setSubTasks(data.subTaskList);
+
 
             })
             .catch((error) => {
                 console.error('Error fetching tasks:', error);
             });
     }, [id, taskId]);
+
 
     function calculateTimeUntilDeadline() {
         const deadlineString = task.deadLine;
@@ -233,15 +239,30 @@ console.log("id" + id)
     };
 
     function checkDeadlineIsValid(e) {
+
+        e.preventDefault();
+
         const deadlineString = deadLine;
         const deadlineDate = new Date(deadlineString);
         const currentDate = new Date();
+
+        let isDeadLineStringValid = false;
+
+        if(deadlineString[4] === "-" &&
+        deadlineString[7] ==="-"){
+            isDeadLineStringValid = true
+        }
     
-        if (deadlineDate > currentDate) {
+        if (isNaN(deadlineDate) || isDeadLineStringValid === false ) {
+            setDeadlineError("The deadline format will be: yyyy-mm-dd");
+        }
+        else if(deadlineDate <= currentDate || deadlineDate > new Date(task.deadLine)){
+            setDeadlineError("Invalid deadline")
+        }
+         else {
+            setDeadlineError(null);
             console.log("Valid deadline. Proceeding with submission.");
             handleSubmit(e);
-        } else {
-            console.log("Invalid deadline. Please choose a date at least one day ahead.");
         }
     }
 
@@ -273,6 +294,7 @@ console.log("id" + id)
                     setSubTaskName('');
                     setDescription('');
                     setColorOfCircle('');
+                    setDeadline('')
                     fetchSubTasks();
 
                 }
@@ -365,7 +387,7 @@ console.log("id" + id)
                     {subTasks.map((subTask) => (
                         <Card key={subTask.id} className={classes.projectCard}>
                             <CardContent>
-                                <Typography variant="h6">{subTask.name}</Typography>
+                                <Typography variant="h6">{subTask.name} {subTask.completed ? "(Completed)" : ""}</Typography>
                                 <Typography variant="body2">{subTask.description}</Typography>
                             </CardContent>
                             <CardActions>
@@ -459,10 +481,16 @@ console.log("id" + id)
                                 ))}
                             </StyledList>
                         </StyledRightPanel>
+                        {deadlineError && <div style={{ color: 'red' }}>{deadlineError}</div>}
                         <Button variant="contained" color="primary" type="submit">
                             Add Sub-Tasks
                         </Button>
                     </form>
+                </div>
+                <div>
+                <div className="w-30">
+        <ProgressCircle subtasks={subTasks} />
+      </div>
                 </div>
                 <div className="w-30">
                     <div className={classes.taskCircle}>

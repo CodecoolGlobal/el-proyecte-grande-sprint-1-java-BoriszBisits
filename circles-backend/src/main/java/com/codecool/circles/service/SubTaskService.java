@@ -44,6 +44,12 @@ public class SubTaskService {
         memberDao.saveMember(member);
     }
 
+    public void addCompletionLevel(String completionLevel,Long subTaskId){
+        SubTask subTask = subTaskDao.getSubTask(subTaskId);
+        subTask.setCompleted(completionLevel);
+        subTaskDao.saveSubTask(subTask);
+    }
+
     public ResponseEntity<String> deleteSUbTaskById(Long subTaskId) {
         ResponseEntity<String> response = subTaskDao.deleteSubtaskById(subTaskId);
         return response;

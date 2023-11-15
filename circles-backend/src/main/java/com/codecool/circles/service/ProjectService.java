@@ -21,15 +21,23 @@ public class ProjectService {
     }
 
 
-
     public Project getProjectById(Long projectId) {
         return projectDao.getProjectById(projectId);
     }
 
     public List<Task> getAllTaskByProjectId(Long projectId) {
-       // System.out.println("service" + projectId);
-        return taskDao.getTasksByProjectId(projectId);
+        // System.out.println("service" + projectId);
+        List<Task> tasks = taskDao.getTasksByProjectId(projectId);
+        System.out.println("cica1");
+//        for (Task task : tasks) {
+//            System.out.println("cica2");
+//            task.checkCompleted();
+//        }
+        return tasks;
     }
 
+    public List<Project> getAllProjects(){
+        return projectDao.getAllProjects();
+    }
 
 }

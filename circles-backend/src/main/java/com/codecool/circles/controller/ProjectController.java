@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/projectlist")
@@ -38,11 +39,25 @@ public class ProjectController {
         this.noteService = noteService;
     }
 
+    @GetMapping("/project/{id}")
+    public ResponseEntity<Project> getProjectById(@PathVariable Long id) {
+        Long projectUUID;
+        try {
+            projectUUID = Long.valueOf(id);
+            Project project = projectService.getProjectById(projectUUID);
+            return new ResponseEntity<>(project, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
+    @GetMapping("/projects")
+    public List<Project> getProjects(){
+        return projectService.getAllProjects();
+    }
 
-
-    @GetMapping("/projectByid/{projectId}")
-    public List<Task> getProjectById(@PathVariable Long projectId) {
+    @GetMapping("/getAllTaskByProjectId/{projectId}")
+    public List<Task> getAllTaskByProjectId(@PathVariable Long projectId) {
 
         Long projectUUID;
 
@@ -54,7 +69,8 @@ public class ProjectController {
         return projectService.getAllTaskByProjectId(projectUUID);
     }
 
-    ///api/project/message/${id}
+
+
 
 
     @GetMapping("/project/message/{id}")

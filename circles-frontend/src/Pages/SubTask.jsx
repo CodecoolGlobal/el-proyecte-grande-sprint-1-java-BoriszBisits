@@ -9,6 +9,44 @@ import {Button,
     ListItemText,
 }from '@mui/material';
 
+const useStyles = {
+    container: {
+        display: 'flex',
+        backgroundColor: '#f5f5f5',
+    },
+    leftContent: {
+        flex: '0 0 70%',
+        marginRight: '16px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+    },
+    
+    title: {
+        fontSize: '24px',
+        marginBottom: '16px',
+    },
+    projectList: {
+        listStyle: 'none',
+        padding: 0,
+    },
+    projectCard: {
+        marginBottom: '16px',
+    },
+    newSubtaskForm: {
+        display: 'flex',
+        flexDirection: 'column',
+        marginTop: '16px',
+    },
+    formInput: {
+        marginBottom: '16px',
+    },
+    rightContent: {
+        flex: '0 0 30%',
+        marginBottom: '16px',
+    },
+};
+
 
 
 const StyledRightPanel = styled(Container)({
@@ -40,6 +78,7 @@ const StyledListItemText = styled(ListItemText)({
     fontSize: "16px",
 });
 function SubTask() {
+    const classes = useStyles;
     const { id, taskId, subTaskId } = useParams();
     const [subTask, setSubTask] = useState({});
     const [membersName, setMembersName] = useState([]);
@@ -47,6 +86,7 @@ function SubTask() {
     const [filteredMembers, setFilteredMembers] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [completionLevel, setCompletionLevel] = useState("");
     const [remainingTime, setRemainingTime] = useState({
         days: 0,
         hours: 0,
@@ -99,10 +139,7 @@ function SubTask() {
         fetchMembers()
 
     },[])
-
-    useEffect(() => {
-
-
+    function fetchSubTasks(){
         const token = localStorage.getItem('token');
 
         fetch(`/api/projectByid/${id}/task/${taskId}/subtask/${subTaskId}`, {
@@ -116,6 +153,11 @@ function SubTask() {
             .catch((error) => {
                 console.error('Error fetching subtask:', error);
             });
+        }
+
+    useEffect(() => {
+     fetchSubTasks()
+
     }, [id, taskId, subTaskId]);
 
     function handleAddCoworker(memberId) {
@@ -183,6 +225,34 @@ function SubTask() {
         return () => clearInterval(intervalId);
     }, [subTask.deadLine]);
 
+    function handleSubmit(e){
+        e.preventDefault();
+
+
+        const token = localStorage.getItem('token');
+
+        const data = {
+          completionLevel : completionLevel
+        };
+
+        fetch(`/api/subtask/completion-level/${subTaskId}`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            .then((res) => {
+                if (res.ok) {
+                  setCompletionLevel("")
+                  fetchSubTasks()
+
+                }
+            });
+
+    }
+
     return (
         <div style={{ backgroundColor: '#f5f5f5' }}>
             <HeaderBar />
@@ -206,6 +276,19 @@ function SubTask() {
                     </Typography>
                 </Paper>
                 <StyledRightPanel>
+                <form onSubmit={handleSubmit} className={classes.newSubtaskForm}>
+                <TextField
+                            className={classes.formInput}
+                            variant="outlined"
+                            label="%"
+                            type="text"
+                            value={completionLevel}
+                            onChange={(e) => setCompletionLevel(e.target.value)}
+                        />
+                        <Button variant="contained" color="primary" type="submit">
+                            Add completion level
+                        </Button>
+                    </form>
                 <StyledHeader variant="h4">Add Memeber:</StyledHeader>
                 <div className="search-bar" style={{marginBottom: "20px"}}>
                     <StyledAddMembersButton

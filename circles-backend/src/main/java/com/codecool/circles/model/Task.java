@@ -25,6 +25,8 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String subtype;
+    private boolean isCompleted = false;
+
 
 
     private String name;
@@ -115,6 +117,24 @@ public class Task {
         }
         return null;
     }
+
+    public void checkCompleted() {
+        setCompleted(true);
+        System.out.println("task-check completed");
+        //project.checkCompleted();
+        if (!subTaskList.isEmpty()) {
+            for (SubTask subTask : subTaskList) {
+                if (!subTask.isCompleted()) {
+                    System.out.println("false");
+                    setCompleted(false);
+                    break;
+                }
+            }
+        } else {
+            setCompleted(false);
+        }
+    }
+
 
     public void addMemberToTask(Member member){
         members.add(member);
