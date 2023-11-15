@@ -4,6 +4,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import TaskCircle from '../Circle/TaskCircle';
 import NotesListOfProject from './NoteListOfProject';
+import ProgressTaskCircle from '../Components/ProgressTaskCircle';
 import {
     Container,
     Typography,
@@ -21,6 +22,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import HeaderBar from '../Components/HeaderBar';
+import ProgressProjectCircle from '../Components/ProgressProjectCircle';
 
 const StyledList = styled(List)({
     padding: 0,
@@ -155,6 +157,9 @@ function Project() {
     const [subTypes, setSubtypes] = useState([]);
     const [scannedText, setScannedText] = useState('');
     const [notes , setNotes]=useState([])
+    const [deadlineError, setDeadlineError] = useState(null);
+    const [project, setProject] = useState(null);
+
 
     const [eventCount, setEventCount] = useState(() => 0);
 
@@ -219,12 +224,13 @@ function Project() {
     const fetchTasks = () => {
         const token = localStorage.getItem('token');
 
-        fetch(`/api/projectlist/projectByid/${id}`, {
+        fetch(`/api/projectlist/getAllTaskByProjectId/${id}`, {
             method: 'GET',
             headers: { Authorization: `Bearer ${token}` },
         })
             .then((res) => res.json())
             .then((data) => {
+                console.log("tasks " + data)
                 setTasks(data);
             })
             .catch((error) => {
@@ -239,7 +245,6 @@ function Project() {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     };
-console.log("project id in NotsListOfProject   "+id)
     fetch(`/api/projectlist/project/message/${id}`, {
       method: "GET",
       headers: headers,
@@ -256,6 +261,36 @@ console.log("project id in NotsListOfProject   "+id)
       });
   };
 
+
+
+//   const fetchProject = () => {
+//     const token = localStorage.getItem("token");
+//     const leader = localStorage.getItem("username");
+//     const headers = {
+//       Authorization: `Bearer ${token}`,
+//       "Content-Type": "application/json",
+//     };
+//     fetch(`/api/projectlist/current-project/${id}`, {
+//       method: "GET",
+//       headers: headers,
+//     })
+//       .then((res) => res.json())
+//       .then((data) => {
+//         setProject(data);
+//       })
+//       .catch((error) => {
+//         console.error("Error fetching notes:", error);
+        
+//       });
+//   };
+
+
+
+
+
+
+  
+
     useEffect(() => {
         fetchTasks();
         fetchMembers();
@@ -264,13 +299,13 @@ console.log("project id in NotsListOfProject   "+id)
 
         const token = localStorage.getItem('token');
 
-        fetch(`/api/projectlist/projectByid/${id}`, {
+        fetch(`/api/projectlist/getAllTaskByProjectId/${id}`, {
             method: 'GET',
             headers: { Authorization: `Bearer ${token}` },
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log(data)
+                console.log("task data " + data[0].completed)
                 setTasks(data);
             })
             .catch((error) => {
@@ -303,16 +338,36 @@ console.log("project id in NotsListOfProject   "+id)
     };
 
     function checkDeadlineIsValid(e) {
+
+        e.preventDefault()
+
         const deadlineString = deadline;
         const deadlineDate = new Date(deadlineString);
         const currentDate = new Date();
+        let isDeadLineStringValid = false;
+
+        // console.log("project " + project)
+        // console.log("dedlájn " + deadline )
+        if(deadlineString[4] === "-" &&
+        deadlineString[7] ==="-"){
+            isDeadLineStringValid = true
+        }
     
-        if (deadlineDate > currentDate ) {
+        if (isNaN(deadlineDate) || isDeadLineStringValid === false ) {
+            console.log(isDeadLineStringValid)
+
+            setDeadlineError("The deadline format will be: yyyy-mm-dd");
+        }
+       
+        else if(deadlineDate <= currentDate ){
+            setDeadlineError("Invalid deadline")
+        }
+         else {
+            setDeadlineError(null);
             console.log("Valid deadline. Proceeding with submission.");
             handleSubmit(e);
-        } else {
-            console.log("Invalid deadline. Please choose a date at least one day ahead.");
         }
+       
     }
 
     const handleSubmit = (e) => {
@@ -431,7 +486,7 @@ console.log("project id in NotsListOfProject   "+id)
                                     <StyledTaskCard>
                                         <StyledTaskCardContent>
                                             <StyledTaskText>
-                                                <Link to={`/project/${id}/task/${task.id}`}>{task.name}</Link>
+                                                <Link to={`/project/${id}/task/${task.id}`}>{task.name} {task.completed ? "(Completed)" : ""}</Link>
                                             </StyledTaskText>
                                             <Button
                                                 onClick={() => submitDelete(task.id)}
@@ -490,6 +545,7 @@ console.log("project id in NotsListOfProject   "+id)
                                         </MenuItem>
                                     ))}
                                 </StyledInput>
+                                {deadlineError && <div style={{ color: 'red' }}>{deadlineError}</div>}
                                 <StyledButton variant="contained" color="primary" type="submit">
                                     Add new task
                                 </StyledButton>
@@ -498,6 +554,9 @@ console.log("project id in NotsListOfProject   "+id)
                         )}
                     </StyledLeftColumn>
                     <NotesListOfProject notes={notes}/>
+                    <div className="w-30">
+        <ProgressTaskCircle tasks={tasks} />
+      </div>
                     <StyledRightColumn>
                         <TaskCircle projectId={id} tasks={tasks} />
                     </StyledRightColumn>

@@ -13,57 +13,53 @@ import java.util.List;
 
 @Repository
 
-public class TaskDaoImpl implements TaskDao{
-private TaskRepository taskRepository;
-private ProjectDao projectDao;
+public class TaskDaoImpl implements TaskDao {
+    private TaskRepository taskRepository;
+    private ProjectDao projectDao;
 
-  @Autowired
-  public TaskDaoImpl(TaskRepository taskRepository, ProjectDao projectDao) {
-    this.taskRepository = taskRepository;
-    this.projectDao = projectDao;
-  }
-
-
-
-
+    @Autowired
+    public TaskDaoImpl(TaskRepository taskRepository, ProjectDao projectDao) {
+        this.taskRepository = taskRepository;
+        this.projectDao = projectDao;
+    }
 
 
     @Override
-    public Task getTask(Long taskID ) {
+    public Task getTask(Long taskID) {
 
-
-      return taskRepository.findById(taskID).get();
+        Task task = taskRepository.findById(taskID).get();
+        //task.checkCompleted();
+        return task;
     }
 
 
-
-  @Override
-  public ResponseEntity<String> deleteTaskById(Long taskId) {
-    try {
-      taskRepository.deleteById(taskId);
-      return new ResponseEntity<>("Task deleted successfully", HttpStatus.OK);
-    } catch (EmptyResultDataAccessException e) {
-      return new ResponseEntity<>("Task not found", HttpStatus.NOT_FOUND);
-    } catch (Exception e) {
-      return new ResponseEntity<>("An error occurred while deleting the task", HttpStatus.INTERNAL_SERVER_ERROR);
+    @Override
+    public ResponseEntity<String> deleteTaskById(Long taskId) {
+        try {
+            taskRepository.deleteById(taskId);
+            return new ResponseEntity<>("Task deleted successfully", HttpStatus.OK);
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Task not found", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("An error occurred while deleting the task", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-  }
 
-  @Override
-  public void addTask(Task task) {
+    @Override
+    public void addTask(Task task) {
 
-    taskRepository.save(task);
-  }
+        taskRepository.save(task);
+    }
 
-  @Override
-  public List<Task> getTasksByProjectId(Long projectId) {
-   return taskRepository.findByProjectId(projectId);
-  }
+    @Override
+    public List<Task> getTasksByProjectId(Long projectId) {
+        return taskRepository.findByProjectId(projectId);
+    }
 
-  @Override
-  public void saveTask(Task task) {
-    taskRepository.save(task);
-  }
+    @Override
+    public void saveTask(Task task) {
+        taskRepository.save(task);
+    }
 /*
   @Override
   public boolean deleteSubtaskById(UUID projectId, UUID taskId, UUID subTaskId) {

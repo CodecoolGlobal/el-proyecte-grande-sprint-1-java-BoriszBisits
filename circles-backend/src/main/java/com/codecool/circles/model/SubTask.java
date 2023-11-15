@@ -69,11 +69,16 @@ public class SubTask {
     }
 
 
-    public void setCompleted() {
+    public void setCompleted(String completionLevel) {
+        setLevelOfCompletion(Integer.parseInt(completionLevel));
         if (levelOfCompletion == 100) {
 
             isCompleted = true;
+        } else {
+            isCompleted = false;
         }
+        task.checkCompleted();
+
     }
 
     public void addUser(Member member) {

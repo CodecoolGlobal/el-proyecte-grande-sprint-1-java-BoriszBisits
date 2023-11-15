@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import ProgressProjectCircle from "../Components/ProgressProjectCircle";
 import {
   AppBar,
   Box,
@@ -113,9 +114,12 @@ function ProjectList() {
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [newProject, setNewProject] = useState("");
+  const [deadLine, setDeadline] = useState("");
   const [projectTypes, setProjectTypes] = useState([]);
   const [selectedProjectType, setSelectedProjectType] = useState(""); // Added state for selected project type
   const [projectsWhereIWork, setProjectsWhereIWork] = useState([])
+  const [deadlineError, setDeadlineError] = useState(null);
+
 
   useEffect(() => {
     fetchProjects();
@@ -199,6 +203,33 @@ function ProjectList() {
       });
   }
 
+  function checkDeadlineIsValid(e) {
+
+    e.preventDefault()
+
+    const deadlineString = deadLine;
+    const deadlineDate = new Date(deadlineString);
+    const currentDate = new Date();
+    let isDeadLineStringValid = false;
+
+    if(deadlineString[4] === "-" &&
+    deadlineString[7] ==="-"){
+        isDeadLineStringValid = true
+    }
+
+    if (isNaN(deadlineDate) || isDeadLineStringValid === false ) {
+        setDeadlineError("The deadline format will be: yyyy-mm-dd");
+    }
+    else if(deadlineDate <= currentDate){
+        setDeadlineError("Invalid deadline")
+    }
+     else {
+        setDeadlineError(null);
+        console.log("Valid deadline. Proceeding with submission.");
+        handleSubmit(e);
+    }
+   
+}
   function handleSubmit(e) {
     e.preventDefault();
     let leader = localStorage.getItem("username");
@@ -206,6 +237,7 @@ function ProjectList() {
       name: newProject,
       leader: leader,
       type: selectedProjectType,
+      deadLine : deadLine
     };
 
     console.log("Selected project type: " + selectedProjectType);
@@ -222,6 +254,7 @@ function ProjectList() {
       .then((res) => {
         if (res.ok) {
           setNewProject("");
+          setDeadline("")
           fetchProjects();
         }
       })
@@ -270,7 +303,7 @@ const deleteProject = (projectId) => {
       <StyledContainer>
         <StyledLeftPanel>
           <StyledHeader variant="h4">Create New Project:</StyledHeader>
-          <StyledForm onSubmit={handleSubmit}>
+          <StyledForm onSubmit={checkDeadlineIsValid}>
             <StyledInput
               variant="outlined"
               label="Project title"
@@ -278,6 +311,14 @@ const deleteProject = (projectId) => {
               id="name"
               value={newProject}
               onChange={(e) => setNewProject(e.target.value)}
+            />
+               <StyledInput
+              variant="outlined"
+              label="Deadline"
+              type="text"
+              id="deadLine"
+              value={deadLine}
+              onChange={(e) => setDeadline(e.target.value)}
             />
             <FormControl variant="outlined" style={{ marginBottom: "8px" }}>
               <InputLabel id="project-type-label">Project Type</InputLabel>
@@ -294,6 +335,7 @@ const deleteProject = (projectId) => {
                 ))}
               </Select>
             </FormControl>
+            {deadlineError && <div style={{ color: 'red' }}>{deadlineError}</div>}
             <StyledButton variant="contained" color="primary" type="submit">
               Create Project
             </StyledButton>
@@ -304,7 +346,7 @@ const deleteProject = (projectId) => {
         {projects.map((project, index) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
             <StyledPaper onClick={() => navigate(`/project/${project.id}`)}>
-              {project.name}
+              {project.name}  {project.completed ? "(Completed)" : ""}
             </StyledPaper>
             <Button
                                             onClick={() => submitDelete(project.id)}
@@ -326,6 +368,10 @@ const deleteProject = (projectId) => {
           </Grid>
         ))}
       </StyledGrid>
+      <div></div>
+      <div className="w-30">
+        <ProgressProjectCircle projects={projects} />
+      </div>
     </div>
   );
 }

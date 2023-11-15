@@ -34,6 +34,8 @@ public class TaskService {
 
     public void addSubTaskToTaskById(Long taskId, SubTask subTask) {
         Task task = taskDao.getTask(taskId);
+        task.setCompleted(false);
+        //task.checkCompleted();
         List<SubTask> subTasks = task.getSubTaskList();
         subTasks.add(subTask);
         task.setSubTaskList(subTasks);

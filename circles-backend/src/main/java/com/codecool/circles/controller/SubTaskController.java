@@ -29,6 +29,12 @@ public class SubTaskController {
         private String projectId;
         private String taskId;
         private String subTaskId;
+
+    }
+    @Data
+    private static class CompletionLevelData{
+        private String completionLevel;
+
     }
     @Autowired
     public SubTaskController(SubTaskService subTaskService, TaskService taskService) {
@@ -49,6 +55,10 @@ public class SubTaskController {
     @PostMapping("/api/subtask/members")
     public void addMemberToTask(@RequestBody RequestData requestData) {
         subTaskService.addMemberToSubtask(Long.valueOf(requestData.subTaskId), Long.valueOf(requestData.memberId));
+    }
+    @PostMapping("/api/subtask/completion-level/{subTaskId}")
+    public void addCompletionLevel(@PathVariable Long subTaskId, @RequestBody CompletionLevelData requestData ) {
+        subTaskService.addCompletionLevel(requestData.completionLevel,subTaskId);
     }
     @DeleteMapping("api/projectByid/{projectId}/task/{taskId}/subTask/{subTaskId}")
     public ResponseEntity<String> deleteSubTask(

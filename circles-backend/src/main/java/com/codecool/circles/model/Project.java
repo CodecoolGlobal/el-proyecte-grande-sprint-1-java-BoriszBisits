@@ -1,12 +1,10 @@
 package com.codecool.circles.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +19,7 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private boolean isCompleted = false;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
@@ -45,6 +44,8 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "note_id")
     )
     private List<Note> chat=new ArrayList<>();
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate deadLine;
 
     @JsonProperty("name")
     private String name;
@@ -121,6 +122,21 @@ public class Project {
             return true;
         }
         return false;
+    }
+    public void checkCompleted() {
+        setCompleted(true);
+
+        if (!taskList.isEmpty()) {
+            for (Task task : taskList) {
+                if (!task.isCompleted()) {
+                    System.out.println("false");
+                    setCompleted(false);
+                    break;
+                }
+            }
+        } else {
+            setCompleted(false);
+        }
     }
 
     public void setId(Long id) {

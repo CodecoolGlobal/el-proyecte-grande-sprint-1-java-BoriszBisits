@@ -31,12 +31,20 @@ public class MainPageService {
     public List<Project> getOwnedProjects(String leader) {
         Member member = memberDao.findMemberByName(leader);
         List<Project> ownedProjects = mainPageDao.getProjects().stream().filter(project -> project.getLeader().equals(leader)).toList();
+        checkProjectIsCompleted(ownedProjects);
         return ownedProjects;
+    }
+
+    public void checkProjectIsCompleted(List<Project> projectList) {
+        for (Project project : projectList) {
+            project.checkCompleted();
+        }
     }
 
     public List<Project> getProjectsWhereIAmACoWorker(String worker) {
         Member member = memberDao.findMemberByName(worker);
         List<Project> projectsWhereIAmACoWorker = mainPageDao.getProjects().stream().filter(project -> project.getMembers().contains(member)).toList();
+        checkProjectIsCompleted(projectsWhereIAmACoWorker);
         return projectsWhereIAmACoWorker;
     }
 
@@ -47,9 +55,9 @@ public class MainPageService {
 
         List<Project> ownedProjects = member.getOwnedProjects();
         ownedProjects.add(project);
-        System.out.println("projekjei az embernek meg az uj projectt"+ ownedProjects);
+        System.out.println("projekjei az embernek meg az uj projectt" + ownedProjects);
         member.setOwnedProjects(ownedProjects);
-       // member.setCoWorkerProjects(projects);
+        // member.setCoWorkerProjects(projects);
 
         memberDao.saveMember(member);
         System.out.println("owned" + member.getOwnedProjects());
@@ -73,17 +81,17 @@ public class MainPageService {
     }
 
     public List<Member> getAllMemberWhoIsNotCoWorker(Long projectId) {
-        List<Member> members=getNotCoWorkers(projectId);
-        String type=projectDao.getProjectById(projectId).getType();
-        List<Member>filteredMembers=new ArrayList<>();
+        List<Member> members = getNotCoWorkers(projectId);
+        String type = projectDao.getProjectById(projectId).getType();
+        List<Member> filteredMembers = new ArrayList<>();
 
-        for (Member member:members){
-            Set<Type> typesOfMember=member.getTypes();
-            List<String>nameOfTypes=new ArrayList<>();
-            for (Type type1:typesOfMember){
+        for (Member member : members) {
+            Set<Type> typesOfMember = member.getTypes();
+            List<String> nameOfTypes = new ArrayList<>();
+            for (Type type1 : typesOfMember) {
                 nameOfTypes.add(type1.getName());
             }
-            if (nameOfTypes.contains(type)){
+            if (nameOfTypes.contains(type)) {
                 filteredMembers.add(member);
             }
 
@@ -96,10 +104,10 @@ public class MainPageService {
 //        return getAllMember();
 //    }
 
-    public void setMemberToCoWorker(Long projectId, String leader,Long memberId) {
+    public void setMemberToCoWorker(Long projectId, String leader, Long memberId) {
         Member member = memberDao.getMemberById(memberId);
         Project project = projectDao.getProjectById(projectId);
-        project.addMemberToProject(project,member);
+        project.addMemberToProject(project, member);
         memberDao.saveMember(member);
     }
 
