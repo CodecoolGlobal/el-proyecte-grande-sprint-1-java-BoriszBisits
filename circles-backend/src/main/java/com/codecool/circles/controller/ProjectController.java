@@ -77,10 +77,8 @@ public class ProjectController {
     public List<Note> getMessagesOfMember(@PathVariable String id) {
         System.out.println("-----------------Message--------------------------");
         System.out.println("project ID in massage context " + id);
-        List<Note>notes= noteService.getNotesOfProjectByProjectId(Long.valueOf(id));
-        for (Note note:notes){
-            System.out.println("note----------------------"+note.getMassege());
-        }
+
+
         return noteService.getNotesOfProjectByProjectId(Long.valueOf(id));
     }
 //"/api/projectlist/project/massege"
