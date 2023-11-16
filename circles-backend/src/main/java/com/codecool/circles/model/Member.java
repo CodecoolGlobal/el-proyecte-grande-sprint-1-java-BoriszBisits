@@ -23,7 +23,6 @@ public class Member {
 
 
 
-
     @ManyToMany
     @JoinTable(
             name = "member_type",
@@ -39,6 +38,7 @@ public class Member {
             inverseJoinColumns = @JoinColumn(name = "sub_type_id")
     )
     private Set<SubType> subTypes = new HashSet<>();
+    private byte[] profilePictureImage;
 
     @ManyToMany
     @JoinTable(

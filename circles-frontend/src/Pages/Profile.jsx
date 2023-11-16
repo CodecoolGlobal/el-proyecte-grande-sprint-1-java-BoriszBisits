@@ -24,12 +24,54 @@ function Profile() {
   const [selectedCoworker, setSelectedCoworker] = useState(null);
   const [messageInput, setMessageInput] = useState("");
   const [allMessages, setAllMessages] = useState([]);
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [profilePictureImage, setProfilePictureImage] = useState("");
+
+
 
   useEffect(() => {
     fetchInterest();
     fetchInterests();
     fetchAllCoworkers();
   }, [savedInterest]);
+
+  const handleProfilePictureChange = (event) => {
+    const file = event.target.files[0];
+    setProfilePicture(file);
+  };
+
+  const handleProfilePictureUpload = async () => {
+    if (profilePicture) {
+      const formData = new FormData();
+      formData.append("file", profilePicture);
+
+      const token = localStorage.getItem("token");
+      const leader = localStorage.getItem("username");
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      try {
+        const response = await fetch(`/api/profile/picture/upload/${leader}`, {
+          method: "POST",
+          headers: headers,
+          body: formData,
+        });
+      
+        if (response.ok) {
+          console.log("Profile picture uploaded successfully");
+          fetchProfilePicture()
+        } else {
+          const errorMessage = await response.text(); // Assuming the error message is returned as text
+          console.error(`Profile picture upload failed: ${errorMessage}`);
+        }
+      } catch (error) {
+        console.error("Error uploading profile picture:", error);
+      }
+      
+    }
+  };
 
   const handleCoworkerSearchQuery = (e) => {
     const query = e.target.value;
@@ -233,12 +275,61 @@ function Profile() {
       });
   };
 
+  useEffect(() => {
+    // Fetch the profile picture URL when the component mounts
+    fetchProfilePicture();
+  }, []); // Empty dependency array means this effect runs once on mount
+
+  const fetchProfilePicture = () => {
+    const token = localStorage.getItem("token");
+    const leader = localStorage.getItem("username");
+  
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+  
+    fetch(`/api/profile/picture/${leader}`, {
+      method: "GET",
+      headers: headers,
+    })
+      .then((res) => res.text())
+      .then((data) => {
+        console.log("image " + data)
+        setProfilePictureImage(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching profile picture:", error);
+      });
+  };
+  
+
   return (
     <Container>
       <HeaderBar />
 
       <Container maxWidth="sm" style={{ marginTop: "20px" }}>
         <Typography variant="h5">{profile.name + "'s Profile"}</Typography>
+        <img
+  src={profilePictureImage ? `data:image/jpeg;base64,${profilePictureImage}` : 'default-image-url'}
+  alt="Profile"
+  style={{ width: "100px", height: "100px", borderRadius: "50%" }}
+/>
+
+
+
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleProfilePictureChange}
+        />
+
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleProfilePictureUpload}
+        >
+          Upload Profile Picture
+        </Button>
 
         {profile && profile.types && profile.types.length > 0 && (
           <div>
