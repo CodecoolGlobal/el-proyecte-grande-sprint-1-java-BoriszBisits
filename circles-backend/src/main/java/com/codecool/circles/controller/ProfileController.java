@@ -7,9 +7,13 @@ import com.codecool.circles.service.SubTypeService;
 import com.codecool.circles.service.TypeService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -26,6 +30,11 @@ public class ProfileController {
         private String sender;
         private String message;
 
+    }
+
+    @Data
+    public static class ProfilePictureData{
+        private String profilePictureUrl;
     }
     private MemberService memberService;
     private TypeService typeService;
@@ -122,6 +131,34 @@ public List<Note> getMessagesOfMember(@PathVariable String leader) {
             System.out.println("-------------------------------------");
         }
 
+    }
+
+    @PostMapping("/profile/picture/upload/{leader}")
+    public ResponseEntity<String> uploadProfilePicture(
+            @PathVariable String leader,
+            @RequestParam("file") MultipartFile file) {
+
+        try {
+            String message = memberService.uploadProfilePicture(leader, file);
+            return ResponseEntity.ok(message);
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the exception for debugging
+            return ResponseEntity.status(500).body("Error uploading profile picture");
+        }
+    }
+
+    @GetMapping("/profile/picture/{leader}")
+    public ResponseEntity<String> getProfilePicture(@PathVariable String leader) {
+        byte[] profilePicture = memberService.getProfilePictureBytes(leader);
+
+        if (profilePicture == null || profilePicture.length == 0) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String base64Image = Base64.getEncoder().encodeToString(profilePicture);
+
+        return ResponseEntity.ok()
+                .body(base64Image);
     }
 
 

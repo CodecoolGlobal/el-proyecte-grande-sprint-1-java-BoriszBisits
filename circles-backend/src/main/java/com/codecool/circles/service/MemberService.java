@@ -5,13 +5,22 @@ import com.codecool.circles.service.dao.MemberDao;
 import com.codecool.circles.service.dao.ProjectDao;
 import com.codecool.circles.service.dao.SubTypeDao;
 import com.codecool.circles.service.dao.TypeDao;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -92,6 +101,27 @@ public class MemberService {
                 destination.add(member);
             }
         }
+    }
+    public String uploadProfilePicture(String userName, MultipartFile file) throws IOException {
+        Member member = memberDao.findMemberByName(userName);
+
+        System.out.println("Received file size: " + file.getSize() + " bytes");
+
+        try (InputStream inputStream = file.getInputStream()) {
+            byte[] bytes = IOUtils.toByteArray(inputStream);
+
+            member.setProfilePictureImage(bytes);
+            memberDao.saveMember(member);
+
+            return "Profile picture uploaded successfully";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Error uploading profile picture";
+        }
+    }
+    @Transactional
+    public byte[] getProfilePictureBytes(String userName) {
+        return memberDao.findMemberByName(userName).getProfilePictureImage();
     }
 
 }
