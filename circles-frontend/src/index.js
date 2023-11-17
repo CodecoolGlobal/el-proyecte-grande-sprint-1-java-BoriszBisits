@@ -12,6 +12,7 @@ import Profile from './Pages/Profile';
 import NotesListOfProfile from './Pages/NotesListOfProfile';
 import Registration from './Pages/Registration';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import SuccessPage from './Pages/SuccesPage';
 
 const router = createBrowserRouter([
     {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
             {
                 path: "/profile",
                 element: <Profile />,
+            },
+            {
+                path: "/success",
+                element: <SuccessPage />,
             },
             {
                 path: "/messages",
