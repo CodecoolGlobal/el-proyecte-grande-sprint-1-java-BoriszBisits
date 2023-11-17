@@ -8,7 +8,8 @@ import {
 import HeaderBar from "../Components/HeaderBar";
 import Autocomplete from "@mui/material/Autocomplete";
 import NotesList from "./NotesListOfProfile";
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useNavigate } from "react-router-dom";
+
 
 function Profile() {
   const [interest, setInterest] = useState([]);
@@ -26,6 +27,11 @@ function Profile() {
   const [allMessages, setAllMessages] = useState([]);
   const [profilePicture, setProfilePicture] = useState(null);
   const [profilePictureImage, setProfilePictureImage] = useState("");
+  const [newUsername, setNewUsername] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [showSettings, setShowSettings] = useState(false);
+  const navigate = useNavigate();
 
 
 
@@ -58,18 +64,17 @@ function Profile() {
           headers: headers,
           body: formData,
         });
-      
+
         if (response.ok) {
           console.log("Profile picture uploaded successfully");
-          fetchProfilePicture()
+          fetchProfilePicture();
         } else {
-          const errorMessage = await response.text(); // Assuming the error message is returned as text
+          const errorMessage = await response.text();
           console.error(`Profile picture upload failed: ${errorMessage}`);
         }
       } catch (error) {
         console.error("Error uploading profile picture:", error);
       }
-      
     }
   };
 
@@ -161,7 +166,6 @@ function Profile() {
     e.preventDefault();
 
     if (!selectedCoworker || !messageInput) {
-      
       return;
     }
 
@@ -183,8 +187,7 @@ function Profile() {
       method: "POST",
       headers: headers,
       body: JSON.stringify(dataToSend),
-    })
-     
+    });
 
     setMessageInput("");
   };
@@ -276,32 +279,150 @@ function Profile() {
   };
 
   useEffect(() => {
-    // Fetch the profile picture URL when the component mounts
     fetchProfilePicture();
-  }, []); // Empty dependency array means this effect runs once on mount
+  }, []);
 
   const fetchProfilePicture = () => {
     const token = localStorage.getItem("token");
     const leader = localStorage.getItem("username");
-  
+
     const headers = {
       Authorization: `Bearer ${token}`,
     };
-  
+
     fetch(`/api/profile/picture/${leader}`, {
       method: "GET",
       headers: headers,
     })
       .then((res) => res.text())
       .then((data) => {
-        console.log("image " + data)
+        console.log("image " + data);
         setProfilePictureImage(data);
       })
       .catch((error) => {
         console.error("Error fetching profile picture:", error);
       });
   };
-  
+
+  const handleUsernameChange = (e) => {
+    setNewUsername(e.target.value);
+  };
+
+  const handleEmailChange = (e) => {
+    setNewEmail(e.target.value);
+  };
+
+  const handleSaveUsername = async () => {
+    const token = localStorage.getItem("token");
+    const leader = localStorage.getItem("username");
+
+    const dataToSend = {
+      newUsername: newUsername,
+    };
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    try {
+      const response = await fetch(`/api/profile/changeusername/${leader}`, {
+        method: "PUT",
+        headers: headers,
+        body: JSON.stringify(dataToSend),
+      });
+
+      if (response.ok) {
+        console.log("Username changed successfully");
+        navigate("/success", {
+          state: { message: "Your username changed. You have to login with the new username." },
+        });
+      } else {
+        const errorMessage = await response.text();
+        console.error(`Error changing username: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error("Error changing username:", error);
+    }
+  };
+
+  const handleSaveEmail = async () => {
+    const token = localStorage.getItem("token");
+    const leader = localStorage.getItem("username");
+
+    const dataToSend = {
+      newEmail: newEmail,
+    };
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    try {
+      const response = await fetch(`/api/profile/changeemail/${leader}`, {
+        method: "PUT",
+        headers: headers,
+        body: JSON.stringify(dataToSend),
+      });
+
+      if (response.ok) {
+        console.log("Email address changed successfully");
+      } else {
+        const errorMessage = await response.text();
+        console.error(`Error changing email address: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error("Error changing email address:", error);
+    }
+  };
+
+  const handleSettingsButtonClick = () => {
+    setShowSettings(!showSettings);
+    // Reset the input fields
+    setNewUsername("");
+    setNewEmail("");
+  };
+
+
+
+  const handlePasswordChange = (e) => {
+    setNewPassword(e.target.value);
+  }
+
+  const handleSavePassword = async () => {
+    const token = localStorage.getItem("token");
+    const leader = localStorage.getItem("username");
+
+    const dataToSend = {
+      newPassword: newPassword,
+    };
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    try {
+      const response = await fetch(`/api/profile/changepassword/${leader}`, {
+        method: "PUT",
+        headers: headers,
+        body: JSON.stringify(dataToSend),
+      });
+
+      if (response.ok) {
+        console.log("Password changed successfully");
+        // navigate("/success", {
+        //   state: { message: "Your password changed. You have to login with the new password." },
+        // });
+      } else {
+        const errorMessage = await response.text();
+        console.error(`Error changing password: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error("Error changing password:", error);
+    }
+  };
 
   return (
     <Container>
@@ -310,12 +431,10 @@ function Profile() {
       <Container maxWidth="sm" style={{ marginTop: "20px" }}>
         <Typography variant="h5">{profile.name + "'s Profile"}</Typography>
         <img
-  src={profilePictureImage ? `data:image/jpeg;base64,${profilePictureImage}` : 'default-image-url'}
-  alt="Profile"
-  style={{ width: "100px", height: "100px", borderRadius: "50%" }}
-/>
-
-
+          src={profilePictureImage ? `data:image/jpeg;base64,${profilePictureImage}` : 'default-image-url'}
+          alt="Profile"
+          style={{ width: "100px", height: "100px", borderRadius: "50%" }}
+        />
 
         <input
           type="file"
@@ -330,6 +449,77 @@ function Profile() {
         >
           Upload Profile Picture
         </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSettingsButtonClick}
+          style={{ marginTop: "20px" }}
+        >
+          Settings
+        </Button>
+
+        {showSettings && (
+          // Input field and button for changing username
+          <div style={{ marginTop: "20px" }}>
+            <TextField
+              label="New Username"
+              variant="outlined"
+              fullWidth
+              value={newUsername}
+              onChange={handleUsernameChange}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSaveUsername}
+              style={{ marginTop: "10px" }}
+            >
+              Save Username
+            </Button>
+          </div>
+        )}
+
+        {showSettings && (
+          // Input field and button for changing email address
+          <div style={{ marginTop: "20px" }}>
+            <TextField
+              label="New Email Address"
+              variant="outlined"
+              fullWidth
+              value={newEmail}
+              onChange={handleEmailChange}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSaveEmail}
+              style={{ marginTop: "10px" }}
+            >
+              Save Email Address
+            </Button>
+          </div>
+        )}
+
+{showSettings && (
+          <div style={{ marginTop: "20px" }}>
+            <TextField
+              label="New Password"
+              type="password"
+              variant="outlined"
+              fullWidth
+              value={newPassword}
+              onChange={handlePasswordChange}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSavePassword}
+              style={{ marginTop: "10px" }}
+            >
+              Save Password
+            </Button>
+          </div>
+        )}
 
         {profile && profile.types && profile.types.length > 0 && (
           <div>
@@ -344,9 +534,7 @@ function Profile() {
 
         {profile && profile.subTypes && profile.subTypes.length > 0 && (
           <div>
-            <Typography variant="h6">
-              Your Interest in SubTypes:
-            </Typography>
+            <Typography variant="h6">Your Interest in SubTypes:</Typography>
             <ul>
               {profile.subTypes.map((projectType, index) => (
                 <li key={index}>{projectType.name}</li>

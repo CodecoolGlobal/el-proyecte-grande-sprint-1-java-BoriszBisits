@@ -1,6 +1,7 @@
 package com.codecool.circles.config;
 
 import com.codecool.circles.service.MemberDetailsService;
+import com.codecool.circles.service.dao.MemberDao;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private  final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final MemberDao memberDao;
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -36,9 +38,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request,response);
             return;
         }
+
         jwt = autHeader.substring(7);
         userEmail = jwtService.extractUserName(jwt);
-        if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
+        if(userEmail != null  && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails =  this.userDetailsService.loadUserByUsername(userEmail);
             if(jwtService.isTokenValid(jwt, userDetails)){
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

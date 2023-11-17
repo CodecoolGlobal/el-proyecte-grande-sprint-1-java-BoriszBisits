@@ -36,6 +36,21 @@ public class ProfileController {
     public static class ProfilePictureData{
         private String profilePictureUrl;
     }
+
+    @Data
+    public static class ChangeUsernameData {
+        private String newUsername;
+    }
+
+    @Data
+    public static class ChangeEmailData {
+        private String newEmail;
+    }
+
+    @Data
+    public static class ChangePasswordData {
+        private String newPassword;
+    }
     private MemberService memberService;
     private TypeService typeService;
     private SubTypeService subTypeService;
@@ -161,7 +176,44 @@ public List<Note> getMessagesOfMember(@PathVariable String leader) {
                 .body(base64Image);
     }
 
+    @PutMapping("/profile/changeusername/{leader}")
+    public ResponseEntity<String> changeUsername(
+            @PathVariable String leader,
+            @RequestBody ChangeUsernameData data) {
+        try {
+            memberService.changeUserName(leader, data.getNewUsername());
+            return ResponseEntity.ok("Username changed successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error changing username");
+        }
+    }
 
+    @PutMapping("/profile/changeemail/{leader}")
+    public ResponseEntity<String> changeEmail(
+            @PathVariable String leader,
+            @RequestBody ChangeEmailData data) {
+        try {
+            memberService.changeEmail(leader, data.getNewEmail());
+            return ResponseEntity.ok("Email address changed successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error changing email address");
+        }
+    }
+
+    @PutMapping("/profile/changepassword/{leader}")
+    public ResponseEntity<String> changePassword(
+            @PathVariable String leader,
+            @RequestBody ChangePasswordData data) {
+        try {
+            memberService.changePassword(leader, data.getNewPassword());
+            return ResponseEntity.ok("Password changed successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error changing password");
+        }
+    }
 
 
 }
