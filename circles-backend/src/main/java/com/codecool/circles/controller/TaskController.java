@@ -1,9 +1,6 @@
 package com.codecool.circles.controller;
 
-import com.codecool.circles.model.Member;
-import com.codecool.circles.model.SubTask;
-import com.codecool.circles.model.SubType;
-import com.codecool.circles.model.Task;
+import com.codecool.circles.model.*;
 import com.codecool.circles.service.*;
 
 import lombok.Data;
@@ -14,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/")
@@ -31,6 +29,12 @@ TypeService typeService;
         private String leader;
         private String projectId;
         private String taskId;
+    }
+
+    @Data
+    private static class CompletionLevelData{
+        private String completionLevel;
+
     }
     @Autowired
 
@@ -121,4 +125,9 @@ TypeService typeService;
 
         return new ResponseEntity<>("Sub-tasks added successfully", HttpStatus.OK);
     }
+    @PostMapping("task/completion-level/{taskId}")
+    public void addCompletionLevel(@PathVariable Long taskId, @RequestBody CompletionLevelData requestData ) {
+        taskService.addCompletionLevel(requestData.completionLevel,taskId);
+    }
+
 }

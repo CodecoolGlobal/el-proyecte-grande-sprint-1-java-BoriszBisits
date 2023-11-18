@@ -1,4 +1,5 @@
 package com.codecool.circles.model;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
@@ -15,11 +16,14 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "project")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private boolean isCompleted = false;
+    private int levelOfCompletion = 0;
+
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
@@ -122,6 +126,27 @@ public class Project {
             return true;
         }
         return false;
+    }
+
+    public void checkLevelOfCompletion() {
+        if (!taskList.isEmpty()) {
+            int completedSubtasks = 0;
+
+            for (Task task: taskList) {
+                if (task.isCompleted()) {
+                    completedSubtasks++;
+                }
+            }
+
+            // Calculate the percentage of completed subtasks
+            int totalSubtasks = taskList.size();
+            int levelOfCompletion = (int) (((double) completedSubtasks / totalSubtasks) * 100);
+
+            setLevelOfCompletion(levelOfCompletion);
+
+        } else {
+            setLevelOfCompletion(0);
+        }
     }
     public void checkCompleted() {
         setCompleted(true);

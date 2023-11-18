@@ -113,6 +113,7 @@ function Task() {
     const [currentPage, setCurrentPage] = useState(1);
     const [eventCount, setEventCount] = useState(() => 0);
     const [deadlineError, setDeadlineError] = useState(null);
+    const [completionLevel, setCompletionLevel] = useState("");
     const [remainingTime, setRemainingTime] = useState({
         days: 0,
         hours: 0,
@@ -372,6 +373,34 @@ console.log("id" + id)
         });
     };
 
+    function handleSubmitCompletionLevel(e){
+        e.preventDefault();
+
+
+        const token = localStorage.getItem('token');
+
+        const data = {
+          completionLevel : completionLevel
+        };
+
+        fetch(`/api/task/completion-level/${taskId}`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            .then((res) => {
+                if (res.ok) {
+                  setCompletionLevel("")
+                  fetchSubTasks()
+
+                }
+            });
+
+    }
+
     return (
         <Container style={{ backgroundColor: '#f5f5f5' }}>
             <HeaderBar />
@@ -410,6 +439,22 @@ console.log("id" + id)
                             </CardActions>
                         </Card>
                     ))}
+                    <Typography variant="body1" align="center" gutterBottom>
+                        Level of Completion: {task.levelOfCompletion}
+                    </Typography>
+                    <form onSubmit={handleSubmitCompletionLevel} className={classes.newSubtaskForm}>
+                <TextField
+                            className={classes.formInput}
+                            variant="outlined"
+                            label="%"
+                            type="text"
+                            value={completionLevel}
+                            onChange={(e) => setCompletionLevel(e.target.value)}
+                        />
+                        <Button variant="contained" color="primary" type="submit">
+                            Add completion level
+                        </Button>
+                    </form>
                     <form onSubmit={checkDeadlineIsValid} className={classes.newSubtaskForm}>
                     <TextField
                             className={classes.formInput}

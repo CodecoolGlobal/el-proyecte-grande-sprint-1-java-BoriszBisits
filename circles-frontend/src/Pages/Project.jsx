@@ -156,12 +156,17 @@ function Project() {
     const [currentPage, setCurrentPage] = useState(1);
     const [subTypes, setSubtypes] = useState([]);
     const [scannedText, setScannedText] = useState('');
-    const [notes , setNotes]=useState([])
+    const [notes, setNotes] = useState([])
     const [deadlineError, setDeadlineError] = useState(null);
     const [project, setProject] = useState(null);
+    const [completionLevel, setCompletionLevel] = useState("");
+    const [currentProject, setCurrentProject] = useState("");
 
 
+    
     const [eventCount, setEventCount] = useState(() => 0);
+
+
 
     const membersPerPage = 5;
 
@@ -237,65 +242,70 @@ function Project() {
                 console.error('Error fetching tasks:', error);
             });
     };
-    
-  const fetchNotes = () => {
-    const token = localStorage.getItem("token");
-    const leader = localStorage.getItem("username");
-    const headers = {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
+
+    const fetchNotes = () => {
+        const token = localStorage.getItem("token");
+        const leader = localStorage.getItem("username");
+        const headers = {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        };
+        fetch(`/api/projectlist/project/message/${id}`, {
+            method: "GET",
+            headers: headers,
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setNotes(data);
+                // setLoading(false);
+            })
+            .catch((error) => {
+                console.error("Error fetching notes:", error);
+                //setError("Error fetching notes. Please try again later.");
+                // setLoading(false);
+            });
     };
-    fetch(`/api/projectlist/project/message/${id}`, {
-      method: "GET",
-      headers: headers,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setNotes(data);
-       // setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching notes:", error);
-        //setError("Error fetching notes. Please try again later.");
-       // setLoading(false);
-      });
-  };
 
 
 
-//   const fetchProject = () => {
-//     const token = localStorage.getItem("token");
-//     const leader = localStorage.getItem("username");
-//     const headers = {
-//       Authorization: `Bearer ${token}`,
-//       "Content-Type": "application/json",
-//     };
-//     fetch(`/api/projectlist/current-project/${id}`, {
-//       method: "GET",
-//       headers: headers,
-//     })
-//       .then((res) => res.json())
-//       .then((data) => {
-//         setProject(data);
-//       })
-//       .catch((error) => {
-//         console.error("Error fetching notes:", error);
-        
-//       });
-//   };
+    const fetchProject = async () => {
+        try {
+          const token = localStorage.getItem("token");
+          const leader = localStorage.getItem("username");
+          const headers = {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          };
+      
+          const response = await fetch(`/api/projectlist/project/${id}`, {
+            method: "GET",
+            headers: headers,
+          });
+      
+          if (!response.ok) {
+            throw new Error("Failed to fetch project");
+          }
+      
+          const data = await response.json();
+          setCurrentProject(data);
+          console.log("currentProject " + currentProject.name)
+        } catch (error) {
+          console.error("Error fetching project:", error);
+        }
+      };
 
 
 
 
 
-
-  
 
     useEffect(() => {
         fetchTasks();
         fetchMembers();
         fetchSubtypes();
         fetchNotes();
+        fetchProject()
+
 
         const token = localStorage.getItem('token');
 
@@ -311,7 +321,7 @@ function Project() {
             .catch((error) => {
                 console.error('Error fetching tasks:', error);
             });
-    }, [id ]);
+    }, [id]);
 
     const submitDelete = (taskId) => {
         confirmAlert({
@@ -348,26 +358,26 @@ function Project() {
 
         // console.log("project " + project)
         // console.log("dedlájn " + deadline )
-        if(deadlineString[4] === "-" &&
-        deadlineString[7] ==="-"){
+        if (deadlineString[4] === "-" &&
+            deadlineString[7] === "-") {
             isDeadLineStringValid = true
         }
-    
-        if (isNaN(deadlineDate) || isDeadLineStringValid === false ) {
+
+        if (isNaN(deadlineDate) || isDeadLineStringValid === false) {
             console.log(isDeadLineStringValid)
 
             setDeadlineError("The deadline format will be: yyyy-mm-dd");
         }
-       
-        else if(deadlineDate <= currentDate ){
+
+        else if (deadlineDate <= currentDate || deadlineDate > new Date(currentProject.deadLine)) {
             setDeadlineError("Invalid deadline")
         }
-         else {
+        else {
             setDeadlineError(null);
             console.log("Valid deadline. Proceeding with submission.");
             handleSubmit(e);
         }
-       
+
     }
 
     const handleSubmit = (e) => {
@@ -380,7 +390,7 @@ function Project() {
             deadLine: deadline,
             colorOfCircle: colorOfCircle,
             projectId: id,
-            subtype: selectedSubtype, 
+            subtype: selectedSubtype,
         };
 
         fetch(`/api/${id}/new-task`, {
@@ -395,7 +405,7 @@ function Project() {
                 setNewTaskName('');
                 setDeadline('');
                 setColorOfCircle('');
-                setSelectedSubtype(''); 
+                setSelectedSubtype('');
                 fetchTasks();
                 setIsFormVisible(false);
             }
@@ -404,13 +414,13 @@ function Project() {
 
     const handleScanTextSubmit = () => {
         let data = {
-            
+
             leader: localStorage.getItem('username'),
             projectId: id,
             massege: scannedText,
         }
         console.log("Scanned Text:", scannedText);
-        let  token=localStorage.getItem('token')
+        let token = localStorage.getItem('token')
         fetch("/api/projectlist/project/massege", {
             method: "POST", headers: {
                 'Authorization': `Bearer ${token}`,
@@ -419,13 +429,13 @@ function Project() {
         })
             .then((res) => {
                 if (res.ok) {
-                    fetchNotes();   
+                    fetchNotes();
                 }
             })
             .catch((error) => {
                 console.error("Error adding coworker:", error);
             });
-    
+
         setScannedText('');
     };
 
@@ -473,12 +483,55 @@ function Project() {
     const currentMembers = filteredMembers.slice(indexOfFirstMember, indexOfLastMember);
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+
+    function handleSubmitCompletionLevel(e) {
+        e.preventDefault();
+
+
+        const token = localStorage.getItem('token');
+
+        const data = {
+            completionLevel: completionLevel
+        };
+
+        fetch(`/api/projectlist/completion-level/${id}`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            .then((res) => {
+                if (res.ok) {
+                    setCompletionLevel("")
+
+                }
+            });
+
+    }
+
     return (
         <div>
             <HeaderBar />
             <StyledContainer>
                 <StyledLeftPanel>
                     <StyledLeftColumn>
+                        <Typography variant="body1" align="center" gutterBottom>
+                            Level of Completion: {currentProject?.levelOfCompletion}
+                        </Typography>
+                        <form onSubmit={handleSubmitCompletionLevel}>
+                            <TextField
+                                variant="outlined"
+                                label="%"
+                                type="text"
+                                value={completionLevel}
+                                onChange={(e) => setCompletionLevel(e.target.value)}
+                            />
+                            <Button variant="contained" color="primary" type="submit">
+                                Add completion level
+                            </Button>
+                        </form>
                         <StyledTitle variant="h4">My Project Tasks</StyledTitle>
                         <StyledTaskList>
                             {tasks.map((task) => (
@@ -549,14 +602,14 @@ function Project() {
                                 <StyledButton variant="contained" color="primary" type="submit">
                                     Add new task
                                 </StyledButton>
-                                
+
                             </StyledForm>
                         )}
                     </StyledLeftColumn>
-                    <NotesListOfProject notes={notes}/>
+                    <NotesListOfProject notes={notes} />
                     <div className="w-30">
-        <ProgressTaskCircle tasks={tasks} />
-      </div>
+                        <ProgressTaskCircle tasks={tasks} />
+                    </div>
                     <StyledRightColumn>
                         <TaskCircle projectId={id} tasks={tasks} />
                     </StyledRightColumn>
@@ -583,10 +636,10 @@ function Project() {
                                 setSearchQuery(newSearchQuery);
                                 setFilteredMembers(filterMembers(newSearchQuery));
                             }}
-                            
+
                         />
                     </div>
-                   
+
                     <StyledList>
                         {currentMembers.map((member) => (
                             <StyledListItem key={member.id}>
@@ -620,13 +673,13 @@ function Project() {
                     Send Comment
                 </Button>
             </StyledContainer>
-            
+
         </div>
-      
-        
-        
+
+
+
     );
-    
+
 }
 
 export default Project;

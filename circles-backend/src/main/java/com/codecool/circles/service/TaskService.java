@@ -46,7 +46,9 @@ public class TaskService {
     }
 
     public Task getTaskByIds(Long taskId) {
-        return taskDao.getTask(taskId);
+       Task task = taskDao.getTask(taskId);
+       task.checkLevelOfCompletion();
+        return task;
     }
 
     public void addNewTask(Task task, Long id) {
@@ -101,5 +103,10 @@ public class TaskService {
         task.addMemberToTask(member);
         memberDao.saveMember(member);
     }
-
+    public void addCompletionLevel(String completionLevel,Long taskId){
+        Task task = taskDao.getTask(taskId);
+        task.setLevelOfCompletion(100);
+        task.setCompleted(true);
+        taskDao.saveTask(task);
+    }
 }

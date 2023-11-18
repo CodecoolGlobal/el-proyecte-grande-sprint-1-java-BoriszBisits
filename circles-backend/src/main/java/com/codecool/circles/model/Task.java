@@ -26,7 +26,7 @@ public class Task {
     private Long id;
     private String subtype;
     private boolean isCompleted = false;
-
+    private int levelOfCompletion = 0;
 
 
     private String name;
@@ -118,7 +118,30 @@ public class Task {
         return null;
     }
 
+    public void checkLevelOfCompletion() {
+        if (!subTaskList.isEmpty()) {
+            int completedSubtasks = 0;
+
+            for (SubTask subTask : subTaskList) {
+                if (subTask.isCompleted()) {
+                    completedSubtasks++;
+                }
+            }
+
+            // Calculate the percentage of completed subtasks
+            int totalSubtasks = subTaskList.size();
+            int levelOfCompletion = (int) (((double) completedSubtasks / totalSubtasks) * 100);
+
+            setLevelOfCompletion(levelOfCompletion);
+
+        } else {
+            setLevelOfCompletion(0);
+        }
+    }
+
+
     public void checkCompleted() {
+
         setCompleted(true);
         System.out.println("task-check completed");
         //project.checkCompleted();
