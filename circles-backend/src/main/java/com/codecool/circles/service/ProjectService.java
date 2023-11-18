@@ -22,7 +22,9 @@ public class ProjectService {
 
 
     public Project getProjectById(Long projectId) {
-        return projectDao.getProjectById(projectId);
+        Project project = projectDao.getProjectById(projectId);
+        project.checkLevelOfCompletion();
+        return project;
     }
 
     public List<Task> getAllTaskByProjectId(Long projectId) {
@@ -40,4 +42,10 @@ public class ProjectService {
         return projectDao.getAllProjects();
     }
 
+    public void addCompletionLevel(String completionLevel,Long id){
+        Project project = projectDao.getProjectById(id);
+        project.setLevelOfCompletion(Integer.parseInt(completionLevel));
+        project.setCompleted(true);
+        projectDao.save(project);
+    }
 }

@@ -28,6 +28,12 @@ public class ProjectController {
         private String projectId;
         private String massege;
     }
+
+    @Data
+    private static class CompletionLevelData{
+        private String completionLevel;
+
+    }
     private ProjectService projectService;
     private MainPageService mainPageService;
     private NoteService noteService;
@@ -112,7 +118,10 @@ public void addNewMassege(@RequestBody RequestData requestData) {
 
 
 
-
+    @PostMapping("completion-level/{id}")
+    public void addCompletionLevel(@PathVariable Long id, @RequestBody CompletionLevelData requestData ) {
+        projectService.addCompletionLevel(requestData.completionLevel,id);
+    }
 
 
 }

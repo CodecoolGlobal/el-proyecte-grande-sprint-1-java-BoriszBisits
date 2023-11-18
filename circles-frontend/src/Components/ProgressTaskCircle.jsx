@@ -13,7 +13,7 @@ function ProgressTaskCircle({ tasks }) {
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <Typography variant="h6">Task Completion</Typography>
+      <Typography variant="h6">Project Completion</Typography>
       <CircularProgress
         variant="determinate"
         value={percentageCompleted}
