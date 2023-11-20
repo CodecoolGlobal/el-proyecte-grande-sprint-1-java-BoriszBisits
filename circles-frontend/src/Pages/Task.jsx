@@ -183,6 +183,7 @@ console.log("id" + id)
             .then((data) => {
                 console.log("Task Data:", data); // Log the entire response
                 setTask(data);
+                console.log("comp-level " + data.levelOfCompletion)
                 setSubTasks(data.subTaskList);
 
 

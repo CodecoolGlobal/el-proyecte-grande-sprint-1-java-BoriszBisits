@@ -82,7 +82,12 @@ public class Member {
     )
     private List<SubTask> subTaskList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany
+    @JoinTable(
+            name = "owned_projects",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id")
+    )
     private List<Project> ownedProjects = new ArrayList<>();
 
     private String password;
@@ -115,5 +120,13 @@ public class Member {
         return role;
     }
 
+    public void setNewUserNameToOwnedProject(String newUserName){
+        for(Project project : ownedProjects){
+            project.setLeader(newUserName);
+        }
 
+    }
+public void addOwnProject(Project project){
+        ownedProjects.add(project);
+}
 }
