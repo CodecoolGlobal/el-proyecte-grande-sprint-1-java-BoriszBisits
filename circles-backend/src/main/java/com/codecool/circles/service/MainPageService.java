@@ -53,12 +53,11 @@ public class MainPageService {
         projectDao.save(project);
         Member member = memberDao.findMemberByName(project.getLeader());
 
-        List<Project> ownedProjects = member.getOwnedProjects();
-        ownedProjects.add(project);
-        System.out.println("projekjei az embernek meg az uj projectt" + ownedProjects);
-        member.setOwnedProjects(ownedProjects);
+        //List<Project> ownedProjects = member.getOwnedProjects();
+        member.addOwnProject(project);
+        //System.out.println("projekjei az embernek meg az uj projectt" + ownedProjects);
+        //member.setOwnedProjects(ownedProjects);
         // member.setCoWorkerProjects(projects);
-
         memberDao.saveMember(member);
         System.out.println("owned" + member.getOwnedProjects());
 

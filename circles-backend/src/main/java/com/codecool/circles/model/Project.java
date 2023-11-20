@@ -25,8 +25,13 @@ public class Project {
     private int levelOfCompletion = 0;
 
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinTable(
+            name = "owned_projects",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id")
+    )
     private Member owner;
 
     @JsonIgnore
@@ -171,4 +176,6 @@ public class Project {
     public Long getId() {
         return id;
     }
+
+
 }

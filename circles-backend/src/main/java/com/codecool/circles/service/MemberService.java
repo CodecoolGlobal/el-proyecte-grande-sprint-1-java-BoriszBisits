@@ -138,6 +138,18 @@ public class MemberService {
 
     public void changeUserName(String user, String newUserName) {
         Member member = memberDao.findMemberByName(user);
+//        List <Project> ownedProjects = new ArrayList<>();
+//        for(Project project : projectDao.getAllProjects()){
+//            if(project.getLeader().equals(user)){
+//                ownedProjects.add(project);
+//            }
+//        }
+//        System.out.println("owned projects from memberservice " + ownedProjects);
+//        for(Project project : ownedProjects){
+//            project.setLeader(newUserName);
+//            projectDao.save(project);
+//        }
+        member.setNewUserNameToOwnedProject(newUserName);
         member.setName(newUserName);
         memberDao.saveMember(member);
     }
