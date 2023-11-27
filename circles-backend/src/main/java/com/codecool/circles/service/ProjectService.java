@@ -7,6 +7,7 @@ import com.codecool.circles.service.dao.TaskDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -45,6 +46,12 @@ public class ProjectService {
     public void addCompletionLevel(String completionLevel, Long id) {
         Project project = projectDao.getProjectById(id);
         project.setCompletionLevel(Integer.parseInt(completionLevel));
+        projectDao.save(project);
+    }
+
+    public void addNewDeadLine(String newDeadLine, Long id){
+        Project project = projectDao.getProjectById(id);
+        project.setDeadLine(LocalDate.parse(newDeadLine));
         projectDao.save(project);
     }
 }

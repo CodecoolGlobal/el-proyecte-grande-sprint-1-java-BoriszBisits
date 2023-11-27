@@ -161,6 +161,7 @@ function Project() {
     const [project, setProject] = useState([]);
     const [completionLevel, setCompletionLevel] = useState("");
     const [currentProject, setCurrentProject] = useState("");
+    const [newDeadLine, setNewDeadLine] = useState("");
 
 
     
@@ -514,6 +515,33 @@ useEffect(() => {
             });
 
     }
+
+    function handleSubmitNewDeadLine(e){
+        e.preventDefault();
+
+
+        const token = localStorage.getItem('token');
+
+        const data = {
+            newDeadLine: newDeadLine
+        };
+
+        fetch(`/api/projectlist/new-deadline/${id}`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            .then((res) => {
+                if (res.ok) {
+                   setNewDeadLine("")
+
+                }
+            });
+    }
+
     function dateCompare(incDate){
         let projectdate=new Date(incDate)
         console.log(projectdate)
@@ -554,8 +582,9 @@ useEffect(() => {
                                     <StyledTaskCard>
                                         <StyledTaskCardContent>
                                             <StyledTaskText>
-                                                <Link to={`/project/${id}/task/${task.id}`}>{task.name} {task.completed ? "(Completed)" : ""}</Link>
+                                                <Link to={`/project/${id}/task/${task.id}`}>{task.name} {task.completed ? "(Completed)" : ""}{dateCompare(task.deadLine) ? "":"Task ended"}</Link>
                                             </StyledTaskText>
+                                          
                                             <Button
                                                 onClick={() => submitDelete(task.id)}
                                                 variant="contained"
@@ -695,16 +724,19 @@ useEffect(() => {
             <div>
                             <HeaderBar />
                             <StyledContainer>
-                            <form onSubmit={handleSubmitCompletionLevel}>
+                            <Typography variant="body1" align="center" gutterBottom>
+                            Your project deadline ended! You have to add new deadline!
+                        </Typography>
+                            <form onSubmit={handleSubmitNewDeadLine}>
                             <TextField
                                 variant="outlined"
                                 label="new deadline"
                                 type="text"
-                                value={completionLevel}
-                                onChange={(e) => setCompletionLevel(e.target.value)}
+                                value={newDeadLine}
+                                onChange={(e) => setNewDeadLine(e.target.value)}
                             />
                             <Button variant="contained" color="primary" type="submit">
-                                Add completion level
+                                Add New Deadline
                             </Button>
                         </form>                            </StyledContainer>
 
