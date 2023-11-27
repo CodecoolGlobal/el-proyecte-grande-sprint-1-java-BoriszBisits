@@ -36,8 +36,8 @@ function Profile() {
 
 
   useEffect(() => {
-    fetchInterest();
-    fetchInterests();
+    fetchProfile();
+    fetchType();
     fetchAllCoworkers();
   }, [savedInterest]);
 
@@ -113,7 +113,7 @@ function Profile() {
       });
   }
 
-  function fetchInterests() {
+  function fetchType() {
     const token = localStorage.getItem("token");
 
     const headers = {
@@ -126,7 +126,8 @@ function Profile() {
     })
       .then((res) => res.json())
       .then((data) => {
-        setInterest(data);
+        console.log("types"+data)
+        fetchProfile(data);
         setFilteredInterests(data);
       })
       .catch((error) => {
@@ -134,7 +135,7 @@ function Profile() {
       });
   }
 
-  function fetchInterest() {
+  function fetchProfile() {
     const token = localStorage.getItem("token");
     const leader = localStorage.getItem("username");
 
@@ -203,6 +204,7 @@ function Profile() {
       user: leader,
       subtype: subtypeInput,
     };
+    console.log("searchQuery"+searchQuery)
 
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -216,8 +218,11 @@ function Profile() {
     })
       .then((res) => res.json())
       .then((data) => {
+
+        console.log("vissza a postra"+data)
         setSavedInterest(searchQuery);
-        fetchSubtypes(profile.types);
+
+        fetchSubtypes(data.types);
       })
       .catch((error) => {
         console.error("Error saving interest:", error);
@@ -244,7 +249,8 @@ function Profile() {
       headers: headers,
       body: JSON.stringify(dataToSend),
     });
-    fetchInterest();
+    fetchProfile();
+    fetchSubtypes();
   };
 
   const filterInterests = (query) => {
@@ -665,8 +671,7 @@ function Profile() {
 </form>
 
       
-      <NotesList />
-
+      
       </Container>
     </Container>
   );
