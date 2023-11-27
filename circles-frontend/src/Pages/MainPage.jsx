@@ -228,7 +228,16 @@ function ProjectList() {
         console.log("Valid deadline. Proceeding with submission.");
         handleSubmit(e);
     }
-   
+
+}
+
+function dateCompare(incDate){
+  let projectdate=new Date(incDate)
+  console.log(projectdate)
+  if(new Date<projectdate){
+    return true;
+  }
+  return false;
 }
   function handleSubmit(e) {
     e.preventDefault();
@@ -343,11 +352,13 @@ const deleteProject = (projectId) => {
         </StyledLeftPanel>
       </StyledContainer>
       <StyledGrid container spacing={3}>
+     
+
         {projects.map((project, index) => (
+   
           <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
             <StyledPaper onClick={() => navigate(`/project/${project.id}`)}>
-              {project.name}  {project.completed ? "(Completed)" : ""}{new Date(project.deadLine)< new Date() ? "(a project lejart )":""}
-            </StyledPaper>
+            {project.name}  {project.completed ? "(Completed)" : ""}{dateCompare(project.deadLine) ? "":"a project lejart"}            </StyledPaper>
             <Button
                                             onClick={() => submitDelete(project.id)}
                                             variant="contained"
