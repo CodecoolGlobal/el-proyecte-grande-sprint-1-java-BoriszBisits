@@ -1,4 +1,5 @@
 package com.codecool.circles.model;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import com.fasterxml.jackson.annotation.*;
@@ -52,7 +53,7 @@ public class Project {
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "note_id")
     )
-    private List<Note> chat=new ArrayList<>();
+    private List<Note> chat = new ArrayList<>();
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate deadLine;
 
@@ -98,7 +99,8 @@ public class Project {
     public List<Task> getAllTask() {
         return taskList;
     }
-    public void addMemberToProject(Project project ,Member member) {
+
+    public void addMemberToProject(Project project, Member member) {
         //project.getMembers().add(member);
         members.add(member);
     }
@@ -137,7 +139,7 @@ public class Project {
         if (!taskList.isEmpty()) {
             int completedSubtasks = 0;
 
-            for (Task task: taskList) {
+            for (Task task : taskList) {
                 if (task.isCompleted()) {
                     completedSubtasks++;
                 }
@@ -153,21 +155,102 @@ public class Project {
             setLevelOfCompletion(0);
         }
     }
-    public void checkCompleted() {
-        setCompleted(true);
 
-        if (!taskList.isEmpty()) {
-            for (Task task : taskList) {
-                if (!task.isCompleted()) {
-                    System.out.println("false");
-                    setCompleted(false);
-                    break;
+    public void checkTasksCompletionLevel(){
+        if(taskList.size() !=0){
+            int counter = 0;
+            for(Task task : taskList){
+                if(!task.isCompleted()){
+                    counter++;
+                }
+                System.out.println("counter " + counter);
+                System.out.println();
+                if(counter > 0){
+                    isCompleted = false;
+                    int completedTaskNumber = taskList.size() - counter;
+                    System.out.println("completedSubTaskNumber " + completedTaskNumber);
+                    int completionLevelNumber = (int) (((double) completedTaskNumber / taskList.size()) * 100);
+                    System.out.println("completion level " + completionLevelNumber);
+                    setLevelOfCompletion(completionLevelNumber);
+                    System.out.println("level Of compeltion " + levelOfCompletion);
+                } else {
+                    System.out.println("true ág");
+                    levelOfCompletion = 100;
+                    setCompleted(true);
                 }
             }
-        } else {
+            counter = 0;
+        }
+    }
+
+    public void setCompletionLevelAfterDeleteEveryTasks(){
+        if(taskList.size() == 0){
+            levelOfCompletion = 0;
             setCompleted(false);
         }
     }
+    public void setCompletionLevel(int completionLevel){
+        levelOfCompletion = completionLevel;
+        if(levelOfCompletion == 100){
+            isCompleted = true;
+        } else {
+            isCompleted = false;
+        }
+    }
+
+//    public void setCompletionLevel(int completionLevel) {
+//        levelOfCompletion = completionLevel;
+//        System.out.println("size " + taskList.size());
+//        if (taskList.size() == 0) {
+//            System.out.println(levelOfCompletion);
+//            System.out.println("empty");
+//            if (levelOfCompletion == 100) {
+//                System.out.println("igen");
+//                isCompleted = true;
+//            } else {
+//                System.out.println("nem");
+//                isCompleted = false;
+//            }
+//        } else {
+//            for (Task task : taskList) {
+//                if (!task.isCompleted()) {
+//                    isCompleted = false;
+//                } else {
+//                    isCompleted = true;
+//                }
+//            }
+//        }
+//    }
+
+
+//public void checkTasksAreCompleted(){
+//
+//        for(Task task : taskList){
+//            if(!task.isCompleted()){
+//                isCompleted = false;
+//                System.out.println("isCompletedTask " + task.isCompleted());
+//                System.out.println("isCompeltedProject " + isCompleted);
+//                break;
+//            } else {
+//                isCompleted = true;
+//            }
+//        }
+//}
+//    public void checkCompleted() {
+//        setCompleted(true);
+//
+//        if (!taskList.isEmpty()) {
+//            for (Task task : taskList) {
+//                if (!task.isCompleted()) {
+//                    System.out.println("false");
+//                    setCompleted(false);
+//                    break;
+//                }
+//            }
+//        } else {
+//            setCompleted(false);
+//        }
+//    }
 
     public void setId(Long id) {
         this.id = id;

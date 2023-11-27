@@ -63,7 +63,7 @@ public class MainPageController {
             @PathVariable Long projectId
     ) {
         for(Task task : projectService.getProjectById(projectId).getAllTask()){
-            taskService.deleteTaskById(task.getId());
+            taskService.deleteTaskById(task.getId(),projectId);
         }
         ResponseEntity<String> response = mainPageService.deleteProjectById(projectId);
         return response;

@@ -29,23 +29,22 @@ public class ProjectService {
 
     public List<Task> getAllTaskByProjectId(Long projectId) {
         // System.out.println("service" + projectId);
+        Project project = projectDao.getProjectById(projectId);
+        //project.checkTasksAreCompleted();
+        project.checkTasksCompletionLevel();
+        projectDao.save(project);
         List<Task> tasks = taskDao.getTasksByProjectId(projectId);
-        System.out.println("cica1");
-//        for (Task task : tasks) {
-//            System.out.println("cica2");
-//            task.checkCompleted();
-//        }
+
         return tasks;
     }
 
-    public List<Project> getAllProjects(){
+    public List<Project> getAllProjects() {
         return projectDao.getAllProjects();
     }
 
-    public void addCompletionLevel(String completionLevel,Long id){
+    public void addCompletionLevel(String completionLevel, Long id) {
         Project project = projectDao.getProjectById(id);
-        project.setLevelOfCompletion(Integer.parseInt(completionLevel));
-        project.setCompleted(true);
+        project.setCompletionLevel(Integer.parseInt(completionLevel));
         projectDao.save(project);
     }
 }

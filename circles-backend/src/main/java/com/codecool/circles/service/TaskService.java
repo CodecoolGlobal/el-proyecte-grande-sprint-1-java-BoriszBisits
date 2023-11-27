@@ -47,7 +47,8 @@ public class TaskService {
 
     public Task getTaskByIds(Long taskId) {
        Task task = taskDao.getTask(taskId);
-       task.checkLevelOfCompletion();
+       task.checkSubtasksCompletionLevel();
+       taskDao.saveTask(task);
         return task;
     }
 
@@ -88,13 +89,18 @@ public class TaskService {
         return filteredMembers;
     }
 
-    public ResponseEntity<String> deleteTaskById(Long taskId) {
+    public ResponseEntity<String> deleteTaskById(Long taskId,Long projectId) {
         Task task = taskDao.getTask(taskId);
         List<SubTask> subTasksForDelete = task.getSubTaskList();
         for(SubTask subTaskForDelete : subTasksForDelete){
             subTaskDao.deleteSubtaskById(subTaskForDelete.getId());
         }
         ResponseEntity<String> response = taskDao.deleteTaskById(taskId);
+
+        Project project = projectDao.getProjectById(projectId);
+        project.setCompletionLevelAfterDeleteEveryTasks();
+        projectDao.save(project);
+
         return response;
     }
     public void addMemberToTask(Long taskId, Long memberId) {
@@ -105,8 +111,7 @@ public class TaskService {
     }
     public void addCompletionLevel(String completionLevel,Long taskId){
         Task task = taskDao.getTask(taskId);
-        task.setLevelOfCompletion(100);
-        task.setCompleted(true);
+        task.setCompletionLevel(Integer.parseInt(completionLevel));
         taskDao.saveTask(task);
     }
 }

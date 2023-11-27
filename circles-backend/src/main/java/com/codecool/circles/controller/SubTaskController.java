@@ -62,9 +62,10 @@ public class SubTaskController {
     }
     @DeleteMapping("api/projectByid/{projectId}/task/{taskId}/subTask/{subTaskId}")
     public ResponseEntity<String> deleteSubTask(
-            @PathVariable Long subTaskId
+            @PathVariable Long subTaskId,
+            @PathVariable Long taskId
     ) {
-        ResponseEntity<String> response = subTaskService.deleteSUbTaskById(subTaskId);
+        ResponseEntity<String> response = subTaskService.deleteSUbTaskById(subTaskId,taskId);
         return response;
 
     }

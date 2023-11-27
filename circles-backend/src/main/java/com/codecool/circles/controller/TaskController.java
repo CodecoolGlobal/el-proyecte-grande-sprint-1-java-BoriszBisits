@@ -101,7 +101,7 @@ TypeService typeService;
             @PathVariable Long projectId,
             @PathVariable Long taskId
     ) {
-        ResponseEntity<String> response = taskService.deleteTaskById(taskId);
+        ResponseEntity<String> response = taskService.deleteTaskById(taskId,projectId);
         return response;
     }
 
