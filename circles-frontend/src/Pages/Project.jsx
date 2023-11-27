@@ -295,7 +295,7 @@ function Project() {
     };
     
 
-    console.log("current project " + currentProject.name)
+    console.log("current project " + currentProject)
 
 
 useEffect(() => {
@@ -514,8 +514,17 @@ useEffect(() => {
             });
 
     }
+    function dateCompare(incDate){
+        let projectdate=new Date(incDate)
+        console.log(projectdate)
+        if(new Date<projectdate){
+          return true;
+        }
+        return false;
+      }
 
     return (
+        dateCompare(currentProject.deadLine) ? (
         <div>
             <HeaderBar />
             <StyledContainer>
@@ -680,7 +689,28 @@ useEffect(() => {
                 </Button>
             </StyledContainer>
 
+
         </div>
+        ) : (
+            <div>
+                            <HeaderBar />
+                            <StyledContainer>
+                            <form onSubmit={handleSubmitCompletionLevel}>
+                            <TextField
+                                variant="outlined"
+                                label="new deadline"
+                                type="text"
+                                value={completionLevel}
+                                onChange={(e) => setCompletionLevel(e.target.value)}
+                            />
+                            <Button variant="contained" color="primary" type="submit">
+                                Add completion level
+                            </Button>
+                        </form>                            </StyledContainer>
+
+            </div>
+        )
+                        
 
 
 
