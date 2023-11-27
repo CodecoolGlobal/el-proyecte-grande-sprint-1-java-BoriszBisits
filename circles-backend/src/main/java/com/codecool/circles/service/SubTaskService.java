@@ -50,8 +50,11 @@ public class SubTaskService {
         subTaskDao.saveSubTask(subTask);
     }
 
-    public ResponseEntity<String> deleteSUbTaskById(Long subTaskId) {
+    public ResponseEntity<String> deleteSUbTaskById(Long subTaskId, Long taskId) {
         ResponseEntity<String> response = subTaskDao.deleteSubtaskById(subTaskId);
+        Task task = taskDao.getTask(taskId);
+        task.setCompletionLevelAfterDeleteEverySubTasks();
+        taskDao.saveTask(task);
         return response;
     }
 }

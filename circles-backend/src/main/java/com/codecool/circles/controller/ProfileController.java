@@ -90,7 +90,7 @@ public class ProfileController {
 
     @PostMapping("/profile/type")
     public Member addNewInterest(@RequestBody RequestDataInterest data) {
-       // System.out.println("interest " + data.interest);
+        // System.out.println("interest " + data.interest);
         // System.out.println("user " + data.user);
         memberService.setMemberType(data.user, data.interest);
         return memberService.getMemberByName(data.user);
@@ -98,7 +98,7 @@ public class ProfileController {
     ///api/profile/subtypes
     @PostMapping("/profile/subtypes")
     public List<SubType> getSubtypeyByUsesTypes(@RequestBody RequestDataInterest data) {
-       List<Type> selectedTypes = data.selectedTypes;
+        List<Type> selectedTypes = data.selectedTypes;
 
         List<Long>typeIds=new ArrayList<>();
         for (Type type:selectedTypes){
@@ -111,7 +111,7 @@ public class ProfileController {
     public void getMembersSubtypes(@RequestBody RequestDataInterest data) {
         System.out.println(data.subtype);
         System.out.println(data.user);
-         memberService.addSubTypeToMember(data.subtype, data.user);;
+        memberService.addSubTypeToMember(data.subtype, data.user);;
 
     }
     @GetMapping("/profile/allcoworkers/{leader}")
@@ -119,14 +119,14 @@ public class ProfileController {
         System.out.println("profilename " + leader);
         return memberService.getAllCoworkers(leader);
     }
-///api/profile/message/${leader}
-@GetMapping("/profile/message/{leader}")
-public List<Note> getMessagesOfMember(@PathVariable String leader) {
-    System.out.println("profilename in massage context " + leader);
+    ///api/profile/message/${leader}
+    @GetMapping("/profile/message/{leader}")
+    public List<Note> getMessagesOfMember(@PathVariable String leader) {
+        System.out.println("profilename in massage context " + leader);
 
 
-    return noteService.getNotesOfMemberByName(leader);
-}
+        return noteService.getNotesOfMemberByName(leader);
+    }
 
     @PostMapping("/profile/sendmessage")
     public void addNewMassege(@RequestBody RequestDataInterest data) {

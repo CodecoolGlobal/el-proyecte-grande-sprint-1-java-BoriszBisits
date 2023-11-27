@@ -118,42 +118,36 @@ public class Task {
         return null;
     }
 
-    public void checkLevelOfCompletion() {
-        if (!subTaskList.isEmpty()) {
-            int completedSubtasks = 0;
-
-            for (SubTask subTask : subTaskList) {
-                if (subTask.isCompleted()) {
-                    completedSubtasks++;
+    public void checkSubtasksCompletionLevel(){
+        if(subTaskList.size() !=0){
+            int counter = 0;
+            for(SubTask subTask : subTaskList){
+                if(!subTask.isCompleted()){
+                    counter++;
+                }
+                System.out.println("counter " + counter);
+                System.out.println();
+                if(counter > 0){
+                    isCompleted = false;
+                    int completedTaskNumber = subTaskList.size() - counter;
+                    System.out.println("completedSubTaskNumber " + completedTaskNumber);
+                    int completionLevelNumber = (int) (((double) completedTaskNumber / subTaskList.size()) * 100);
+                    System.out.println("completion level " + completionLevelNumber);
+                    setLevelOfCompletion(completionLevelNumber);
+                    System.out.println("level Of compeltion " + levelOfCompletion);
+                } else {
+                    System.out.println("true ág");
+                    levelOfCompletion = 100;
+                    setCompleted(true);
                 }
             }
-
-            // Calculate the percentage of completed subtasks
-            int totalSubtasks = subTaskList.size();
-            int levelOfCompletion = (int) (((double) completedSubtasks / totalSubtasks) * 100);
-
-            setLevelOfCompletion(levelOfCompletion);
-
-        } else {
-            setLevelOfCompletion(0);
+            counter = 0;
         }
     }
 
-
-    public void checkCompleted() {
-
-        setCompleted(true);
-        System.out.println("task-check completed");
-        //project.checkCompleted();
-        if (!subTaskList.isEmpty()) {
-            for (SubTask subTask : subTaskList) {
-                if (!subTask.isCompleted()) {
-                    System.out.println("false");
-                    setCompleted(false);
-                    break;
-                }
-            }
-        } else {
+    public void setCompletionLevelAfterDeleteEverySubTasks(){
+        if(subTaskList.size() == 0){
+            levelOfCompletion = 0;
             setCompleted(false);
         }
     }
@@ -163,6 +157,15 @@ public class Task {
         members.add(member);
         for(Member member1 : members){
             System.out.println("ember " + member1.getName());
+        }
+    }
+
+    public void setCompletionLevel(int completionLevel){
+        levelOfCompletion = completionLevel;
+        if(levelOfCompletion == 100){
+            isCompleted = true;
+        } else {
+            isCompleted = false;
         }
     }
     /*public boolean removeSubTaskById(UUID subTaskId) {

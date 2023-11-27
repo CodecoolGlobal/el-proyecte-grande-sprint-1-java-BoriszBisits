@@ -158,7 +158,7 @@ function Project() {
     const [scannedText, setScannedText] = useState('');
     const [notes, setNotes] = useState([])
     const [deadlineError, setDeadlineError] = useState(null);
-    const [project, setProject] = useState(null);
+    const [project, setProject] = useState([]);
     const [completionLevel, setCompletionLevel] = useState("");
     const [currentProject, setCurrentProject] = useState("");
 
@@ -268,35 +268,39 @@ function Project() {
 
 
 
-    const fetchProject = async () => {
-        try {
-          const token = localStorage.getItem("token");
-          const leader = localStorage.getItem("username");
-          const headers = {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          };
-      
-          const response = await fetch(`/api/projectlist/project/${id}`, {
-            method: "GET",
-            headers: headers,
-          });
-      
-          if (!response.ok) {
-            throw new Error("Failed to fetch project");
-          }
-      
-          const data = await response.json();
-          setCurrentProject(data);
-          console.log("currentProject " + currentProject.name)
-        } catch (error) {
-          console.error("Error fetching project:", error);
-        }
-      };
+    function fetchProject  () {
+        
+            const token = localStorage.getItem("token");
+            const leader = localStorage.getItem("username");
+            const headers = {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            };
+    
+            fetch(`/api/projectlist/project/${id}`, {
+                method: "GET",
+                headers: headers,
+            }).then((res) => { 
+                if(!res.ok) {
+                    throw new Error("Failed to fetch project")
+                }
+                return res.json();
+            }).then((data) => {
+                console.log("API Response:", data);
+                setCurrentProject(data);
+            })
+    .catch ((error) => {
+        console.error("Error fetching project", error)
+    })
+    };
+    
+
+    console.log("current project " + currentProject.name)
 
 
-
-
+useEffect(() => {
+    fetchProject();
+},[])
 
 
     useEffect(() => {
@@ -304,7 +308,6 @@ function Project() {
         fetchMembers();
         fetchSubtypes();
         fetchNotes();
-        fetchProject()
 
 
         const token = localStorage.getItem('token');
@@ -345,6 +348,7 @@ function Project() {
         setTasks((tasks) => {
             return tasks.filter((task) => task.id !== taskId);
         });
+        
     };
 
     function checkDeadlineIsValid(e) {
@@ -518,8 +522,9 @@ function Project() {
                 <StyledLeftPanel>
                     <StyledLeftColumn>
                         <Typography variant="body1" align="center" gutterBottom>
-                            Level of Completion: {currentProject?.levelOfCompletion}
+                            Level of Completion: {currentProject.levelOfCompletion}
                         </Typography>
+                        {tasks.length == 0 && (
                         <form onSubmit={handleSubmitCompletionLevel}>
                             <TextField
                                 variant="outlined"
@@ -532,6 +537,7 @@ function Project() {
                                 Add completion level
                             </Button>
                         </form>
+                        ) }
                         <StyledTitle variant="h4">My Project Tasks</StyledTitle>
                         <StyledTaskList>
                             {tasks.map((task) => (

@@ -443,6 +443,7 @@ console.log("id" + id)
                     <Typography variant="body1" align="center" gutterBottom>
                         Level of Completion: {task.levelOfCompletion}
                     </Typography>
+                    {subTasks.length == 0 && (
                     <form onSubmit={handleSubmitCompletionLevel} className={classes.newSubtaskForm}>
                 <TextField
                             className={classes.formInput}
@@ -456,6 +457,8 @@ console.log("id" + id)
                             Add completion level
                         </Button>
                     </form>
+                                            )}
+
                     <form onSubmit={checkDeadlineIsValid} className={classes.newSubtaskForm}>
                     <TextField
                             className={classes.formInput}

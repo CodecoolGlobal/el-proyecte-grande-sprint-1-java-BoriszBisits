@@ -77,7 +77,7 @@ public class SubTask {
         } else {
             isCompleted = false;
         }
-        task.checkCompleted();
+        //task.checkCompleted();
 
     }
 
