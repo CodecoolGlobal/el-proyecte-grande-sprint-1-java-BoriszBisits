@@ -13,7 +13,7 @@ function ProgressProjectCircle({ projects }) {
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <Typography variant="h6">Completion Level</Typography>
+      <Typography variant="h6">Completion ratio</Typography>
       <CircularProgress
         variant="determinate"
         value={percentageCompleted}

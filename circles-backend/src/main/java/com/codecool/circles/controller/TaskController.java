@@ -36,6 +36,12 @@ TypeService typeService;
         private String completionLevel;
 
     }
+
+    @Data
+    private static class NewDeadLineData{
+        private String newDeadLine;
+
+    }
     @Autowired
 
     public TaskController(ProjectService projectService, TaskService taskService, MainPageService mainPageService, SubTypeService subTypeService, TypeService typeService) {
@@ -128,6 +134,11 @@ TypeService typeService;
     @PostMapping("task/completion-level/{taskId}")
     public void addCompletionLevel(@PathVariable Long taskId, @RequestBody CompletionLevelData requestData ) {
         taskService.addCompletionLevel(requestData.completionLevel,taskId);
+    }
+
+    @PostMapping("task/new-deadline/{id}")
+    public void addNewDeadLine(@PathVariable Long id, @RequestBody NewDeadLineData newDeadLineData ) {
+        taskService.addNewDeadLine(newDeadLineData.newDeadLine,id);
     }
 
 }
