@@ -20,6 +20,7 @@ function Registration() {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [token, setToken] = useState(null);
+  const [errorMassage , setErrorMassage]=useState("");
   const navigate = useNavigate();
 
   const handleRegistration = (e) => {
@@ -41,12 +42,16 @@ function Registration() {
                   }
               })
               .then((data) => {
+                  if(data.token==="fail"){
+                    setErrorMassage("This UserName is already in use , Please try Another One")
+                  }else{
                   setToken(data.token); // Set the 'token' here
                   console.log("token " + data.token); // Use data.token here
 
                   localStorage.setItem('token', data.token);
                   localStorage.setItem('username', username);
                   navigate('/');
+                  }
               })
               .catch((error) => {
                   console.error(error);
@@ -98,6 +103,7 @@ function Registration() {
                 onSubmit={handleRegistration}
                 style={{ width: '300px', display: 'flex', flexDirection: 'column', gap: '16px' }}
               >
+                {errorMassage && <div style={{ color: 'red' }}>{errorMassage}</div>}
                 <TextField
                   label="Username"
                   variant="outlined"

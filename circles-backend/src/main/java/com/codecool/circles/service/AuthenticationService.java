@@ -16,6 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -26,15 +29,22 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final MemberDetailsService memberDetailsService;
     public AuthenticationResponse register(RegisterRequest request) {
+
+        List<String> MemberNames=memberRepository.findAll().stream().map(member -> member.getName()).collect(Collectors.toList());
+        for (String name:MemberNames){
+            if(name.equals(request.getName())){
+                System.out.println(("Mar can ilyen Member"));
+                return AuthenticationResponse.builder().token("fail").build();
+            }
+        }
+
+        System.out.println("Nincs ilyen ember");
         var user = Member.builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .build();
-        System.out.println("name " + user.getName());
-        System.out.println("pass " + user.getPassword());
-        System.out.println("email " + user.getEmail());
 
         memberRepository.save(user);
         var jwtToken = jwtService.generateToken(memberDetailsService.loadUserByUsername(user.getName()));
