@@ -358,7 +358,7 @@ const deleteProject = (projectId) => {
    
           <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
             <StyledPaper onClick={() => navigate(`/project/${project.id}`)}>
-            {project.name}  {project.completed ? "(Completed)" : ""}{dateCompare(project.deadLine) ? "":"a project lejart"}            </StyledPaper>
+            {project.name}  {project.completed ? "(Completed)" : ""}{dateCompare(project.deadLine) ? "":"Project ended"}            </StyledPaper>
             <Button
                                             onClick={() => submitDelete(project.id)}
                                             variant="contained"

@@ -34,6 +34,12 @@ public class ProjectController {
         private String completionLevel;
 
     }
+
+    @Data
+    private static class NewDeadLineData{
+        private String newDeadLine;
+
+    }
     private ProjectService projectService;
     private MainPageService mainPageService;
     private NoteService noteService;
@@ -121,6 +127,11 @@ public void addNewMassege(@RequestBody RequestData requestData) {
     @PostMapping("completion-level/{id}")
     public void addCompletionLevel(@PathVariable Long id, @RequestBody CompletionLevelData requestData ) {
         projectService.addCompletionLevel(requestData.completionLevel,id);
+    }
+
+    @PostMapping("new-deadline/{id}")
+    public void addNewDeadLine(@PathVariable Long id, @RequestBody NewDeadLineData newDeadLineData ) {
+        projectService.addNewDeadLine(newDeadLineData.newDeadLine,id);
     }
 
 

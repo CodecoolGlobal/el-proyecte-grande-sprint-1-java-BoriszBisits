@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,6 +113,12 @@ public class TaskService {
     public void addCompletionLevel(String completionLevel,Long taskId){
         Task task = taskDao.getTask(taskId);
         task.setCompletionLevel(Integer.parseInt(completionLevel));
+        taskDao.saveTask(task);
+    }
+
+    public void addNewDeadLine(String newDeadLine, Long id){
+        Task task = taskDao.getTask(id);
+        task.setDeadLine(LocalDate.parse(newDeadLine));
         taskDao.saveTask(task);
     }
 }

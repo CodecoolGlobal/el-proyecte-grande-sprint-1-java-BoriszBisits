@@ -68,6 +68,14 @@ const StyledHeader = styled(Typography)({
     marginBottom: "20px",
     textAlign: "left",
 });
+const StyledContainer = styled(Container)({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: '20px',
+    marginBottom: '50px',
+    textAlign: 'center',
+});
 
 const StyledAddMembersButton = styled(Button)({
     marginBottom: "20px",
@@ -114,6 +122,7 @@ function Task() {
     const [eventCount, setEventCount] = useState(() => 0);
     const [deadlineError, setDeadlineError] = useState(null);
     const [completionLevel, setCompletionLevel] = useState("");
+    const [newDeadLine, setNewDeadLine] = useState("")
     const [remainingTime, setRemainingTime] = useState({
         days: 0,
         hours: 0,
@@ -402,7 +411,42 @@ console.log("id" + id)
 
     }
 
+    function handleSubmitNewDeadLine(e){
+        e.preventDefault();
+
+
+        const token = localStorage.getItem('token');
+
+        const data = {
+            newDeadLine: newDeadLine
+        };
+
+        fetch(`/api/task/new-deadline/${taskId}`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            .then((res) => {
+                if (res.ok) {
+                   setNewDeadLine("")
+
+                }
+            });
+    }
+    function dateCompare(incDate){
+        let taskdate=new Date(incDate)
+        console.log(taskdate)
+        if(new Date<taskdate){
+          return true;
+        }
+        return false;
+      }
+
     return (
+        dateCompare(task.deadLine) ? (
         <Container style={{ backgroundColor: '#f5f5f5' }}>
             <HeaderBar />
             <div className="d-flex">
@@ -548,6 +592,28 @@ console.log("id" + id)
                 </div>
             </div>
         </Container>
+        ) : (
+            <div>
+                            <HeaderBar />
+                            <StyledContainer>
+                            <Typography variant="body1" align="center" gutterBottom>
+                            Your task deadline ended! You have to add new deadline!
+                        </Typography>
+                            <form onSubmit={handleSubmitNewDeadLine}>
+                            <TextField
+                                variant="outlined"
+                                label="new deadline"
+                                type="text"
+                                value={newDeadLine}
+                                onChange={(e) => setNewDeadLine(e.target.value)}
+                            />
+                            <Button variant="contained" color="primary" type="submit">
+                                Add New Deadline
+                            </Button>
+                        </form>                            </StyledContainer>
+
+            </div>
+        )
     );
 }
 
