@@ -42,3 +42,8 @@ Balázs Füredi
 Balázs Füredi  
 LinkedIn: www.linkedin.com/in/balázs60  
 Email: f.balozs60@gmail.com  
+
+Tihamér Antal  
+LinkedIn: www.linkedin.com/in/tihamer-antal/  
+Email: antaltihamer97@gmail.com  
+
