@@ -26,7 +26,7 @@ public class Application implements CommandLineRunner {
     }
     @PostConstruct
     public void seedDatabase() {
-      //seedDataService.seedDatabase();
+      seedDataService.seedDatabase();
     }
     @Override
     public void run(String... args) throws Exception {
