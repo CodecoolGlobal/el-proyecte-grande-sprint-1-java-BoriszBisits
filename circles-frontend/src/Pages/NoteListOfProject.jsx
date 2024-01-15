@@ -4,7 +4,7 @@ import HeaderBar from '../Components/HeaderBar';
 
 const NotesListOfProject = ({ notes }) => {
   if (!notes) {
-    return null; // Return null or handle accordingly if notes are not available
+    return null;
   }
 
   if (notes.length === 0) {
@@ -17,8 +17,6 @@ const NotesListOfProject = ({ notes }) => {
 
   return (
     <>
-      <HeaderBar />
-
       <Paper elevation={3} style={{ padding: '16px', margin: '16px' }}>
         <Typography variant="h5" gutterBottom>
           Notes List

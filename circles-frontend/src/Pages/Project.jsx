@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { confirmAlert } from 'react-confirm-alert';
+import React, {useState, useEffect} from 'react';
+import {useParams, Link} from 'react-router-dom';
+import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import TaskCircle from '../Circle/TaskCircle';
 import NotesListOfProject from './NoteListOfProject';
@@ -19,8 +19,9 @@ import {
     ListItem,
     ListItemText,
     MenuItem,
+    Box,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import {styled} from '@mui/material/styles';
 import HeaderBar from '../Components/HeaderBar';
 import ProgressProjectCircle from '../Components/ProgressProjectCircle';
 
@@ -29,67 +30,29 @@ const StyledList = styled(List)({
 });
 
 const StyledListItem = styled(ListItem)({
-    marginBottom: "8px",
-    "&:last-child": {
+    marginBottom: "8px", "&:last-child": {
         marginBottom: "20px",
     },
 });
 
 const StyledAddMembersButton = styled(Button)({
-    marginBottom: "20px",
-    float: "right",
+    marginBottom: "20px", float: "right",
 });
 
 const StyledListItemText = styled(ListItemText)({
     fontSize: "16px",
 });
 
-const StyledRightPanel = styled(Container)({
-    flex: "0 0 calc(50% - 8px)",
-    marginBottom: "20px", display: "flex", flexDirection: "column", alignItems: "flex-start",
-});
-
-const StyledLeftPanel = styled(Container)({
-    flex: "0 0 calc(50% - 8px)",
-    marginRight: "16px",
-    marginBottom: "20px",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-});
-
 const StyledHeader = styled(Typography)({
-    fontSize: "24px",
-    marginBottom: "20px",
-    textAlign: "left",
-});
-
-const StyledContainer = styled(Container)({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: '20px',
-    marginBottom: '50px',
-    textAlign: 'center',
-});
-
-const StyledLeftColumn = styled(Grid)({
-    flex: '0 0 calc(70% - 8px)',
-    marginRight: '16px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-});
-
-const StyledRightColumn = styled(Grid)({
-    flex: '0 0 calc(30% - 8px)',
-    marginBottom: '20px',
+    fontSize: "24px", marginBottom: "20px", textAlign: "left",
 });
 
 const StyledTitle = styled(Typography)({
-    fontSize: '24px',
-    marginBottom: '20px',
-    textAlign: 'left',
+    fontSize: '24px', marginBottom: '20px', marginLeft: '20px', textAlign: 'left', color: "blue",
+});
+
+const StyledCompletion = styled(Typography)({
+    fontSize: '15px', color: 'blue', textAlign: 'center', marginTop: '8px',
 });
 
 const StyledTaskList = styled(List)({
@@ -101,26 +64,17 @@ const StyledTaskItem = styled(ListItem)({
 });
 
 const StyledTaskCard = styled(Card)({
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
+    height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
 });
 
 const StyledTaskCardContent = styled(CardContent)({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
 });
 
 const StyledTaskText = styled(ListItemText)({
-    fontSize: '16px',
-    textDecoration: 'none',
-    '& a': {
-        textDecoration: 'none',
-        color: 'inherit',
-    },
-    margin: '5px',
+    fontSize: '16px', textDecoration: 'none', '& a': {
+        textDecoration: 'none', color: 'inherit',
+    }, margin: '5px',
 });
 
 const StyledAddTaskButton = styled(Button)({
@@ -128,9 +82,7 @@ const StyledAddTaskButton = styled(Button)({
 });
 
 const StyledForm = styled('form')({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+    display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
 });
 
 const StyledInput = styled(TextField)({
@@ -142,7 +94,7 @@ const StyledButton = styled(Button)({
 });
 
 function Project() {
-    const { id } = useParams();
+    const {id} = useParams();
     const [newTaskName, setNewTaskName] = useState('');
     const [tasks, setTasks] = useState([]);
     const [deadline, setDeadline] = useState('');
@@ -164,11 +116,7 @@ function Project() {
     const [newDeadLine, setNewDeadLine] = useState("");
 
 
-    
     const [eventCount, setEventCount] = useState(() => 0);
-
-
-
     const membersPerPage = 5;
 
     function handleAddMember() {
@@ -186,8 +134,7 @@ function Project() {
         const token = localStorage.getItem('token');
 
         fetch(`/api/project/subtypes/${id}`, {
-            method: 'GET',
-            headers: {
+            method: 'GET', headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
@@ -209,7 +156,7 @@ function Project() {
         const token = localStorage.getItem('token');
 
         fetch(`/api/projectlist/project/members/${id}`, {
-            method: 'GET', headers: { Authorization: `Bearer ${token}` },
+            method: 'GET', headers: {Authorization: `Bearer ${token}`},
         })
             .then((res) => {
                 if (!res.ok) {
@@ -231,8 +178,7 @@ function Project() {
         const token = localStorage.getItem('token');
 
         fetch(`/api/projectlist/getAllTaskByProjectId/${id}`, {
-            method: 'GET',
-            headers: { Authorization: `Bearer ${token}` },
+            method: 'GET', headers: {Authorization: `Bearer ${token}`},
         })
             .then((res) => res.json())
             .then((data) => {
@@ -248,61 +194,47 @@ function Project() {
         const token = localStorage.getItem("token");
         const leader = localStorage.getItem("username");
         const headers = {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, "Content-Type": "application/json",
         };
         fetch(`/api/projectlist/project/message/${id}`, {
-            method: "GET",
-            headers: headers,
+            method: "GET", headers: headers,
         })
             .then((res) => res.json())
             .then((data) => {
                 setNotes(data);
-                // setLoading(false);
             })
             .catch((error) => {
                 console.error("Error fetching notes:", error);
-                //setError("Error fetching notes. Please try again later.");
-                // setLoading(false);
             });
     };
 
+    function fetchProject() {
 
+        const token = localStorage.getItem("token");
+        const leader = localStorage.getItem("username");
+        const headers = {
+            Authorization: `Bearer ${token}`, "Content-Type": "application/json",
+        };
 
-    function fetchProject  () {
-        
-            const token = localStorage.getItem("token");
-            const leader = localStorage.getItem("username");
-            const headers = {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-            };
-    
-            fetch(`/api/projectlist/project/${id}`, {
-                method: "GET",
-                headers: headers,
-            }).then((res) => { 
-                if(!res.ok) {
-                    throw new Error("Failed to fetch project")
-                }
-                return res.json();
-            }).then((data) => {
-                console.log("API Response:", data);
-                setCurrentProject(data);
+        fetch(`/api/projectlist/project/${id}`, {
+            method: "GET", headers: headers,
+        }).then((res) => {
+            if (!res.ok) {
+                throw new Error("Failed to fetch project")
+            }
+            return res.json();
+        }).then((data) => {
+            console.log("API Response:", data);
+            setCurrentProject(data);
+        })
+            .catch((error) => {
+                console.error("Error fetching project", error)
             })
-    .catch ((error) => {
-        console.error("Error fetching project", error)
-    })
     };
-    
 
-    console.log("current project " + currentProject)
-
-
-useEffect(() => {
-    fetchProject();
-},[])
-
+    useEffect(() => {
+        fetchProject();
+    }, [])
 
     useEffect(() => {
         fetchTasks();
@@ -310,12 +242,10 @@ useEffect(() => {
         fetchSubtypes();
         fetchNotes();
 
-
         const token = localStorage.getItem('token');
 
         fetch(`/api/projectlist/getAllTaskByProjectId/${id}`, {
-            method: 'GET',
-            headers: { Authorization: `Bearer ${token}` },
+            method: 'GET', headers: {Authorization: `Bearer ${token}`},
         })
             .then((res) => res.json())
             .then((data) => {
@@ -329,17 +259,11 @@ useEffect(() => {
 
     const submitDelete = (taskId) => {
         confirmAlert({
-            title: 'Confirm to delete',
-            message: 'Are you sure to delete this task?',
-            buttons: [
-                {
-                    label: 'Yes',
-                    onClick: () => handleDelete(taskId),
-                },
-                {
-                    label: 'No',
-                },
-            ],
+            title: 'Confirm to delete', message: 'Are you sure to delete this task?', buttons: [{
+                label: 'Yes', onClick: () => handleDelete(taskId),
+            }, {
+                label: 'No',
+            },],
         });
     };
 
@@ -349,7 +273,6 @@ useEffect(() => {
         setTasks((tasks) => {
             return tasks.filter((task) => task.id !== taskId);
         });
-        
     };
 
     function checkDeadlineIsValid(e) {
@@ -361,10 +284,7 @@ useEffect(() => {
         const currentDate = new Date();
         let isDeadLineStringValid = false;
 
-        // console.log("project " + project)
-        // console.log("dedlájn " + deadline )
-        if (deadlineString[4] === "-" &&
-            deadlineString[7] === "-") {
+        if (deadlineString[4] === "-" && deadlineString[7] === "-") {
             isDeadLineStringValid = true
         }
 
@@ -372,17 +292,13 @@ useEffect(() => {
             console.log(isDeadLineStringValid)
 
             setDeadlineError("The deadline format will be: yyyy-mm-dd");
-        }
-
-        else if (deadlineDate <= currentDate || deadlineDate > new Date(currentProject.deadLine)) {
+        } else if (deadlineDate <= currentDate || deadlineDate > new Date(currentProject.deadLine)) {
             setDeadlineError("Invalid deadline")
-        }
-        else {
+        } else {
             setDeadlineError(null);
             console.log("Valid deadline. Proceeding with submission.");
             handleSubmit(e);
         }
-
     }
 
     const handleSubmit = (e) => {
@@ -399,12 +315,9 @@ useEffect(() => {
         };
 
         fetch(`/api/${id}/new-task`, {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
+            method: 'POST', headers: {
+                Authorization: `Bearer ${token}`, 'Content-Type': 'application/json',
+            }, body: JSON.stringify(data),
         }).then((res) => {
             if (res.ok) {
                 setNewTaskName('');
@@ -420,16 +333,13 @@ useEffect(() => {
     const handleScanTextSubmit = () => {
         let data = {
 
-            leader: localStorage.getItem('username'),
-            projectId: id,
-            massege: scannedText,
+            leader: localStorage.getItem('username'), projectId: id, massege: scannedText,
         }
         console.log("Scanned Text:", scannedText);
         let token = localStorage.getItem('token')
         fetch("/api/projectlist/project/massege", {
             method: "POST", headers: {
-                'Authorization': `Bearer ${token}`,
-                "Content-Type": "application/json",
+                'Authorization': `Bearer ${token}`, "Content-Type": "application/json",
             }, body: JSON.stringify(data),
         })
             .then((res) => {
@@ -447,26 +357,21 @@ useEffect(() => {
     const deleteTask = (taskId) => {
         const token = localStorage.getItem('token');
         return fetch(`/api/projectByid/${id}/task/${taskId}`, {
-            method: 'DELETE',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
+            method: 'DELETE', headers: {
+                Authorization: `Bearer ${token}`, 'Content-Type': 'application/json',
             },
         }).then((res) => res.json());
     };
 
     function handleAddCoworker(memberId) {
         let data = {
-            memberId: memberId,
-            leader: localStorage.getItem('username'),
-            projectId: id
+            memberId: memberId, leader: localStorage.getItem('username'), projectId: id
         }
         let token = localStorage.getItem('token')
 
         fetch("/api/projectlist/project/members", {
             method: "POST", headers: {
-                'Authorization': `Bearer ${token}`,
-                "Content-Type": "application/json",
+                'Authorization': `Bearer ${token}`, "Content-Type": "application/json",
             }, body: JSON.stringify(data),
         })
             .then((res) => {
@@ -500,167 +405,154 @@ useEffect(() => {
         };
 
         fetch(`/api/projectlist/completion-level/${id}`, {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
+            method: 'POST', headers: {
+                Authorization: `Bearer ${token}`, 'Content-Type': 'application/json',
+            }, body: JSON.stringify(data),
         })
             .then((res) => {
                 if (res.ok) {
                     setCompletionLevel("")
-
                 }
             });
-
     }
 
-    function handleSubmitNewDeadLine(e){
+    function handleSubmitNewDeadLine(e) {
         e.preventDefault();
 
-
         const token = localStorage.getItem('token');
-
         const data = {
             newDeadLine: newDeadLine
         };
 
         fetch(`/api/projectlist/new-deadline/${id}`, {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
+            method: 'POST', headers: {
+                Authorization: `Bearer ${token}`, 'Content-Type': 'application/json',
+            }, body: JSON.stringify(data),
         })
             .then((res) => {
                 if (res.ok) {
-                   setNewDeadLine("")
-
+                    setNewDeadLine("")
                 }
             });
     }
 
-    function dateCompare(incDate){
-        let projectdate=new Date(incDate)
+    function dateCompare(incDate) {
+        let projectdate = new Date(incDate)
         console.log(projectdate)
-        if(new Date<projectdate){
-          return true;
+        if (new Date < projectdate) {
+            return true;
         }
         return false;
-      }
+    }
 
-    return (
-        dateCompare(currentProject.deadLine) ? (
-        <div>
-            <HeaderBar />
-            <StyledContainer>
-                <StyledLeftPanel>
-                    <StyledLeftColumn>
-                        <Typography variant="body1" align="center" gutterBottom>
-                            Level of Completion: {currentProject.levelOfCompletion}
-                        </Typography>
-                        {tasks.length == 0 && (
-                        <form onSubmit={handleSubmitCompletionLevel}>
-                            <TextField
-                                variant="outlined"
-                                label="%"
-                                type="text"
-                                value={completionLevel}
-                                onChange={(e) => setCompletionLevel(e.target.value)}
-                            />
-                            <Button variant="contained" color="primary" type="submit">
-                                Add completion level
-                            </Button>
-                        </form>
-                        ) }
-                        <StyledTitle variant="h4">My Project Tasks</StyledTitle>
-                        <StyledTaskList>
-                            {tasks.map((task) => (
-                                <StyledTaskItem key={task.id}>
-                                    <StyledTaskCard>
-                                        <StyledTaskCardContent>
-                                            <StyledTaskText>
-                                                <Link to={`/project/${id}/task/${task.id}`}>{task.name} {task.completed ? "(Completed)" : ""}{dateCompare(task.deadLine) ? "":"Task ended"}</Link>
-                                            </StyledTaskText>
-                                          
-                                            <Button
-                                                onClick={() => submitDelete(task.id)}
-                                                variant="contained"
-                                                color="primary"
-                                            >
-                                                Delete
-                                            </Button>
-                                        </StyledTaskCardContent>
-                                    </StyledTaskCard>
-                                </StyledTaskItem>
-                            ))}
-                        </StyledTaskList>
-                        <StyledAddTaskButton
-                            type="button"
-                            variant="contained"
-                            color="primary"
-                            onClick={() => setIsFormVisible(!isFormVisible)}
+    return (dateCompare(currentProject.deadLine) ? (<div>
+        <HeaderBar/>
+
+        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+            {/* title and completion level */}
+
+                <StyledTitle variant="button">My Project Tasks </StyledTitle>
+                <StyledCompletion variant="overline">
+                    Level of Completion: {currentProject.levelOfCompletion}
+                </StyledCompletion>
+        </div>
+
+        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+            <div style={{width: '25%', marginRight: '20px'}}>
+                {/*Tasks*/}
+                <Box>
+                    {tasks.length == 0 && (<form onSubmit={handleSubmitCompletionLevel}>
+                        <TextField
+                            variant="outlined"
+                            label="%"
+                            type="text"
+                            value={completionLevel}
+                            onChange={(e) => setCompletionLevel(e.target.value)}
+                        />
+                        <Button variant="contained" color="primary" type="submit">
+                            Add completion level
+                        </Button>
+                    </form>)}
+
+                    <StyledTaskList>
+                        {tasks.map((task) => (<StyledTaskItem key={task.id}>
+                            <StyledTaskCard>
+                                <StyledTaskCardContent>
+                                    <StyledTaskText>
+                                        <Link to={`/project/${id}/task/${task.id}`}>
+                                            {task.name}
+                                            {task.completed ? "(Completed)" : ""}{dateCompare(task.deadLine) ? "" : "Task ended"}
+                                        </Link>
+                                    </StyledTaskText>
+
+                                    <Button
+                                        onClick={() => submitDelete(task.id)}
+                                        variant="contained"
+                                        color="primary"
+                                    >
+                                        Delete
+                                    </Button>
+                                </StyledTaskCardContent>
+                            </StyledTaskCard>
+                        </StyledTaskItem>))}
+                    </StyledTaskList>
+
+                    <StyledAddTaskButton
+                        type="button"
+                        variant="contained"
+                        color="primary"
+                        onClick={() => setIsFormVisible(!isFormVisible)}
+                    >
+                        {isFormVisible ? 'Hide Form' : 'Add Task'}
+                    </StyledAddTaskButton>
+                    {isFormVisible && (<StyledForm onSubmit={checkDeadlineIsValid}>
+                        <StyledInput
+                            variant="outlined"
+                            label="Name"
+                            type="text"
+                            value={newTaskName}
+                            onChange={(e) => setNewTaskName(e.target.value)}
+                        />
+                        <StyledInput
+                            variant="outlined"
+                            label="Deadline"
+                            type="text"
+                            value={deadline}
+                            onChange={(e) => setDeadline(e.target.value)}
+                        />
+                        <StyledInput
+                            variant="outlined"
+                            label="Color"
+                            type="text"
+                            value={colorOfCircle}
+                            onChange={(e) => setColorOfCircle(e.target.value)}
+                        />
+                        <StyledInput
+                            variant="outlined"
+                            label="Subtype"
+                            select
+                            value={selectedSubtype}
+                            onChange={(e) => setSelectedSubtype(e.target.value)}
+                            style={{marginBottom: '8px'}}
                         >
-                            {isFormVisible ? 'Hide Form' : 'Add Task'}
-                        </StyledAddTaskButton>
-                        {isFormVisible && (
-                            <StyledForm onSubmit={checkDeadlineIsValid}>
-                                <StyledInput
-                                    variant="outlined"
-                                    label="Name"
-                                    type="text"
-                                    value={newTaskName}
-                                    onChange={(e) => setNewTaskName(e.target.value)}
-                                />
-                                <StyledInput
-                                    variant="outlined"
-                                    label="Deadline"
-                                    type="text"
-                                    value={deadline}
-                                    onChange={(e) => setDeadline(e.target.value)}
-                                />
-                                <StyledInput
-                                    variant="outlined"
-                                    label="Color"
-                                    type="text"
-                                    value={colorOfCircle}
-                                    onChange={(e) => setColorOfCircle(e.target.value)}
-                                />
-                                <StyledInput
-                                    variant="outlined"
-                                    label="Subtype"
-                                    select
-                                    value={selectedSubtype}
-                                    onChange={(e) => setSelectedSubtype(e.target.value)}
-                                    style={{ marginBottom: '8px' }}
-                                >
-                                    {subTypes.map((subtype) => (
-                                        <MenuItem key={subtype.id} value={subtype.name}>
-                                            {subtype.name}
-                                        </MenuItem>
-                                    ))}
-                                </StyledInput>
-                                {deadlineError && <div style={{ color: 'red' }}>{deadlineError}</div>}
-                                <StyledButton variant="contained" color="primary" type="submit">
-                                    Add new task
-                                </StyledButton>
+                            {subTypes.map((subtype) => (<MenuItem key={subtype.id} value={subtype.name}>
+                                {subtype.name}
+                            </MenuItem>))}
+                        </StyledInput>
+                        {deadlineError && <div style={{color: 'red'}}>{deadlineError}</div>}
+                        <StyledButton variant="contained" color="primary" type="submit">
+                            Add new task
+                        </StyledButton>
 
-                            </StyledForm>
-                        )}
-                    </StyledLeftColumn>
-                    <NotesListOfProject notes={notes} />
-                    <div className="w-30">
-                        <ProgressTaskCircle tasks={tasks} />
-                    </div>
-                    <StyledRightColumn>
-                        <TaskCircle projectId={id} tasks={tasks} />
-                    </StyledRightColumn>
-                </StyledLeftPanel>
-                <StyledRightPanel>
+                    </StyledForm>)}
+                </Box>
+            </div>
+
+            {/*Members*/}
+            <div style={{width: '25%', marginRight: '20px'}}>
+                <Box>
                     <StyledHeader variant="h4">All Members:</StyledHeader>
-                    <div className="search-bar" style={{ marginBottom: "20px" }}>
+                    <div className="search-bar" style={{marginBottom: "20px"}}>
                         <StyledAddMembersButton
                             type="submit"
                             variant="contained"
@@ -674,80 +566,86 @@ useEffect(() => {
                             type="search"
                             label="Search members"
                             value={searchQuery}
-                            style={{ marginBottom: "20px", float: "right", marginRight: "10px" }}
+                            style={{marginBottom: "20px", float: "right", marginRight: "10px"}}
                             onChange={(e) => {
                                 const newSearchQuery = e.target.value;
                                 setSearchQuery(newSearchQuery);
                                 setFilteredMembers(filterMembers(newSearchQuery));
                             }}
-
                         />
                     </div>
 
                     <StyledList>
-                        {currentMembers.map((member) => (
-                            <StyledListItem key={member.id}>
-                                <StyledListItemText>{member.name}</StyledListItemText>
-                                <Button
-                                    onClick={() => handleAddCoworker(member.id)}
-                                    variant="contained"
-                                    color="primary"
-                                >
-                                    Add Coworker
-                                </Button>
-                            </StyledListItem>
-                        ))}
-                    </StyledList>
-                </StyledRightPanel>
-            </StyledContainer>
-            <StyledContainer>
-                <StyledInput
-                    variant="outlined"
-                    label="Scan Text"
-                    type="text"
-                    value={scannedText}
-                    onChange={(e) => setScannedText(e.target.value)}
-                />
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleScanTextSubmit}
-                    style={{ marginLeft: '10px' }}
-                >
-                    Send Comment
-                </Button>
-            </StyledContainer>
-
-
-        </div>
-        ) : (
-            <div>
-                            <HeaderBar />
-                            <StyledContainer>
-                            <Typography variant="body1" align="center" gutterBottom>
-                            Your project deadline ended! You have to add new deadline!
-                        </Typography>
-                            <form onSubmit={handleSubmitNewDeadLine}>
-                            <TextField
-                                variant="outlined"
-                                label="new deadline"
-                                type="text"
-                                value={newDeadLine}
-                                onChange={(e) => setNewDeadLine(e.target.value)}
-                            />
-                            <Button variant="contained" color="primary" type="submit">
-                                Add New Deadline
+                        {currentMembers.map((member) => (<StyledListItem key={member.id}>
+                            <StyledListItemText>{member.name}</StyledListItemText>
+                            <Button
+                                onClick={() => handleAddCoworker(member.id)}
+                                variant="contained"
+                                color="primary"
+                            >
+                                Add Coworker
                             </Button>
-                        </form>                            </StyledContainer>
-
+                        </StyledListItem>))}
+                    </StyledList>
+                </Box>
             </div>
-        )
-                        
 
+            {/*Notes*/}
+            <div style={{width: '25%', marginRight: '20px'}}>
+                <Box>
+                    <NotesListOfProject notes={notes}/>
+                    {/*Send Note*/}
+                    <StyledInput
+                        variant="outlined"
+                        label="Scan Text"
+                        type="text"
+                        value={scannedText}
+                        onChange={(e) => setScannedText(e.target.value)}
+                    />
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleScanTextSubmit}
+                        style={{marginLeft: '10px'}}
+                    >
+                        Send Comment
+                    </Button>
+                </Box>
+            </div>
+        </div>
 
+        {/*Progress Circle*/}
+        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+            <div className="w-30" style={{ textAlign: 'center' }}>
+                <ProgressTaskCircle tasks={tasks} />
+            </div>
+            {/*TaskCricle*/}
+            <div style={{ textAlign: 'center' }}>
+                <TaskCircle projectId={id} tasks={tasks} />
+            </div>
+        </div>
 
-    );
-
+    </div>) : (
+        <div>
+        <HeaderBar/>
+        <Box>
+            <Typography variant="body1" align="center" gutterBottom>
+                Your project deadline ended! You have to add new deadline!
+            </Typography>
+            <form onSubmit={handleSubmitNewDeadLine}>
+                <TextField
+                    variant="outlined"
+                    label="new deadline"
+                    type="text"
+                    value={newDeadLine}
+                    onChange={(e) => setNewDeadLine(e.target.value)}
+                />
+                <Button variant="contained" color="primary" type="submit">
+                    Add New Deadline
+                </Button>
+            </form>
+        </Box>
+    </div>));
 }
 
 export default Project;
