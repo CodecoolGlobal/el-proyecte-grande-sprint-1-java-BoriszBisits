@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Container, Paper, Typography } from "@mui/material";
 import HeaderBar from "../Components/HeaderBar";
 import { styled } from '@mui/material/styles';
-import {Button, 
+import {Button,
        TextField,  List,
     ListItem,
     ListItemText,
@@ -21,7 +21,7 @@ const useStyles = {
         flexDirection: 'column',
         alignItems: 'flex-start',
     },
-    
+
     title: {
         fontSize: '24px',
         marginBottom: '16px',
@@ -47,12 +47,14 @@ const useStyles = {
     },
 };
 
-
-
 const StyledRightPanel = styled(Container)({
     flex: "0 0 calc(50% - 8px)",
-    marginBottom: "20px", display: "flex", flexDirection: "column", alignItems: "flex-start",
+    marginTop: "10vh",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center", // Updated to center the children
 });
+
 const StyledHeader = styled(Typography)({
     fontSize: "24px",
     marginBottom: "20px",
@@ -202,7 +204,6 @@ function SubTask() {
         const deadlineDate = new Date(deadlineString);
         const currentDate = new Date();
         const timeDifference = deadlineDate - currentDate;
-
         const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
         const hoursLeft = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutesLeft = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
@@ -228,9 +229,7 @@ function SubTask() {
     function handleSubmit(e){
         e.preventDefault();
 
-
         const token = localStorage.getItem('token');
-
         const data = {
           completionLevel : completionLevel
         };
@@ -250,9 +249,7 @@ function SubTask() {
 
                 }
             });
-
     }
-
     return (
         <div style={{ backgroundColor: '#f5f5f5' }}>
             <HeaderBar />
@@ -285,11 +282,11 @@ function SubTask() {
                             value={completionLevel}
                             onChange={(e) => setCompletionLevel(e.target.value)}
                         />
-                        <Button variant="contained" color="primary" type="submit">
-                            Add completion level
-                        </Button>
+                    <Button variant="contained" color="primary" type="submit" style={{ marginLeft: '10px' }}>
+                        Add completion level
+                    </Button>
                     </form>
-                <StyledHeader variant="h4">Add Memeber:</StyledHeader>
+                <StyledHeader variant="h4" style={{ marginTop: '15px' }}>Add Memeber:</StyledHeader>
                 <div className="search-bar" style={{marginBottom: "20px"}}>
                     <StyledAddMembersButton
                         type="submit"
